@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Los datos no se tocan: el hash de las etiquetas depende de los bytes exactos.
+data/** -text

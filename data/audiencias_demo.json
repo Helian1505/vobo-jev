@@ -1,0 +1,45 @@
+{
+  "factores_escala": {
+    "Deal en el CRM": 83.22,
+    "Lead (sin deal)": 18.8
+  },
+  "nota": "destinatarios estimados = perfiles de la muestra x factor de escala (base real ~24.800 con deal y ~7.500 leads, según 30X)",
+  "audiencias": {
+    "A1": {
+      "nombre": "Leads con afinidad muy alta y sugeridos a Inmersión Ejecutiva",
+      "perfiles_en_muestra": 46,
+      "destinatarios_estimados_base_real": 865,
+      "pct_afinidad_baja": 0.0
+    },
+    "A2": {
+      "nombre": "Toda la base de leads (sin deal)",
+      "perfiles_en_muestra": 399,
+      "destinatarios_estimados_base_real": 7500,
+      "pct_afinidad_baja": 0.271
+    },
+    "A3": {
+      "nombre": "Leads sin programa sugerido",
+      "perfiles_en_muestra": 91,
+      "destinatarios_estimados_base_real": 1711,
+      "pct_afinidad_baja": 1.0
+    },
+    "A4": {
+      "nombre": "Deals en proceso sugeridos a AI Sales con afinidad alta o muy alta",
+      "perfiles_en_muestra": 37,
+      "destinatarios_estimados_base_real": 3079,
+      "pct_afinidad_baja": 0.0
+    },
+    "A5": {
+      "nombre": "Leads cuyo objetivo es vender más",
+      "perfiles_en_muestra": 90,
+      "destinatarios_estimados_base_real": 1692,
+      "pct_afinidad_baja": 0.222
+    },
+    "A6": {
+      "nombre": "Deals con cierre perdido",
+      "perfiles_en_muestra": 40,
+      "destinatarios_estimados_base_real": 3329,
+      "pct_afinidad_baja": 0.175
+    }
+  }
+}

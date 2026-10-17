@@ -1,0 +1,80 @@
+{
+  "version": "demo-v1 (17 oct 12:45; supuestos de demostración + datos de perfiles de 30X; aprobada por Helian)",
+  "umbral_audiencia_revision": 5000,
+  "horario_masivos": {
+    "inicio": "07:00",
+    "fin": "20:00",
+    "aplica_a": [
+      "correo_masivo",
+      "whatsapp_masivo"
+    ]
+  },
+  "canales_oficiales": [
+    "correo_oficial",
+    "whatsapp_oficial",
+    "instagram_oficial",
+    "linkedin_oficial",
+    "crm"
+  ],
+  "campos_crm_protegidos": [
+    "consentimiento_marketing",
+    "estado_pago",
+    "nivel_acceso",
+    "descuento_aprobado"
+  ],
+  "catalogo_precios_usd": {
+    "sesion_abierta": 99
+  },
+  "catalogo_programas_usd": {
+    "AI for Executives": 2000,
+    "Free Sales Training": 0
+  },
+  "programas_pagos": [
+    "AI Sales",
+    "Sales Machine",
+    "Inmersión Ejecutiva",
+    "30X Executive Program",
+    "AI for Executives",
+    "Hardcore AI",
+    "AI for devs",
+    "AI Second Brain",
+    "Achievers",
+    "Negociacion",
+    "Ventas con LinkedIn",
+    "Multipliers",
+    "B2B",
+    "Next Fellowship",
+    "Fundraising School"
+  ],
+  "regla_afinidad": {
+    "aplica_a": [
+      "correo_masivo",
+      "whatsapp_masivo"
+    ],
+    "banda_baja": "0-3 (baja)",
+    "umbral_pct_baja": 0.5
+  },
+  "etapas_ganado": [
+    "Ganado Pagado Completo",
+    "Ganado Pago Parcial"
+  ],
+  "reversibilidad_por_tipo": {
+    "correo_masivo": "irreversible",
+    "whatsapp_masivo": "irreversible",
+    "publicacion_redes": "parcial",
+    "crm_update": "reversible"
+  },
+  "severidad": {
+    "canal_no_oficial": "BLOCK",
+    "en_lista_de_bajas": "BLOCK",
+    "campo_protegido_masivo": "BLOCK",
+    "campo_protegido_individual": "REVIEW",
+    "etapa_ganado_masivo": "BLOCK",
+    "etapa_ganado_individual": "REVIEW",
+    "audiencia_grande": "REVIEW",
+    "fuera_de_horario": "REVIEW",
+    "fecha_inconsistente": "REVIEW",
+    "precio_inconsistente": "REVIEW",
+    "oferta_sin_afinidad": "REVIEW"
+  }
+}

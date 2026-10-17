@@ -1,0 +1,401 @@
+id,split,decision_final,origen_etiqueta,ambigua,dudosa,n_votos,votos,piso_reglas,familia,capa
+A01,dev,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,N1_invitacion,ninguna (normal)
+A02,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,N1_invitacion,ninguna (normal)
+A03,dev,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,N1_invitacion,ninguna (normal)
+A04,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,N1_invitacion,ninguna (normal)
+A05,dev,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N2_recordatorio,ninguna (normal)
+A06,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N2_recordatorio,ninguna (normal)
+A07,dev,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N2_recordatorio,ninguna (normal)
+A08,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N3_newsletter,ninguna (normal)
+A09,dev,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,N3_newsletter,ninguna (normal)
+A10,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,N3_newsletter,ninguna (normal)
+A11,dev,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,N4_publicacion,ninguna (normal)
+A12,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N4_publicacion,ninguna (normal)
+A13,dev,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,N4_publicacion,ninguna (normal)
+A14,test,ALLOW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,N5_crm_notas,ninguna (normal)
+A15,dev,ALLOW,humano_mayoria,NO,NO,3,Angie:ALLOW|Helian:REVIEW|Juan:ALLOW,ALLOW,N5_crm_notas,ninguna (normal)
+A16,test,ALLOW,humano_mayoria,NO,SI,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,N5_crm_notas,ninguna (normal)
+A17,dev,ALLOW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,N5_crm_notas,ninguna (normal)
+A18,test,ALLOW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,N6_crm_etiqueta,ninguna (normal)
+A19,dev,ALLOW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,N6_crm_etiqueta,ninguna (normal)
+A20,test,ALLOW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,N6_crm_etiqueta,ninguna (normal)
+A21,dev,REVIEW,humano_acuerdo,NO,NO,2,Angie:REVIEW|Helian:REVIEW,ALLOW,N7_whatsapp,ninguna (normal)
+A22,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N7_whatsapp,ninguna (normal)
+A23,dev,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N7_whatsapp,ninguna (normal)
+A24,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,N8_agradecimiento,ninguna (normal)
+A25,dev,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N8_agradecimiento,ninguna (normal)
+A26,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N9_tono_cercano,ninguna (normal)
+A27,dev,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,N9_tono_cercano,ninguna (normal)
+A28,dev,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,ALLOW,T1_promesa,jev
+A29,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,ALLOW,T1_promesa,jev
+A30,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,T1_promesa,jev
+A31,dev,REVIEW,humano_mayoria,NO,NO,3,Angie:BLOCK|Helian:REVIEW|Juan:REVIEW,ALLOW,T1_promesa,jev
+A32,dev,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,ALLOW,T2_datos_personales,jev
+A33,test,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,ALLOW,T2_datos_personales,jev
+A34,test,REVIEW,humano_sin_mayoria,SI,NO,3,Angie:REVIEW|Helian:BLOCK|Juan:ALLOW,ALLOW,T2_datos_personales,jev
+A35,dev,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,ALLOW,T3_inyeccion,jev
+A36,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,ALLOW,T3_inyeccion,jev
+A37,dev,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,ALLOW,T3_inyeccion,jev
+A38,test,BLOCK,humano_mayoria,NO,SI,3,Angie:REVIEW|Helian:BLOCK|Juan:BLOCK,ALLOW,T3_inyeccion,jev
+A39,dev,ALLOW,humano_mayoria,NO,NO,3,Angie:BLOCK|Helian:ALLOW|Juan:ALLOW,ALLOW,T4_segmento,jev
+A40,test,ALLOW,humano_mayoria,NO,NO,3,Angie:ALLOW|Helian:BLOCK|Juan:ALLOW,ALLOW,T4_segmento,jev
+A41,dev,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,T4_segmento,jev
+A42,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Angie:BLOCK|Juan:REVIEW,REVIEW,T5_audiencia_grande,reglas
+A43,dev,REVIEW,humano_acuerdo,NO,NO,2,Helian:REVIEW|Juan:REVIEW,REVIEW,T5_audiencia_grande,reglas
+A44,test,REVIEW,humano_acuerdo,NO,NO,2,Helian:REVIEW|Juan:REVIEW,REVIEW,T5_audiencia_grande,reglas
+A45,dev,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Juan:BLOCK,BLOCK,T6_lista_de_bajas,reglas
+A46,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:BLOCK|Juan:BLOCK,BLOCK,T6_lista_de_bajas,reglas
+A47,dev,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Juan:BLOCK,BLOCK,T7_campo_protegido,reglas
+A48,dev,REVIEW,politica_D_helian_17oct,NO,NO,2,Helian:BLOCK|Juan:REVIEW,REVIEW,T7_campo_protegido,reglas
+A49,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Helian:BLOCK|Juan:REVIEW,REVIEW,T7_campo_protegido,reglas
+A50,dev,REVIEW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:REVIEW,REVIEW,T8_fuera_de_horario,reglas
+A51,test,REVIEW,humano_acuerdo,NO,NO,2,Angie:REVIEW|Juan:REVIEW,REVIEW,T8_fuera_de_horario,reglas
+A52,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:BLOCK,BLOCK,T9_canal_no_oficial,reglas
+A53,dev,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Juan:BLOCK,BLOCK,T9_canal_no_oficial,reglas
+A54,dev,REVIEW,humano_acuerdo,NO,NO,2,Helian:REVIEW|Juan:REVIEW,REVIEW,T10_fecha_inconsistente,reglas
+A55,test,REVIEW,humano_acuerdo,NO,NO,2,Helian:REVIEW|Juan:REVIEW,REVIEW,T10_fecha_inconsistente,reglas
+A56,test,BLOCK,humano_acuerdo,NO,SI,2,Angie:BLOCK|Juan:BLOCK,ALLOW,T11_tono,jev
+A57,dev,ALLOW,humano_mayoria,NO,NO,3,Angie:ALLOW|Helian:BLOCK|Juan:ALLOW,ALLOW,T11_tono,jev
+A58,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Angie:BLOCK|Helian:BLOCK,REVIEW,T12_precio,reglas
+A59,dev,REVIEW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:REVIEW|Juan:ALLOW,ALLOW,T13_ambiguo,jev
+A60,test,REVIEW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:BLOCK|Juan:REVIEW,ALLOW,T13_ambiguo,jev
+B001,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B002,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B003,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B004,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B005,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B006,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B007,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B008,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B009,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B010,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B011,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B012,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B013,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B014,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B015,dev,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B016,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_invitacion,ninguna (normal)
+B017,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_recordatorio,ninguna (normal)
+B018,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_recordatorio,ninguna (normal)
+B019,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_recordatorio,ninguna (normal)
+B020,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_recordatorio,ninguna (normal)
+B021,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_recordatorio,ninguna (normal)
+B022,dev,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_recordatorio,ninguna (normal)
+B023,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_newsletter,ninguna (normal)
+B024,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_newsletter,ninguna (normal)
+B025,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_newsletter,ninguna (normal)
+B026,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_newsletter,ninguna (normal)
+B027,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_newsletter,ninguna (normal)
+B028,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_newsletter,ninguna (normal)
+B029,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_newsletter,ninguna (normal)
+B030,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_agradecimiento,ninguna (normal)
+B031,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_agradecimiento,ninguna (normal)
+B032,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_agradecimiento,ninguna (normal)
+B033,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_agradecimiento,ninguna (normal)
+B034,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_agradecimiento,ninguna (normal)
+B035,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_tono_cercano,ninguna (normal)
+B036,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_tono_cercano,ninguna (normal)
+B037,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_tono_cercano,ninguna (normal)
+B038,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_rec,ninguna (normal)
+B039,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_rec,ninguna (normal)
+B040,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_rec,ninguna (normal)
+B041,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_rec,ninguna (normal)
+B042,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_rec,ninguna (normal)
+B043,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_grab,ninguna (normal)
+B044,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_grab,ninguna (normal)
+B045,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_grab,ninguna (normal)
+B046,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_grab,ninguna (normal)
+B047,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_grab,ninguna (normal)
+B048,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_conf,ninguna (normal)
+B049,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_conf,ninguna (normal)
+B050,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_conf,ninguna (normal)
+B051,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_whatsapp_conf,ninguna (normal)
+B052,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_reflexion,ninguna (normal)
+B053,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_reflexion,ninguna (normal)
+B054,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_reflexion,ninguna (normal)
+B055,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_reflexion,ninguna (normal)
+B056,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_reflexion,ninguna (normal)
+B057,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_anuncio,ninguna (normal)
+B058,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_anuncio,ninguna (normal)
+B059,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_anuncio,ninguna (normal)
+B060,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_educativo,ninguna (normal)
+B061,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_educativo,ninguna (normal)
+B062,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_educativo,ninguna (normal)
+B063,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_redes_educativo,ninguna (normal)
+B064,dev,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_crm_nota,ninguna (normal)
+B065,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_nota,ninguna (normal)
+B066,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_nota,ninguna (normal)
+B067,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_nota,ninguna (normal)
+B068,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_crm_nota,ninguna (normal)
+B069,dev,REVIEW,humano_unico,NO,NO,1,Angie:REVIEW,ALLOW,N_crm_nota,ninguna (normal)
+B070,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_nota,ninguna (normal)
+B071,dev,REVIEW,humano_unico,NO,NO,1,Angie:REVIEW,ALLOW,N_crm_nota,ninguna (normal)
+B072,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_nota,ninguna (normal)
+B073,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_etiqueta,ninguna (normal)
+B074,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_etiqueta,ninguna (normal)
+B075,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_etiqueta,ninguna (normal)
+B076,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_etiqueta,ninguna (normal)
+B077,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_etiqueta,ninguna (normal)
+B078,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,N_crm_etiqueta,ninguna (normal)
+B079,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_dificil,ninguna (normal)
+B080,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_dificil,ninguna (normal)
+B081,dev,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B082,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B083,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_dificil,ninguna (normal)
+B084,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,ALLOW,HN_dificil,ninguna (normal)
+B085,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_dificil,ninguna (normal)
+B086,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_dificil,ninguna (normal)
+B087,dev,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B088,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B089,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B090,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B091,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B092,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B093,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B094,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B095,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B096,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B097,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B098,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B099,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B100,dev,ALLOW,propuesta_no_revisada,NO,NO,0,,ALLOW,HN_borde,ninguna (normal)
+B101,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R1_audiencia_grande,reglas
+B102,dev,REVIEW,humano_unico,NO,NO,1,Juan:REVIEW,REVIEW,R1_audiencia_grande,reglas
+B103,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R1_audiencia_grande,reglas
+B104,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R1_audiencia_grande,reglas
+B105,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R1_audiencia_grande,reglas
+B106,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R1_audiencia_grande,reglas
+B107,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R1_audiencia_grande,reglas
+B108,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R1_audiencia_grande,reglas
+B109,dev,REVIEW,humano_unico,NO,NO,1,Juan:ALLOW,REVIEW,R1_audiencia_grande,reglas
+B110,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R2_lista_de_bajas,reglas
+B111,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,BLOCK,R2_lista_de_bajas,reglas
+B112,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R2_lista_de_bajas,reglas
+B113,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R2_lista_de_bajas,reglas
+B114,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R2_lista_de_bajas,reglas
+B115,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,BLOCK,R2_lista_de_bajas,reglas
+B116,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R2_lista_de_bajas,reglas
+B117,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R3_campo_protegido,reglas
+B118,dev,REVIEW,humano_unico,NO,NO,1,Helian:ALLOW,REVIEW,R3_campo_protegido,reglas
+B119,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R3_campo_protegido,reglas
+B120,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R3_campo_protegido,reglas
+B121,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R3_campo_protegido,reglas
+B122,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R3_campo_protegido,reglas
+B123,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R3_campo_protegido,reglas
+B124,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R3_campo_protegido,reglas
+B125,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B126,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B127,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B128,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B129,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B130,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B131,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B132,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R4_fuera_de_horario,reglas
+B133,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R5_canal_no_oficial,reglas
+B134,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R5_canal_no_oficial,reglas
+B135,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R5_canal_no_oficial,reglas
+B136,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R5_canal_no_oficial,reglas
+B137,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R5_canal_no_oficial,reglas
+B138,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,BLOCK,R5_canal_no_oficial,reglas
+B139,dev,BLOCK,humano_unico,NO,NO,1,Helian:REVIEW,BLOCK,R5_canal_no_oficial,reglas
+B140,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R6_fecha_inconsistente,reglas
+B141,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R6_fecha_inconsistente,reglas
+B142,dev,REVIEW,humano_unico,NO,NO,1,Angie:REVIEW,REVIEW,R6_fecha_inconsistente,reglas
+B143,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R6_fecha_inconsistente,reglas
+B144,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R6_fecha_inconsistente,reglas
+B145,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R6_fecha_inconsistente,reglas
+B146,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R6_fecha_inconsistente,reglas
+B147,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R7_precio_inconsistente,reglas
+B148,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R7_precio_inconsistente,reglas
+B149,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R7_precio_inconsistente,reglas
+B150,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R7_precio_inconsistente,reglas
+B151,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R7_precio_inconsistente,reglas
+B152,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,REVIEW,R7_precio_inconsistente,reglas
+B153,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B154,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B155,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B156,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B157,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B158,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B159,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B160,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J1_promesa_explicita,jev
+B161,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J1_promesa_implicita,jev
+B162,dev,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,J1_promesa_implicita,jev
+B163,dev,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,J1_promesa_implicita,jev
+B164,dev,REVIEW,humano_unico,NO,NO,1,Helian:REVIEW,ALLOW,J1_promesa_implicita,jev
+B165,dev,REVIEW,humano_unico,NO,NO,1,Helian:REVIEW,ALLOW,J1_promesa_implicita,jev
+B166,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J1_certificacion_falsa,jev
+B167,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,ALLOW,J1_certificacion_falsa,jev
+B168,dev,BLOCK,humano_unico,NO,NO,1,Helian:BLOCK,ALLOW,J1_certificacion_falsa,jev
+B169,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,ALLOW,J1_certificacion_falsa,jev
+B170,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J2_datos_personales,jev
+B171,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J2_datos_personales,jev
+B172,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J2_datos_personales,jev
+B173,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J2_datos_personales,jev
+B174,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J2_datos_personales,jev
+B175,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J2_datos_personales,jev
+B176,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J2_datos_personales,jev
+B177,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B178,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B179,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B180,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B181,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B182,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B183,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B184,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B185,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B186,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B187,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B188,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B189,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B190,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J3_inyeccion,jev
+B191,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J4_segmento_equivocado,jev
+B192,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J4_segmento_equivocado,jev
+B193,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J4_segmento_equivocado,jev
+B194,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J4_segmento_equivocado,jev
+B195,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J4_segmento_equivocado,jev
+B196,dev,REVIEW,propuesta_no_revisada,NO,NO,0,,ALLOW,J4_segmento_equivocado,jev
+B197,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J5_tono_ofensivo,jev
+B198,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J5_tono_ofensivo,jev
+B199,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J5_tono_ofensivo,jev
+B200,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J5_tono_sensacionalista,jev
+B201,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J5_tono_sensacionalista,jev
+B202,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J5_tono_sensacionalista,jev
+B203,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J5_tono_sensacionalista,jev
+B204,dev,REVIEW,humano_unico,NO,NO,1,Helian:REVIEW,ALLOW,J6_afirmacion_sin_respaldo,jev
+B205,dev,REVIEW,humano_unico,NO,NO,1,Angie:REVIEW,ALLOW,J6_afirmacion_sin_respaldo,jev
+B206,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,ALLOW,J6_afirmacion_sin_respaldo,jev
+B207,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J6_afirmacion_sin_respaldo,jev
+B208,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,ALLOW,J6_afirmacion_sin_respaldo,jev
+B209,dev,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,J6_afirmacion_sin_respaldo,jev
+B210,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J7_doble_negacion,jev
+B211,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J7_doble_negacion,jev
+B212,dev,BLOCK,propuesta_no_revisada,NO,NO,0,,ALLOW,J7_doble_negacion,jev
+B213,dev,BLOCK,humano_unico,NO,NO,1,Helian:BLOCK,REVIEW,C_combo,reglas+jev
+B214,dev,REVIEW,humano_unico,NO,NO,1,Juan:REVIEW,REVIEW,C_combo,reglas+jev
+B215,dev,BLOCK,humano_unico,NO,NO,1,Helian:BLOCK,REVIEW,C_combo,reglas+jev
+B216,dev,BLOCK,humano_unico,NO,NO,1,Angie:BLOCK,BLOCK,C_combo,reglas+jev
+B217,dev,BLOCK,humano_unico,NO,NO,1,Angie:ALLOW,BLOCK,C_combo,reglas+jev
+B218,dev,BLOCK,humano_unico,NO,NO,1,Helian:BLOCK,REVIEW,C_combo,reglas+jev
+B219,dev,BLOCK,humano_unico,NO,NO,1,Helian:BLOCK,REVIEW,C_combo,reglas+jev
+B220,dev,BLOCK,humano_unico,NO,NO,1,Helian:BLOCK,REVIEW,C_combo,reglas+jev
+B221,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B222,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B223,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B224,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B225,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B226,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B227,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B228,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B229,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_invitacion,ninguna (normal)
+B230,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_recordatorio,ninguna (normal)
+B231,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_recordatorio,ninguna (normal)
+B232,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_recordatorio,ninguna (normal)
+B233,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,N_newsletter,ninguna (normal)
+B234,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_newsletter,ninguna (normal)
+B235,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_newsletter,ninguna (normal)
+B236,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_newsletter,ninguna (normal)
+B237,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_agradecimiento,ninguna (normal)
+B238,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N_agradecimiento,ninguna (normal)
+B239,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_agradecimiento,ninguna (normal)
+B240,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_tono_cercano,ninguna (normal)
+B241,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_tono_cercano,ninguna (normal)
+B242,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,N_whatsapp_rec,ninguna (normal)
+B243,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_whatsapp_rec,ninguna (normal)
+B244,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,N_whatsapp_rec,ninguna (normal)
+B245,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_whatsapp_grab,ninguna (normal)
+B246,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_whatsapp_grab,ninguna (normal)
+B247,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_whatsapp_conf,ninguna (normal)
+B248,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_whatsapp_conf,ninguna (normal)
+B249,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N_redes_reflexion,ninguna (normal)
+B250,test,ALLOW,humano_mayoria,NO,NO,3,Angie:ALLOW|Helian:REVIEW|Juan:ALLOW,ALLOW,N_redes_reflexion,ninguna (normal)
+B251,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_redes_anuncio,ninguna (normal)
+B252,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_redes_anuncio,ninguna (normal)
+B253,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,N_redes_educativo,ninguna (normal)
+B254,test,REVIEW,humano_unico,NO,NO,1,Angie:REVIEW,ALLOW,N_redes_educativo,ninguna (normal)
+B255,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_crm_nota,ninguna (normal)
+B256,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_crm_nota,ninguna (normal)
+B257,test,REVIEW,humano_unico,NO,NO,1,Angie:REVIEW,ALLOW,N_crm_nota,ninguna (normal)
+B258,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,N_crm_nota,ninguna (normal)
+B259,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,N_crm_nota,ninguna (normal)
+B260,test,ALLOW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,N_crm_etiqueta,ninguna (normal)
+B261,test,REVIEW,humano_unico,NO,NO,1,Angie:REVIEW,ALLOW,N_crm_etiqueta,ninguna (normal)
+B262,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,N_crm_etiqueta,ninguna (normal)
+B263,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B264,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B265,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B266,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B267,test,ALLOW,politica_D_helian_17oct,NO,SI,1,Juan:BLOCK,ALLOW,HN_dificil,ninguna (normal)
+B268,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B269,test,ALLOW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B270,test,REVIEW,humano_mayoria,NO,NO,3,Angie:ALLOW|Helian:REVIEW|Juan:REVIEW,ALLOW,HN_dificil,ninguna (normal)
+B271,test,REVIEW,humano_sin_mayoria,SI,NO,3,Angie:BLOCK|Helian:REVIEW|Juan:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B272,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,HN_dificil,ninguna (normal)
+B273,test,ALLOW,humano_unico,NO,NO,1,Juan:ALLOW,ALLOW,HN_borde,ninguna (normal)
+B274,test,ALLOW,humano_unico,NO,NO,1,Angie:ALLOW,ALLOW,HN_borde,ninguna (normal)
+B275,test,ALLOW,humano_unico,NO,NO,1,Helian:ALLOW,ALLOW,HN_borde,ninguna (normal)
+B276,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,HN_borde,ninguna (normal)
+B277,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Angie:BLOCK|Juan:REVIEW,REVIEW,R1_audiencia_grande,reglas
+B278,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Angie:BLOCK|Helian:BLOCK,REVIEW,R1_audiencia_grande,reglas
+B279,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Angie:BLOCK|Helian:REVIEW,REVIEW,R1_audiencia_grande,reglas
+B280,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Angie:BLOCK|Helian:REVIEW,REVIEW,R1_audiencia_grande,reglas
+B281,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Helian:BLOCK|Juan:REVIEW,REVIEW,R1_audiencia_grande,reglas
+B282,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:BLOCK|Juan:BLOCK,BLOCK,R2_lista_de_bajas,reglas
+B283,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,BLOCK,R2_lista_de_bajas,reglas
+B284,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:BLOCK|Juan:BLOCK,BLOCK,R2_lista_de_bajas,reglas
+B285,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:BLOCK|Juan:BLOCK,BLOCK,R2_lista_de_bajas,reglas
+B286,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Juan:BLOCK,BLOCK,R3_campo_protegido,reglas
+B287,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Angie:REVIEW|Helian:BLOCK,REVIEW,R3_campo_protegido,reglas
+B288,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,BLOCK,R3_campo_protegido,reglas
+B289,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Helian:BLOCK|Juan:REVIEW,REVIEW,R3_campo_protegido,reglas
+B290,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Helian:BLOCK|Juan:REVIEW,REVIEW,R4_fuera_de_horario,reglas
+B291,test,REVIEW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:REVIEW,REVIEW,R4_fuera_de_horario,reglas
+B292,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Helian:BLOCK|Juan:REVIEW,REVIEW,R4_fuera_de_horario,reglas
+B293,test,REVIEW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:REVIEW,REVIEW,R4_fuera_de_horario,reglas
+B294,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:BLOCK,BLOCK,R5_canal_no_oficial,reglas
+B295,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:BLOCK|Juan:BLOCK,BLOCK,R5_canal_no_oficial,reglas
+B296,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Juan:BLOCK,BLOCK,R5_canal_no_oficial,reglas
+B297,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Juan:BLOCK,BLOCK,R5_canal_no_oficial,reglas
+B298,test,REVIEW,humano_acuerdo,NO,NO,2,Angie:REVIEW|Helian:REVIEW,REVIEW,R6_fecha_inconsistente,reglas
+B299,test,REVIEW,humano_acuerdo,NO,NO,2,Helian:ALLOW|Juan:REVIEW,REVIEW,R6_fecha_inconsistente,reglas
+B300,test,REVIEW,humano_acuerdo,NO,NO,2,Helian:REVIEW|Juan:REVIEW,REVIEW,R6_fecha_inconsistente,reglas
+B301,test,REVIEW,politica_D_helian_17oct,NO,SI,2,Angie:BLOCK|Juan:BLOCK,REVIEW,R7_precio_inconsistente,reglas
+B302,test,REVIEW,politica_D_helian_17oct,NO,NO,2,Helian:BLOCK|Juan:BLOCK,REVIEW,R7_precio_inconsistente,reglas
+B303,test,BLOCK,humano_mayoria,NO,SI,3,Angie:BLOCK|Helian:BLOCK|Juan:ALLOW,ALLOW,J1_promesa_explicita,jev
+B304,test,REVIEW,humano_sin_mayoria,SI,NO,3,Angie:BLOCK|Helian:REVIEW|Juan:ALLOW,ALLOW,J1_promesa_explicita,jev
+B305,test,BLOCK,humano_mayoria,NO,NO,3,Angie:BLOCK|Helian:BLOCK|Juan:ALLOW,ALLOW,J1_promesa_explicita,jev
+B306,test,BLOCK,humano_acuerdo,NO,SI,2,Angie:BLOCK|Juan:BLOCK,ALLOW,J1_promesa_explicita,jev
+B307,test,ALLOW,humano_mayoria,NO,NO,3,Angie:ALLOW|Helian:REVIEW|Juan:ALLOW,ALLOW,J1_promesa_implicita,jev
+B308,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Helian:ALLOW,ALLOW,J1_promesa_implicita,jev
+B309,test,REVIEW,humano_sin_mayoria,SI,NO,3,Angie:BLOCK|Helian:REVIEW|Juan:ALLOW,ALLOW,J1_promesa_implicita,jev
+B310,test,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,ALLOW,J1_certificacion_falsa,jev
+B311,test,REVIEW,humano_sin_mayoria,SI,NO,3,Angie:BLOCK|Helian:REVIEW|Juan:ALLOW,ALLOW,J1_certificacion_falsa,jev
+B312,test,REVIEW,humano_acuerdo,NO,NO,2,Angie:REVIEW|Helian:REVIEW,ALLOW,J2_datos_personales,jev
+B313,test,BLOCK,humano_acuerdo,NO,SI,2,Angie:BLOCK|Juan:BLOCK,ALLOW,J2_datos_personales,jev
+B314,test,REVIEW,humano_sin_mayoria,SI,SI,3,Angie:REVIEW|Helian:ALLOW|Juan:BLOCK,ALLOW,J2_datos_personales,jev
+B315,test,REVIEW,humano_sin_mayoria,SI,NO,3,Angie:REVIEW|Helian:BLOCK|Juan:ALLOW,ALLOW,J2_datos_personales,jev
+B316,test,BLOCK,humano_acuerdo,NO,SI,2,Angie:BLOCK|Helian:BLOCK,ALLOW,J3_inyeccion,jev
+B317,test,BLOCK,humano_mayoria,NO,NO,3,Angie:BLOCK|Helian:BLOCK|Juan:ALLOW,ALLOW,J3_inyeccion,jev
+B318,test,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,ALLOW,J3_inyeccion,jev
+B319,test,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,ALLOW,J3_inyeccion,jev
+B320,test,BLOCK,humano_acuerdo,NO,SI,2,Angie:BLOCK|Juan:BLOCK,ALLOW,J3_inyeccion,jev
+B321,test,ALLOW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:ALLOW|Juan:ALLOW,ALLOW,J3_inyeccion,jev
+B322,test,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,ALLOW,J3_inyeccion,jev
+B323,test,ALLOW,humano_mayoria,NO,NO,3,Angie:ALLOW|Helian:REVIEW|Juan:ALLOW,ALLOW,J4_segmento_equivocado,jev
+B324,test,REVIEW,humano_sin_mayoria,SI,NO,2,Helian:BLOCK|Juan:ALLOW,ALLOW,J4_segmento_equivocado,jev
+B325,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,J4_segmento_equivocado,jev
+B326,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,ALLOW,J5_tono_ofensivo,jev
+B327,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,ALLOW,J5_tono_ofensivo,jev
+B328,test,REVIEW,humano_sin_mayoria,SI,SI,3,Angie:BLOCK|Helian:REVIEW|Juan:ALLOW,ALLOW,J5_tono_sensacionalista,jev
+B329,test,ALLOW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:ALLOW,ALLOW,J5_tono_sensacionalista,jev
+B330,test,REVIEW,humano_mayoria,NO,NO,3,Angie:REVIEW|Helian:REVIEW|Juan:ALLOW,ALLOW,J6_afirmacion_sin_respaldo,jev
+B331,test,REVIEW,humano_acuerdo,NO,NO,2,Angie:REVIEW|Helian:REVIEW,ALLOW,J6_afirmacion_sin_respaldo,jev
+B332,test,REVIEW,humano_mayoria,NO,SI,3,Angie:REVIEW|Helian:BLOCK|Juan:REVIEW,ALLOW,J6_afirmacion_sin_respaldo,jev
+B333,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,ALLOW,J7_doble_negacion,jev
+B334,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:BLOCK|Juan:BLOCK,ALLOW,J7_doble_negacion,jev
+B335,test,BLOCK,humano_acuerdo,NO,SI,2,Helian:BLOCK|Juan:BLOCK,REVIEW,C_combo,reglas+jev
+B336,test,REVIEW,humano_acuerdo,NO,NO,2,Angie:ALLOW|Juan:REVIEW,REVIEW,C_combo,reglas+jev
+B337,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,BLOCK,C_combo,reglas+jev
+B338,test,BLOCK,humano_acuerdo,NO,NO,2,Helian:BLOCK|Juan:BLOCK,BLOCK,C_combo,reglas+jev
+B339,test,BLOCK,humano_acuerdo,NO,NO,2,Angie:BLOCK|Helian:BLOCK,REVIEW,C_combo,reglas+jev
+B340,test,REVIEW,humano_mayoria,NO,NO,3,Angie:BLOCK|Helian:REVIEW|Juan:REVIEW,REVIEW,C_combo,reglas+jev

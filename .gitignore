@@ -1,0 +1,15 @@
+# llaves y entorno
+.env*
+!.env.example
+
+# dependencias y build
+node_modules
+.next
+next-env.d.ts
+*.tsbuildinfo
+
+# corridas crudas de JEV
+eval/runs/*.raw.json
+
+# configuración local de Claude Code
+.claude/settings.local.json
