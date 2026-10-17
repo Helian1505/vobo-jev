@@ -1,0 +1,13 @@
+{
+  "version": "inicial-0",
+  "estado": "inicial_sin_ajustar",
+  "nota": "Valores iniciales de CLAUDE.md §6.4. Todavía NO se ajustaron en dev. scripts/tune.ts los reemplaza y pasa estado a ajustado_en_dev. La corrida del test debe negarse a correr mientras el estado sea inicial_sin_ajustar.",
+  "fecha": null,
+  "modelo": null,
+  "metricas_dev": null,
+  "perfiles": {
+    "estricto": { "T_accion": 0.6, "T_revision": 0.25, "T_segmento": 0.6 },
+    "normal": { "T_accion": 0.7, "T_revision": 0.35, "T_segmento": 0.6 },
+    "laxo": { "T_accion": 0.8, "T_revision": 0.5, "T_segmento": 0.6 }
+  }
+}
