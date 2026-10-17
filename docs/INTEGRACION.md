@@ -177,7 +177,7 @@ Sobre las 145 acciones del conjunto principal del test, con JEV real (`jev-1.14.
 | Costo por decisión | USD 0,0000645 |
 | **Costo por 1.000 decisiones** | **≈ USD 0,064** |
 
-Una sola llamada a JEV responde las 7 preguntas. Dos matices honestos:
+Una sola llamada a JEV responde las 7 preguntas. Esas cifras se midieron desde un computador de desarrollo; desde la instancia desplegada en Vercel, una corrida de la simulación (20 acciones, una sola muestra, JEV real) dio una latencia media de JEV de 97 ms. La latencia depende de dónde corra VoBo. Dos matices honestos:
 
 - La **primera** llamada real que hicimos tardó 6,1 s, probablemente un arranque en frío; las siguientes, entre 289 y 655 ms. Cada llamada a JEV tiene un tiempo límite de 3 s y hasta 2 reintentos, así que **en el peor caso el servidor tarda unos 10 s antes de rendirse** y devolver `jev_estado: "fallo"`. Por eso el cliente de ejemplo usa un tiempo límite de 5 s (`VOBO_TIMEOUT_MS`) y, si se agota, falla cerrado.
 - El límite de 20 solicitudes por minuto por IP es de la **demo pública**. Para tráfico real hay que desplegar tu propia instancia y definir tus límites.
