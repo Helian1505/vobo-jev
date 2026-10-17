@@ -1,0 +1,569 @@
+{
+  "name": "VoBo — compuerta de salida (ejemplo)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Compuerta VoBo (ejemplo)\nTodo lo que sale hacia afuera pasa por **Evaluar con VoBo** antes de ejecutarse.\n\n- **PERMITIR** → ejecuta.\n- **PEDIR VOBO** → una persona aprueba en Slack.\n- **BLOQUEAR** → avisa y detiene.\n- **Cualquier falla de VoBo** (red, tiempo agotado, 5xx, respuesta rara) → PEDIR VOBO. Nunca PERMITIR.\n\nEs un ejemplo: reemplaza el webhook por el disparador real y los nodos placeholder por tus acciones.",
+        "height": 300,
+        "width": 460,
+        "color": 7
+      },
+      "id": "b9678938-3665-5091-8099-0312c50db70a",
+      "name": "Nota: cómo funciona",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Antes de usarlo\n1. Cambia la URL del nodo **Evaluar con VoBo** por tu instancia de VoBo.\n2. Configura la credencial de **Slack** y el canal en los dos nodos de Slack.\n3. Reemplaza **Ejecutar la acción** por la acción real.\n4. **Registrar decisión** solo arma el registro; no escribe en ningún sistema.",
+        "height": 240,
+        "width": 380,
+        "color": 3
+      },
+      "id": "cc87ede1-d4f8-5023-ae76-fa7d5c1c1bb7",
+      "name": "Nota: antes de usarlo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vobo-salida-agente",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "ede592bf-e7be-5851-acc6-e2a65d4fbff1",
+      "name": "Salida del agente (webhook)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "a2388a9d-b35d-5a48-b8b8-4e7f3b3094dd"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3f2872d0-a7b9-5d5d-ae30-f61b7918ccb7",
+              "name": "id",
+              "value": "={{ $json.body.id ?? ('n8n-' + $execution.id) }}",
+              "type": "string"
+            },
+            {
+              "id": "7d9587fc-1a87-579e-af26-1b05b7a8a55b",
+              "name": "tipo_accion",
+              "value": "={{ $json.body.tipo_accion ?? 'correo_masivo' }}",
+              "type": "string"
+            },
+            {
+              "id": "67551768-7b2d-56ca-a73c-5b0d419c19d8",
+              "name": "canal",
+              "value": "={{ $json.body.canal ?? 'correo_oficial' }}",
+              "type": "string"
+            },
+            {
+              "id": "0c5cdf0b-73d2-5d10-a996-1663c31ddc27",
+              "name": "destinatarios",
+              "value": "={{ Number($json.body.destinatarios ?? 0) }}",
+              "type": "number"
+            },
+            {
+              "id": "0cdc2912-07e7-5c35-a30a-1396ca2d0a79",
+              "name": "segmento_declarado",
+              "value": "={{ $json.body.segmento_declarado ?? 'comunidad_general' }}",
+              "type": "string"
+            },
+            {
+              "id": "3edee2df-f923-5cca-a986-412731188cc7",
+              "name": "hora_envio",
+              "value": "={{ $json.body.hora_envio ?? $now.setZone('America/Bogota').toFormat('HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "559551c6-1ffe-5e83-b994-d1284c15c0e1",
+              "name": "campo_crm",
+              "value": "={{ $json.body.campo_crm ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "889a836c-1c00-5dec-b8f4-dd831dde83b9",
+              "name": "texto",
+              "value": "={{ $json.body.texto ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      },
+      "id": "2588f857-f48b-52bc-bd68-a775ad5e6d07",
+      "name": "Armar la acción",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://vobo-jev.vercel.app/api/evaluate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 5000
+        }
+      },
+      "id": "6b77bf6c-5980-5244-84eb-646ffa89e5b7",
+      "name": "Evaluar con VoBo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Tiempo límite de 5 s. Si falla (red, tiempo agotado, 5xx, 4xx), la salida de error va a la rama de PEDIR VOBO."
+    },
+    {
+      "parameters": {
+        "jsCode": "// FALLA CERRADA: si VoBo no respondió bien (red caída, tiempo agotado, 5xx, 4xx, JSON raro o una decisión\n// desconocida), la acción pasa a una persona. NUNCA a PERMITIR.\nconst ev = $json;\nconst motivo = ev.error?.message ?? ev.message ?? (ev.decision ? 'decisión desconocida: ' + ev.decision : 'sin respuesta de VoBo');\nconst accion = $('Armar la acción').first().json;\nconst resumen = [\n  '*VoBo no pudo evaluar esta acción*',\n  'Acción: ' + accion.tipo_accion + ' a ' + accion.destinatarios + ' destinatario(s) por «' + accion.canal + '»' + (accion.id ? ' (id ' + accion.id + ')' : ''),\n  'Texto: «' + String(accion.texto ?? '').slice(0, 120) + '»',\n  'Por qué: ' + motivo + '. Por seguridad pasa a una persona.',\n].join('\\n');\nreturn [{ json: {\n  decision: 'REVIEW',\n  resumen_aprobacion: resumen,\n  registro: {\n    request_id: null, timestamp: new Date().toISOString(), decision: 'REVIEW', piso_reglas: null, riesgo_jev: null,\n    reglas: '', modelo: null, jev_estado: 'fallo', tipo_accion: accion.tipo_accion, id_accion: accion.id ?? null,\n  },\n} }];"
+      },
+      "id": "22e083e7-86f9-5047-9464-c25cd1033bcc",
+      "name": "Falla cerrada: armar solicitud",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8fccdd72-8594-580c-a656-893d44aeb36b",
+                    "leftValue": "={{ $json.decision }}",
+                    "rightValue": "ALLOW",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PERMITIR"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0406194e-865a-5845-a41d-3b6a81740ca3",
+                    "leftValue": "={{ $json.decision }}",
+                    "rightValue": "REVIEW",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PEDIR VOBO"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "508b3fb2-0318-5d72-a4ab-cf2fc114bf27",
+                    "leftValue": "={{ $json.decision }}",
+                    "rightValue": "BLOCK",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "BLOQUEAR"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Desconocida (falla cerrada)"
+        }
+      },
+      "id": "1c0d9119-7a4a-52a1-8d4a-9979aca078cf",
+      "name": "Decidir",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        760,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "a1fe75c6-193e-55c1-944e-f580863383e2",
+      "name": "Ejecutar la acción (placeholder)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        80
+      ],
+      "notes": "PLACEHOLDER: aquí va la acción real (API de Google Workspace, Slack, CRM, etc.). No hace nada."
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendAndWait",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_EL_ID_DEL_CANAL_DE_APROBACIONES",
+          "mode": "id"
+        },
+        "message": "={{ $json.resumen_aprobacion }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Aprobar",
+            "disapproveLabel": "Rechazar"
+          }
+        },
+        "options": {}
+      },
+      "id": "e500438f-f78c-5abd-b3ae-d5f33c41a312",
+      "name": "Pedir aprobación en Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1000,
+        400
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURA_TU_CREDENCIAL",
+          "name": "Slack (configura tu credencial)"
+        }
+      },
+      "notes": "Send and Wait for Response: el flujo espera la respuesta de una persona."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c958487-c508-5a36-a655-22a453f26096",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "fe0e2ab6-3830-534e-ae86-602904ddbb5d",
+      "name": "¿Aprobada?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1240,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "6c5d88d4-2925-5e99-be96-d6755d004892",
+      "name": "Detener: rechazada",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "REEMPLAZA_CON_EL_ID_DEL_CANAL_DE_APROBACIONES",
+          "mode": "id"
+        },
+        "text": "={{ $json.resumen_aprobacion }}",
+        "otherOptions": {}
+      },
+      "id": "612bb8bb-d0f1-5c76-b1cd-4feef20ed68e",
+      "name": "Avisar bloqueo en Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1000,
+        640
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURA_TU_CREDENCIAL",
+          "name": "Slack (configura tu credencial)"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "09bd3e8c-48a6-59db-b7d4-c50e0135d5e9",
+      "name": "Detener: bloqueada",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// PLACEHOLDER: aquí iría la escritura del registro (por ejemplo, en un CRM, solo como registro).\n// Hoy solo ARMA el objeto y no escribe en ningún sistema.\nconst intentar = (nombre) => { try { const it = $(nombre).first(); return it ? it.json : null; } catch (e) { return null; } };\nconst evaluacion = intentar('Falla cerrada: armar solicitud') ?? intentar('Evaluar con VoBo') ?? {};\nconst ejecutada = intentar('Ejecutar la acción (placeholder)') !== null;\nconst rechazada = intentar('Detener: rechazada') !== null;\nconst bloqueada = intentar('Detener: bloqueada') !== null;\nconst resultado = ejecutada ? 'ejecutada' : rechazada ? 'rechazada por una persona' : bloqueada ? 'bloqueada' : 'sin ejecutar';\nreturn [{ json: { registro: evaluacion.registro ?? null, resultado, escribe_en: 'nada (placeholder)' } }];"
+      },
+      "id": "21594643-377e-5e44-9a7f-047ba96a87d5",
+      "name": "Registrar decisión (placeholder)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        300
+      ],
+      "notes": "PLACEHOLDER: arma el registro de la decisión. No escribe en ningún sistema."
+    }
+  ],
+  "connections": {
+    "Salida del agente (webhook)": {
+      "main": [
+        [
+          {
+            "node": "Armar la acción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar la acción": {
+      "main": [
+        [
+          {
+            "node": "Evaluar con VoBo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar con VoBo": {
+      "main": [
+        [
+          {
+            "node": "Decidir",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Falla cerrada: armar solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decidir": {
+      "main": [
+        [
+          {
+            "node": "Ejecutar la acción (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pedir aprobación en Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar bloqueo en Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Falla cerrada: armar solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Falla cerrada: armar solicitud": {
+      "main": [
+        [
+          {
+            "node": "Pedir aprobación en Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir aprobación en Slack": {
+      "main": [
+        [
+          {
+            "node": "¿Aprobada?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Aprobada?": {
+      "main": [
+        [
+          {
+            "node": "Ejecutar la acción (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Detener: rechazada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar bloqueo en Slack": {
+      "main": [
+        [
+          {
+            "node": "Detener: bloqueada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ejecutar la acción (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Registrar decisión (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detener: rechazada": {
+      "main": [
+        [
+          {
+            "node": "Registrar decisión (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detener: bloqueada": {
+      "main": [
+        [
+          {
+            "node": "Registrar decisión (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
