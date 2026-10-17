@@ -412,7 +412,7 @@ interface Evaluacion {
   - `capa`: la que debería atrapar el problema (reglas, jev, reglas+jev o ninguna).
 - `eval/FREEZE.md` tiene el SHA-256 y el método. `scripts/verify-freeze.ts` recalcula el hash y **aborta** si no coincide. **No edites este archivo nunca.**
 - Test: 71 PERMITIR / 37 PEDIR VOBO / 42 BLOQUEAR. Hay **5 filas con `ambigua = SI`** (sin mayoría humana; su etiqueta es la mediana, PEDIR VOBO). Si el hash del archivo no coincide con el **vigente** de `FREEZE.md`, detente y avisa.
-- Dev: 76 filas con etiqueta humana (1 corregida por criterio) y 174 con la propuesta de diseño (`propuesta_no_revisada`). Es ruidoso a propósito: sirve para ajustar, no para reportar.
+- Dev: 76 filas sin la propuesta de diseño (74 humanas, 1 de política de Helian y 1 corregida por criterio v1.1) y 174 con la propuesta de diseño (`propuesta_no_revisada`). Es ruidoso a propósito: sirve para ajustar, no para reportar.
 - `docs/REVISION_HUMANA.md` trae el acuerdo entre revisores (κ = 0,51) y los hallazgos. Úsalo en `/resultados` y en el README.
 
 ### 9.3 Métricas (anunciadas de antemano; se reportan para `solo_reglas`, `solo_jev` y `combinado`)

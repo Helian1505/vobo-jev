@@ -145,7 +145,7 @@ function Matriz({ titulo, m }: { titulo: string; m: MetricasModo }) {
       <h3 className="mb-2 text-sm font-semibold text-fg">{titulo}</h3>
       <table className="tabular border-collapse text-center text-sm">
         <caption className="sr-only">
-          Matriz de confusión: filas, etiqueta humana; columnas, decisión de VoBo.
+          Matriz de confusión: filas, etiqueta del banco; columnas, decisión de VoBo.
         </caption>
         <thead>
           <tr>
@@ -279,7 +279,7 @@ export default function Resultados() {
       <header className="max-w-3xl">
         <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">Resultados del banco</h1>
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
-          400 acciones sintéticas, etiquetadas por personas, partidas en 250 para ajustar (dev) y 150 para medir (test). El test se corrió{" "}
+          400 acciones sintéticas, con etiquetas de revisión humana y de decisiones de política (el detalle está en «Cómo sabemos que el resultado es creíble», abajo), partidas en 250 para ajustar (dev) y 150 para medir (test). El test se corrió{" "}
           <strong className="font-semibold text-fg">una sola vez</strong>, con JEV real, y se reporta tal cual, fallos incluidos.
         </p>
       </header>
@@ -374,7 +374,7 @@ export default function Resultados() {
         <div className="grid gap-6 lg:grid-cols-2">
           {[
             { titulo: `Todo dev (${devTodo.n})`, c: devTodo },
-            { titulo: `Solo con etiqueta humana (${devHum.n})`, c: devHum },
+            { titulo: `Solo sin la propuesta de diseño (${devHum.n})`, c: devHum },
           ].map(({ titulo, c }) => (
             <div key={titulo} className="rounded-card border border-line bg-surface p-5">
               <h3 className="text-sm font-semibold text-fg">{titulo}</h3>
@@ -419,10 +419,13 @@ export default function Resultados() {
       >
         <ul className="max-w-3xl list-disc space-y-2 pl-5 text-sm leading-relaxed text-fg-soft marker:text-fg-muted">
           <li>
-            <strong className="font-semibold text-fg">Banco ciego.</strong> Las 400 acciones se publicaron sin la decisión correcta. Las 150 del test y 76 del dev las
-            etiquetaron personas del equipo sin ver la propuesta de diseño (acuerdo entre revisores: κ = 0,51, moderado; ver{" "}
-            <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/docs/REVISION_HUMANA.md`}>REVISION_HUMANA.md</a>); las otras 174 del dev
-            usan esa propuesta, por eso el dev no se usa para reportar.
+            <strong className="font-semibold text-fg">Banco ciego.</strong> Las 400 acciones se publicaron sin la decisión correcta. De las 150 del test, 129 las
+            etiquetaron personas del equipo sin ver la propuesta de diseño; 15 siguen una decisión de política de Helian (17 oct) y 6 una corrección por criterio explícito
+            (v1.1, declarada en{" "}
+            <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/eval/FREEZE.md`}>FREEZE.md</a>). Del dev, 74 son etiquetas humanas, 1 sigue una
+            decisión de política y 1 una corrección v1.1; las otras 174 usan la propuesta de diseño, por eso el dev no se usa para reportar. El acuerdo entre revisores
+            (κ = 0,51, moderado) se calculó solo sobre las 133 filas obligatorias con dos votos (oro y test), con el piso de reglas aplicado; ver{" "}
+            <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/docs/REVISION_HUMANA.md`}>REVISION_HUMANA.md</a>.
           </li>
           <li>
             <strong className="font-semibold text-fg">Etiquetas congeladas con hash.</strong> SHA-256{" "}

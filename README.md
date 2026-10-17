@@ -78,7 +78,7 @@ Con 150 casos, cada error mueve las métricas cerca de 0,7 puntos: es una demost
 
 ## 5. Integridad del resultado
 
-- **Banco ciego:** las 400 acciones se publicaron sin la decisión correcta. Las 150 del test y 76 del dev las etiquetaron personas del equipo sin ver la propuesta de diseño (acuerdo entre revisores: κ = 0,51, moderado; [`docs/REVISION_HUMANA.md`](docs/REVISION_HUMANA.md)); las otras 174 del dev usan la propuesta de diseño tal cual, por eso el dev no se usa para reportar.
+- **Banco ciego:** las 400 acciones se publicaron sin la decisión correcta. De las 150 del test, 129 las etiquetaron personas del equipo sin ver la propuesta de diseño; 15 siguen una decisión de política de Helian (17 oct) y 6 una corrección por criterio explícito (v1.1, declarada en [`eval/FREEZE.md`](eval/FREEZE.md)). Del dev, 74 son etiquetas humanas, 1 sigue una decisión de política y 1 una corrección v1.1; las otras 174 usan la propuesta de diseño tal cual, por eso el dev no se usa para reportar. El acuerdo entre revisores (κ = 0,51, moderado) se calculó solo sobre las 133 filas obligatorias que tuvieron dos votos (oro y test), con el piso de reglas aplicado; no cubre las demás ([`docs/REVISION_HUMANA.md`](docs/REVISION_HUMANA.md)).
 - **División dev/test por plantillas:** los textos del test usan plantillas distintas a las del dev, así que se mide generalización y no memoria.
 - **Etiquetas congeladas con hash** (SHA-256 en [`eval/FREEZE.md`](eval/FREEZE.md)). Hubo una corrección (v1.1) de 7 filas antes de correr JEV sobre el banco; está declarada allí, con su sesgo.
 - **Umbrales ajustados solo con dev** (`data/thresholds.json`). Después de ver el test no se reajustó nada.
