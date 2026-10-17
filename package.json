@@ -16,7 +16,8 @@
     "bench": "node --env-file-if-exists=.env.local --import tsx scripts/bench.ts",
     "tune": "node --env-file-if-exists=.env.local --import tsx scripts/tune.ts",
     "verify-freeze": "tsx scripts/verify-freeze.ts",
-    "build-data": "tsx scripts/build-data.ts"
+    "build-data": "tsx scripts/build-data.ts",
+    "agente-demo": "tsx examples/agente-demo.ts"
   },
   "dependencies": {
     "next": "^16.4.2",
