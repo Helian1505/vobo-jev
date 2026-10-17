@@ -3,6 +3,14 @@ import { JevMock } from "./jev/mock";
 import { JevError, type JevClient } from "./jev/types";
 
 export const MODELO_POR_DEFECTO = "jev-1.14.0";
+/** Tiempo límite por llamada a JEV (CLAUDE.md §6.6). Se puede cambiar con JEV_TIMEOUT_MS. */
+export const TIEMPO_LIMITE_POR_DEFECTO_MS = 3000;
+
+/** JEV_TIMEOUT_MS válido: entero entre 500 y 30000; cualquier otra cosa vuelve a los 3 s por defecto. */
+export function tiempoLimiteMs(env: Record<string, string | undefined> = process.env): number {
+  const n = Number(env.JEV_TIMEOUT_MS);
+  return Number.isInteger(n) && n >= 500 && n <= 30_000 ? n : TIEMPO_LIMITE_POR_DEFECTO_MS;
+}
 
 export interface EstadoJev {
   /** mock o live, según VOBO_JEV_MODE (sin definir = mock). */
@@ -28,5 +36,9 @@ export function crearCliente(env: Record<string, string | undefined> = process.e
   if (!estado.configurado) {
     throw new JevError("no_configurado", "JEV real no configurado: falta TYPESAFE_API_KEY.");
   }
-  return new JevReal({ apiKey: env.TYPESAFE_API_KEY as string, modelo: estado.modelo });
+  return new JevReal({
+    apiKey: env.TYPESAFE_API_KEY as string,
+    modelo: estado.modelo,
+    tiempoLimiteMs: tiempoLimiteMs(env),
+  });
 }

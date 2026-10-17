@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { GET, POST } from "@/app/api/evaluate/route";
-import { estadoJev, crearCliente } from "@/lib/vobo/config";
+import { estadoJev, crearCliente, tiempoLimiteMs } from "@/lib/vobo/config";
 import { LimitadorVentana } from "@/lib/vobo/rate-limit";
 
 const valida = {
@@ -87,6 +87,22 @@ describe("estado de JEV", () => {
 
   it("JEV_MODEL cambia el modelo", () => {
     expect(estadoJev({ JEV_MODEL: "jev-1.15.0" }).modelo).toBe("jev-1.15.0");
+  });
+});
+
+describe("tiempo límite (JEV_TIMEOUT_MS)", () => {
+  it("por defecto son 3 s", () => {
+    expect(tiempoLimiteMs({})).toBe(3000);
+  });
+  it("acepta un entero entre 500 y 30000", () => {
+    expect(tiempoLimiteMs({ JEV_TIMEOUT_MS: "8000" })).toBe(8000);
+    expect(tiempoLimiteMs({ JEV_TIMEOUT_MS: "500" })).toBe(500);
+    expect(tiempoLimiteMs({ JEV_TIMEOUT_MS: "30000" })).toBe(30000);
+  });
+  it("un valor inválido vuelve al valor por defecto", () => {
+    for (const malo of ["", "abc", "0", "499", "30001", "-5", "2.5"]) {
+      expect(tiempoLimiteMs({ JEV_TIMEOUT_MS: malo })).toBe(3000);
+    }
   });
 });
 
