@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { accionSchema } from "@/lib/vobo/accion-schema";
+import { resolverAudiencia } from "@/lib/vobo/audiencias";
 import { estadoJev } from "@/lib/vobo/config";
 import { evaluateAction } from "@/lib/vobo/evaluate";
 import { LimitadorVentana } from "@/lib/vobo/rate-limit";
@@ -45,6 +46,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "JEV real no configurado: falta TYPESAFE_API_KEY." }, { status: 503 });
   }
 
-  const evaluacion = await evaluateAction(entrada.data as AccionAgente);
+  // La afinidad de la audiencia la calcula el servidor desde audiencia_id; lo que mande el cliente se ignora.
+  const accion = entrada.data as AccionAgente;
+  const audiencia = accion.audiencia_id ? resolverAudiencia(accion.audiencia_id) : undefined;
+  accion.audiencia_pct_afinidad_baja = audiencia?.pct_afinidad_baja;
+
+  const evaluacion = await evaluateAction(accion);
   return NextResponse.json(evaluacion);
 }

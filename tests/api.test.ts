@@ -50,6 +50,18 @@ describe("POST /api/evaluate", () => {
     expect((await pedir({ ...valida, texto: "a".repeat(2000) })).status).toBe(200);
   });
 
+  it("ignora la afinidad del cliente y la calcula desde la audiencia", async () => {
+    vi.stubEnv("VOBO_JEV_MODE", "mock");
+    const oferta = { ...valida, programa_ofrecido: "AI Sales", destinatarios: 1711, audiencia_id: "A3", segmento_declarado: "comunidad_general" };
+    // A3 (leads sin programa sugerido) tiene 100% de afinidad baja: aunque el cliente diga 0, se activa la regla.
+    const mentira = await (await pedir({ ...oferta, audiencia_pct_afinidad_baja: 0 })).json();
+    expect(mentira.reglas.map((r: { regla: string }) => r.regla)).toContain("oferta_sin_afinidad");
+    // Sin audiencia_id no hay afinidad que calcular, aunque el cliente la mande.
+    const sin = { ...oferta, audiencia_id: undefined, audiencia_pct_afinidad_baja: 1 };
+    const r = await (await pedir(sin)).json();
+    expect(r.reglas.map((x: { regla: string }) => x.regla)).not.toContain("oferta_sin_afinidad");
+  });
+
   it("limita a 20 solicitudes por minuto por IP", async () => {
     const ip = "192.168.9.9";
     for (let i = 0; i < 20; i++) expect((await pedir(valida, ip)).status).toBe(200);

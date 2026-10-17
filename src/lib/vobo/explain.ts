@@ -20,7 +20,7 @@ function menosUnMinuto(hhmm: string): string {
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
-function textoRegla(r: ReglaActivada): string {
+export function textoRegla(r: ReglaActivada): string {
   const d = r.detalle as Record<string, string | number | boolean | undefined>;
   switch (r.regla) {
     case "canal_no_oficial":

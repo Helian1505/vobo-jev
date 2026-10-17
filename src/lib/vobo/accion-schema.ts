@@ -21,7 +21,7 @@ export const accionSchema = z.object({
   texto: z.string().max(MAX_TEXTO, `El texto admite como máximo ${MAX_TEXTO} caracteres.`),
   programa_ofrecido: opcional(z.string().max(100)),
   audiencia_id: opcional(z.string().max(20)),
-  // Lo calcula perfiles.ts a partir de audiencia_id; el servidor lo recalculará cuando exista (F3).
+  // Se acepta por compatibilidad, pero la ruta lo recalcula desde audiencia_id y descarta el del cliente.
   audiencia_pct_afinidad_baja: opcional(z.number().min(0).max(1)),
   perfil_id: opcional(z.string().max(20)),
 });

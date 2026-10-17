@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "bench": "tsx scripts/bench.ts",
     "tune": "tsx scripts/tune.ts",
-    "verify-freeze": "tsx scripts/verify-freeze.ts"
+    "verify-freeze": "tsx scripts/verify-freeze.ts",
+    "build-data": "tsx scripts/build-data.ts"
   },
   "dependencies": {
     "next": "^16.4.2",

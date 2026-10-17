@@ -11,5 +11,5 @@ next-env.d.ts
 # corridas crudas de JEV
 eval/runs/*.raw.json
 
-# configuración local de Claude Code
-.claude/settings.local.json
+# configuración local de Claude Code (no se versiona)
+.claude/
