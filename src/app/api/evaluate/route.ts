@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { accionSchema } from "@/lib/vobo/accion-schema";
+import { SCHEMA_VERSION, type RespuestaEvaluate } from "@/lib/vobo/api-contrato";
 import { resolverAudiencia } from "@/lib/vobo/audiencias";
 import { estadoJev } from "@/lib/vobo/config";
 import { evaluateAction } from "@/lib/vobo/evaluate";
@@ -51,6 +52,8 @@ export async function POST(req: Request) {
   const audiencia = accion.audiencia_id ? resolverAudiencia(accion.audiencia_id) : undefined;
   accion.audiencia_pct_afinidad_baja = audiencia?.pct_afinidad_baja;
 
+  const request_id = crypto.randomUUID();
   const evaluacion = await evaluateAction(accion);
-  return NextResponse.json(evaluacion);
+  const respuesta: RespuestaEvaluate = { schema_version: SCHEMA_VERSION, request_id, ...evaluacion };
+  return NextResponse.json(respuesta, { headers: { "x-request-id": request_id } });
 }

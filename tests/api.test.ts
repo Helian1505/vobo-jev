@@ -35,6 +35,33 @@ describe("POST /api/evaluate", () => {
     expect(e.explicacion.titular).toContain("PERMITIR");
   });
 
+  it("incluye schema_version y request_id (uuid) sin quitar ningún campo existente", async () => {
+    vi.stubEnv("VOBO_JEV_MODE", "mock");
+    const res = await pedir(valida);
+    const e = await res.json();
+    expect(e.schema_version).toBe("1");
+    expect(e.request_id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    expect(res.headers.get("x-request-id")).toBe(e.request_id);
+    // los campos de siempre siguen ahí
+    for (const campo of ["decision", "modo", "piso_reglas", "reglas", "riesgo_jev", "senales_jev", "jev_estado", "jev_simulado", "perfil", "reversibilidad", "explicacion", "traza"]) {
+      expect(e, campo).toHaveProperty(campo);
+    }
+    expect(e.explicacion).toHaveProperty("titular");
+    expect(e.traza).toHaveProperty("costo_usd");
+  });
+
+  it("cada solicitud tiene un request_id distinto", async () => {
+    vi.stubEnv("VOBO_JEV_MODE", "mock");
+    const a = await (await pedir(valida)).json();
+    const b = await (await pedir(valida)).json();
+    expect(a.request_id).not.toBe(b.request_id);
+  });
+
+  it("los errores no llevan schema_version (solo las respuestas 200)", async () => {
+    const e = await (await pedir({ ...valida, tipo_accion: "otra" })).json();
+    expect(e).not.toHaveProperty("schema_version");
+  });
+
   it("acepta celdas vacías como ausentes", async () => {
     const res = await pedir({ ...valida, campo_crm: "", fecha_en_texto: "", precio_en_texto_usd: null });
     expect(res.status).toBe(200);
