@@ -17,8 +17,8 @@ const { ejemplos } = JSON.parse(
 ) as { ejemplos: Ejemplo[] };
 
 describe("ejemplos de la demo (data/ejemplos_demo.json)", () => {
-  it("hay 15 ejemplos", () => {
-    expect(ejemplos).toHaveLength(15);
+  it("hay 16 ejemplos", () => {
+    expect(ejemplos).toHaveLength(16);
   });
 
   it.each(ejemplos.map((e) => [e.id, e.titulo, e] as const))("%s · %s", (_id, _titulo, e) => {

@@ -86,7 +86,7 @@ Lema: *"El visto bueno antes de que un agente actúe."*
 5. Página de demo: elegir un ejemplo o escribir una acción, ver la decisión, el porqué y las respuestas de JEV con sus probabilidades, la latencia y el costo.
 6. Script de evaluación del banco (`dev` y `test`) con las métricas de la sección 9 y el candado de corrida única del `test`.
 7. Despliegue en Vercel y README técnico.
-8. Los ejemplos de la demo salen de `data/ejemplos_demo.json` (15 casos con programas, etapas y audiencias reales de 30X). También hay un selector de audiencia desde los perfiles y un selector de perfil para las acciones de CRM (sección 15).
+8. Los ejemplos de la demo salen de `data/ejemplos_demo.json` (16 casos con programas, etapas y audiencias reales de 30X). También hay un selector de audiencia desde los perfiles y un selector de perfil para las acciones de CRM (sección 15).
 
 ### DEBERÍA (si hay tiempo, en este orden)
 1. Página de resultados del banco (matriz de confusión, métricas, lista de fallos), pensada para capturas de pantalla del video.
@@ -128,7 +128,7 @@ Lema: *"El visto bueno antes de que un agente actúe."*
 │  ├─ piso_reglas_referencia.csv ← salida de la referencia en Python (para la prueba de paridad)
 │  ├─ perfiles_30x.csv           ← 697 perfiles reales y anónimos de 30X (solo categorías)
 │  ├─ audiencias_demo.json       ← 6 audiencias armadas desde los perfiles + factores de escala
-│  ├─ ejemplos_demo.json         ← 15 ejemplos de la demo con su piso de reglas esperado
+│  ├─ ejemplos_demo.json         ← 16 ejemplos de la demo con su piso de reglas esperado
 │  └─ etiquetas_v1.csv           ← LLEGA DESPUÉS (no existe todavía)
 ├─ docs/BASE_CONOCIMIENTO_30X.md ← todo lo que sabemos de 30X y su fuente
 ├─ referencia/rules_ref.py       ← motor de reglas de referencia (Python, no se despliega)
@@ -230,7 +230,7 @@ Las tres reglas v2 salen de los datos de 30X; la justificación está en `docs/B
 **Prueba de paridad (obligatoria):**
 - `tests/rules.parity.test.ts` lee `data/banco_acciones_v1_ciego.csv` y `data/piso_reglas_referencia.csv`, y exige igualdad exacta de `piso_reglas` y del conjunto de `reglas_activadas` en las **400** filas (293 ALLOW / 70 REVIEW / 37 BLOCK).
 - Las reglas v2 no se activan en el banco; eso está verificado con la referencia en Python.
-- Además, `tests/ejemplos.test.ts` exige que los 15 ejemplos de `data/ejemplos_demo.json` den su `piso_reglas_esperado` y sus `reglas_esperadas`. Agrega pruebas unitarias de los bordes: 07:00, 19:59, 20:00, 5.000 frente a 5.001, `destinatarios` = 1 frente a 2 en un campo protegido, una fecha que no se puede leer.
+- Además, `tests/ejemplos.test.ts` exige que los 16 ejemplos de `data/ejemplos_demo.json` den su `piso_reglas_esperado` y sus `reglas_esperadas`. Agrega pruebas unitarias de los bordes: 07:00, 19:59, 20:00, 5.000 frente a 5.001, `destinatarios` = 1 frente a 2 en un campo protegido, una fecha que no se puede leer.
 
 ### 5.3 (DEBERÍA) Detector determinista de inyección
 Es una señal adicional de la capa 1, apagada por defecto en el piso (`flags.inyeccion_regex`). Se evalúa en `dev` con y sin ella.
@@ -377,7 +377,7 @@ interface Evaluacion {
 
 ### 8.2 Páginas (UI en español; sobria, accesible, lista para capturas)
 - **`/` Demo.** A la izquierda va el formulario de la acción: tipo, canal, programa ofrecido, audiencia o perfil, destinatarios, segmento, hora, campo del CRM, fechas, precio, número en la lista de bajas y texto.
-  - Arriba hay un selector de **ejemplos**: los 15 de `data/ejemplos_demo.json`, con su título y una línea de "por qué". Muestra la "intención" del ejemplo solo después de evaluarlo, para comparar.
+  - Arriba hay un selector de **ejemplos**: los 16 de `data/ejemplos_demo.json`, con su título y una línea de "por qué". Muestra la "intención" del ejemplo solo después de evaluarlo, para comparar.
   - En las acciones masivas, un **selector de audiencia** (`data/audiencias_demo.json`) llena los destinatarios estimados y muestra "N perfiles en la muestra · ≈ M personas en la base · X% con afinidad baja".
   - En `crm_update`, un **selector de perfil** muestra la tarjeta del perfil: estado, etapa, programa, programa sugerido, afinidad y temas, sin inventar campos.
 
@@ -527,7 +527,7 @@ Todo vive en `data/policy_demo.json` y en el `contexto_30x` del state. Debe pode
 - `docs/BASE_CONOCIMIENTO_30X.md`: la referencia de todo dato sobre 30X (programas, embudo, roles, calidad de datos, decisiones derivadas y supuestos abiertos). Cada dato trae su fuente: [30X], [Público], [Inferencia] o [Supuesto].
 - `data/perfiles_30x.csv`: 697 perfiles. Columnas: `id, relacion, estado, etapa_crm, programa, rol, pais, dolor_principal, objetivo_principal, programa_sugerido, afinidad, banda_afinidad, temas_interes, nivel_info, info_disponible`. "—" significa que no hay dato.
 - `data/audiencias_demo.json`: 6 audiencias (A1–A6) con `perfiles_en_muestra`, `destinatarios_estimados_base_real` y `pct_afinidad_baja`, más los factores de escala (deal = 83,22 personas; lead = 18,80).
-- `data/ejemplos_demo.json`: 15 ejemplos (E01–E15). Cada uno trae `accion`, `intencion` (el resultado buscado por diseño; **no es una etiqueta**), `por_que`, `piso_reglas_esperado` y `reglas_esperadas`.
+- `data/ejemplos_demo.json`: 16 ejemplos (E01–E16; E16 es el precio correcto del catálogo, el par limpio de E05). Cada uno trae `accion`, `intencion` (el resultado buscado por diseño; **no es una etiqueta**), `por_que`, `piso_reglas_esperado` y `reglas_esperadas`.
 
 **`src/lib/vobo/perfiles.ts`:**
 - Carga los perfiles. En Next.js, conviértelos a un módulo JSON en el build (`scripts/build-data.ts` → `src/generated/perfiles.json`) para no depender de `fs` en Vercel.

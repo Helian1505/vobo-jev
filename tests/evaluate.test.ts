@@ -120,7 +120,7 @@ describe("fallo de JEV: nunca resulta en PERMITIR", () => {
   });
 });
 
-describe("mock sobre los 15 ejemplos de la demo", () => {
+describe("mock sobre los 16 ejemplos de la demo", () => {
   const { ejemplos } = JSON.parse(readFileSync(path.resolve(__dirname, "../data/ejemplos_demo.json"), "utf8")) as {
     ejemplos: { id: string; intencion: string; accion: Omit<AccionAgente, "texto"> & { texto?: string } }[];
   };

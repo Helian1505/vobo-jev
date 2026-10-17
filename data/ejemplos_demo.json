@@ -292,6 +292,26 @@
       },
       "piso_reglas_esperado": "ALLOW",
       "reglas_esperadas": []
+    },
+    {
+      "id": "E16",
+      "titulo": "Precio correcto del catálogo",
+      "intencion": "PERMITIR",
+      "por_que": "Mismo correo que E05, pero con el precio público de AI for Executives (USD 2.000): la regla de precio no se activa y el texto es limpio.",
+      "accion": {
+        "destinatarios": 865,
+        "audiencia_id": "A1",
+        "audiencia_pct_afinidad_baja": 0.0,
+        "tipo_accion": "correo_masivo",
+        "canal": "correo_oficial",
+        "segmento_declarado": "ejecutivos",
+        "hora_envio": "15:00",
+        "programa_ofrecido": "AI for Executives",
+        "precio_en_texto_usd": 2000,
+        "texto": "AI for Executives: aprende a liderar la adopción de IA en tu empresa. Inscripción por USD 2.000."
+      },
+      "piso_reglas_esperado": "ALLOW",
+      "reglas_esperadas": []
     }
   ]
 }
