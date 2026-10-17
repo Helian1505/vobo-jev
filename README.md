@@ -6,6 +6,7 @@ Proyecto del equipo VoBo para el Hackathon 30X (reto JEV), 16–18 oct 2026.
 
 - **Demo:** https://vobo-jev.vercel.app/ (usa JEV real, `jev-1.14.0`)
 - **Resultados del banco:** https://vobo-jev.vercel.app/resultados
+- **Cómo integrarlo con un agente:** [`docs/INTEGRACION.md`](docs/INTEGRACION.md) (contrato, tres patrones, falla cerrada, modo sombra y lo que no hicimos)
 
 ![VoBo bloquea una acción con promesa de resultados: la decisión, las razones y las respuestas de JEV con su probabilidad](docs/assets/demo-bloquear.jpg)
 
@@ -118,6 +119,7 @@ npm test                        # 140+ pruebas, incluida la paridad con la refer
 npm run verify-freeze           # comprueba que las etiquetas congeladas no cambiaron
 npm run bench -- --split dev --mode live    # corre el banco dev con JEV real
 npm run tune                    # propone umbrales usando solo dev (no hace llamadas nuevas)
+npm run agente-demo             # agente simulado con VoBo delante de sus herramientas (ver docs/INTEGRACION.md)
 ```
 
 Variables de entorno (`.env.example`):
@@ -128,6 +130,7 @@ Variables de entorno (`.env.example`):
 | `JEV_MODEL` | Modelo fijo, `jev-1.14.0` (no se usa `jev-latest`: los alias se mueven). |
 | `VOBO_JEV_MODE` | `live` (JEV real) o `mock` (simulado, sin red). Sin definir, es `mock`. |
 | `JEV_TIMEOUT_MS` | Opcional: tiempo límite por llamada (500–30000). Por defecto 3000. |
+| `VOBO_REVIEW_WEBHOOK_URL` | Opcional: si existe, avisa por POST JSON cuando una acción queda en PEDIR VOBO o BLOQUEAR (ver `docs/INTEGRACION.md`). |
 
 El banco de test no se puede volver a correr: `npm run bench -- --split test --corrida-unica` se niega si existe el candado.
 
