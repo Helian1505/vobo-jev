@@ -17,7 +17,8 @@
     "tune": "node --env-file-if-exists=.env.local --import tsx scripts/tune.ts",
     "verify-freeze": "tsx scripts/verify-freeze.ts",
     "build-data": "tsx scripts/build-data.ts",
-    "agente-demo": "tsx examples/agente-demo.ts"
+    "agente-demo": "tsx examples/agente-demo.ts",
+    "test:python": "python -I -m unittest discover -s integraciones/python -p \"test_*.py\" -v"
   },
   "dependencies": {
     "next": "^16.4.2",
