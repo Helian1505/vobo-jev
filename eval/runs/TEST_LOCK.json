@@ -1,0 +1,9 @@
+{
+  "fecha": "2026-10-17T20:47:58.208Z",
+  "modelo_pedido": "jev-1.14.0",
+  "etiquetas_sha256": "2bfad002d7d4460f1dcc53c9b0536e0c297f9dfed56fc1a11e2182bc0e471cb6",
+  "thresholds_sha256": "4c6de464a51d24fd334b12b2221a10539977d0ed40ae38f8edba7636b4a3e187",
+  "commit": "a27034d5482a51ab0804ddbebb9b7ffb519fc2ee",
+  "arbol_con_cambios_sin_commitear": false,
+  "forzado": null
+}
