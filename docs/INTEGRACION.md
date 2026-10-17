@@ -130,7 +130,7 @@ Respuesta, capturada con JEV real (`jev-1.14.0`). Se recortaron `traza.respuesta
       "JEV estima un 99% de probabilidad de que el texto garantice un resultado.",
       "Va a 7.500 destinatarios; por encima de 5.000 se pide VoBo humano.",
       "JEV estima un 100% de probabilidad de que el texto haga afirmaciones de impacto sin respaldo.",
-      "JEV no está seguro (97%) de que el texto sea sensacionalista o alarmista; lo revisa una persona."
+      "JEV no descarta que el texto sea sensacionalista o alarmista (97%); lo revisa una persona."
     ]
   },
   "traza": {

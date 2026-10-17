@@ -74,7 +74,7 @@ describe("señales de JEV", () => {
       senales: [senal({ decision: "REVIEW", estado: "duda", prob: 0.35 })],
       jevFallo: false,
     });
-    expect(d.razones).toEqual(["JEV no está seguro (35%) de que el texto garantice un resultado; lo revisa una persona."]);
+    expect(d.razones).toEqual(["JEV no descarta que el texto garantice un resultado (35%); lo revisa una persona."]);
     expect(d.titular.startsWith("PEDIR VOBO: ")).toBe(true);
   });
 

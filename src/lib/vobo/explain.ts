@@ -75,7 +75,7 @@ function textoSenal(s: Senal): string | null {
   const desc = DESCRIPCION[s.id]?.[s.opcion ?? "_"] ?? DESCRIPCION[s.id]?._ ?? "tenga un problema";
   return s.estado === "alerta"
     ? `JEV estima un ${pct(s.prob)}% de probabilidad de que el texto ${desc}.`
-    : `JEV no está seguro (${pct(s.prob)}%) de que el texto ${desc}; lo revisa una persona.`;
+    : `JEV no descarta que el texto ${desc} (${pct(s.prob)}%); lo revisa una persona.`;
 }
 
 export interface EntradaExplicacion {

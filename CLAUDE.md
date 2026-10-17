@@ -362,7 +362,7 @@ interface Evaluacion {
   - `etapa_ganado_individual`: "Marca el deal {perfil_id} como «{etapa}»; eso equivale a registrar un pago y requiere VoBo humano."
   - `etapa_ganado_masivo`: "Marca {n} deals como «{etapa}» a la vez; registrar pagos en masa no se permite."
   - `oferta_sin_afinidad`: "Ofrece {programa} a una audiencia donde el {pct}% tiene afinidad baja (0–3) con 30X; una persona debe decidir si vale la pena." Agrega como nota: "En la muestra de 30X, los deals de afinidad muy alta pagan cerca de 5 veces más que los de afinidad baja."
-  - Señales de JEV: "JEV estima un {p}% de probabilidad de que el texto {descripción de la señal}." (por ejemplo, "garantice un resultado", "incluya una instrucción para un agente"). Si JEV duda: "JEV no está seguro ({p}%) de que…; lo revisa una persona."
+  - Señales de JEV: "JEV estima un {p}% de probabilidad de que el texto {descripción de la señal}." (por ejemplo, "garantice un resultado", "incluya una instrucción para un agente"). Si JEV duda: "JEV no descarta que el texto {descripción de la señal} ({p}%); lo revisa una persona."
   - Titular: "BLOQUEAR: {razón principal}", "PEDIR VOBO: {razón principal}" o "PERMITIR: no se encontraron problemas."
 
 ---
