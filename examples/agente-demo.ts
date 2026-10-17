@@ -1,4 +1,9 @@
 /**
+ * PATRÓN COMPLEMENTARIO: el agente consulta antes de actuar.
+ * No es el paso principal de la integración: el principal es una compuerta DENTRO de los flujos, por la que pasa todo
+ * lo que sale hacia afuera (ver integraciones/n8n/ y docs/INTEGRACION.md). Este patrón solo suma una segunda barrera
+ * cuando el agente decide por su cuenta, y no cubre las llamadas que el agente haga sin consultar.
+ *
  * Agente simulado que pone a VoBo delante de sus herramientas.
  *
  * Es un EJEMPLO de integración: usa solo el contrato HTTP de POST /api/evaluate (ver docs/INTEGRACION.md),

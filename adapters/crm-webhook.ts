@@ -2,6 +2,9 @@
  * ───────────────────────────────────────────────────────────────────────────────────────────────
  *  EJEMPLO: el mapeo real depende del stack de 30X.
  * ───────────────────────────────────────────────────────────────────────────────────────────────
+ * PATRÓN COMPLEMENTARIO: el agente (o un middleware) consulta antes de actuar. No es el paso principal de la
+ * integración: el principal es una compuerta dentro de los flujos (integraciones/n8n/ y docs/INTEGRACION.md).
+ *
  * Este adaptador NO describe ningún CRM real ni afirma nada sobre los sistemas de 30X. Muestra el
  * patrón: tomar el evento que emite un CRM cualquiera cuando cambia un deal («deal.updated», con la
  * etapa o el campo que cambió y su nuevo valor) y traducirlo a una AccionAgente que VoBo entiende.
