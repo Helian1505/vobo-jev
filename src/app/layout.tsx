@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
             <p className="flex items-baseline gap-2">
               <span className="font-display text-xl font-bold tracking-tight text-fg">VoBo</span>
-              <span className="text-sm text-fg-muted">para 30X</span>
+              <span className="hidden whitespace-nowrap text-sm text-fg-muted sm:inline">para 30X</span>
             </p>
             <div className="flex items-center gap-3">
               <Nav />

@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { ResultadoPanel } from "@/components/ResultadoPanel";
-import type { Evaluacion } from "@/lib/vobo/evaluate";
+import type { RespuestaEvaluate } from "@/lib/vobo/api-contrato";
+import { encolar } from "@/lib/vobo/cola-local";
 import type { Perfil } from "@/lib/vobo/perfiles-datos";
 import {
   CAMPOS_CRM_SUGERIDOS,
@@ -92,7 +94,7 @@ function TarjetaPerfil({ p }: { p: Perfil }) {
 export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
   const [form, setForm] = useState<FormEstado>(FORM_VACIO);
   const [ejemploId, setEjemploId] = useState("");
-  const [resultado, setResultado] = useState<Evaluacion | null>(null);
+  const [resultado, setResultado] = useState<RespuestaEvaluate | null>(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
   const [jev, setJev] = useState<EstadoJevUi | null>(null);
@@ -142,7 +144,21 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
         setResultado(null);
         setError([cuerpo.error ?? "No se pudo evaluar la acción.", ...detalles].join(" "));
       } else {
-        setResultado(cuerpo as Evaluacion);
+        const r = cuerpo as RespuestaEvaluate;
+        setResultado(r);
+        // Lo que queda en PEDIR VOBO espera en la cola de la demo (estado solo en este navegador).
+        if (r.decision === "REVIEW") {
+          encolar({
+            id: r.request_id,
+            origen: "demo",
+            tipo_accion: estado.tipo_accion,
+            id_accion: null,
+            texto: estado.texto,
+            titular: r.explicacion.titular,
+            razones: r.explicacion.razones,
+            reglas: r.reglas.map((x) => x.regla),
+          });
+        }
       }
     } catch {
       setResultado(null);
@@ -444,6 +460,12 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
           {resultado && !error && (
             <div className={cargando ? "opacity-50" : undefined}>
               <ResultadoPanel evaluacion={resultado} intencion={ejemplo?.intencion} />
+              {resultado.decision === "REVIEW" && (
+                <p className="mt-5 rounded-field border border-review/40 bg-review/10 px-4 py-3 text-sm text-fg-soft">
+                  Esta acción quedó en la cola de VoBo humano, esperando a una persona.{" "}
+                  <Link className="font-medium text-fg underline underline-offset-4 hover:text-accent" href="/cola">Ver la cola</Link>
+                </p>
+              )}
             </div>
           )}
         </div>

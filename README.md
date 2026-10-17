@@ -6,6 +6,7 @@ Proyecto del equipo VoBo para el Hackathon 30X (reto JEV), 16–18 oct 2026.
 
 - **Demo:** https://vobo-jev.vercel.app/ (usa JEV real, `jev-1.14.0`)
 - **Resultados del banco:** https://vobo-jev.vercel.app/resultados
+- **Simulación en vivo:** https://vobo-jev.vercel.app/simulacion (un agente propone acciones una tras otra y VoBo decide cada una, con contadores y costo acumulado) y **cola de VoBo humano:** https://vobo-jev.vercel.app/cola (demostración: el estado vive solo en el navegador)
 - **Cómo integrarlo con un agente:** [`docs/INTEGRACION.md`](docs/INTEGRACION.md) (contrato, tres patrones, falla cerrada, modo sombra y lo que no hicimos)
 
 ![VoBo bloquea una acción con promesa de resultados: la decisión, las razones y las respuestas de JEV con su probabilidad](docs/assets/demo-bloquear.jpg)
