@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { SCHEMA_VERSION, type RespuestaEvaluate } from "@/lib/vobo/api-contrato";
+import type { RespuestaEvaluate } from "@/lib/vobo/api-contrato";
 import { estadoJev } from "@/lib/vobo/config";
 import { evaluateAction } from "@/lib/vobo/evaluate";
 import { LimitadorVentana } from "@/lib/vobo/rate-limit";
+import { armarRespuestaEvaluate } from "@/lib/vobo/respuesta";
 import { SIMULACION } from "@/lib/vobo/simulacion";
 
 export const runtime = "nodejs";
@@ -42,9 +43,7 @@ export async function POST(req: Request) {
   const accion = SIMULACION[i]!;
   const evaluacion = await evaluateAction({ ...accion });
   const respuesta: RespuestaEvaluate & { indice: number; accion: { id?: string; tipo_accion: string; canal: string; destinatarios: number; texto: string } } = {
-    schema_version: SCHEMA_VERSION,
-    request_id: crypto.randomUUID(),
-    ...evaluacion,
+    ...armarRespuestaEvaluate(accion, evaluacion, crypto.randomUUID()),
     indice: i,
     accion: { id: accion.id, tipo_accion: accion.tipo_accion, canal: accion.canal, destinatarios: accion.destinatarios, texto: accion.texto },
   };

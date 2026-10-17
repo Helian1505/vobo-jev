@@ -1,10 +1,10 @@
 import { NextResponse, after } from "next/server";
 import { accionSchema } from "@/lib/vobo/accion-schema";
-import { SCHEMA_VERSION, type RespuestaEvaluate } from "@/lib/vobo/api-contrato";
 import { resolverAudiencia } from "@/lib/vobo/audiencias";
 import { estadoJev } from "@/lib/vobo/config";
 import { evaluateAction } from "@/lib/vobo/evaluate";
 import { LimitadorVentana } from "@/lib/vobo/rate-limit";
+import { armarRespuestaEvaluate } from "@/lib/vobo/respuesta";
 import type { AccionAgente } from "@/lib/vobo/types";
 import { construirCarga, debeNotificar, enviarWebhook, urlWebhook } from "@/lib/vobo/webhook";
 
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
 
   const request_id = crypto.randomUUID();
   const evaluacion = await evaluateAction(accion);
-  const respuesta: RespuestaEvaluate = { schema_version: SCHEMA_VERSION, request_id, ...evaluacion };
+  const respuesta = armarRespuestaEvaluate(accion, evaluacion, request_id);
 
   // Webhook opcional: avisa a una persona cuando algo queda en PEDIR VOBO o BLOQUEAR. Va después de responder
   // (after) y no puede bloquear ni cambiar la respuesta. Sin VOBO_REVIEW_WEBHOOK_URL no hace nada.

@@ -155,10 +155,13 @@ describe("POST /api/evaluate con el webhook", () => {
       const cuerpo = await res.json();
       expect(Date.now() - inicio).toBeLessThan(1000);
       expect(res.status).toBe(200);
-      const { request_id: _a, traza: ta, ...resto } = cuerpo;
-      const { request_id: _b, traza: tb, ...restoBase } = base;
-      expect(resto).toEqual(restoBase);
-      expect(ta.modelo).toBe(tb.modelo);
+      // lo que cambia en cada solicitud (id, hora, trazas y el texto que lleva el id) no cuenta
+      const sinVolatiles = (r: Record<string, any>) => {
+        const { request_id: _i, traza, resumen_aprobacion: _r, registro, ...resto } = r;
+        const { request_id: _j, timestamp: _t, ...registroEstable } = registro;
+        return { resto, registroEstable, modelo: traza.modelo };
+      };
+      expect(sinVolatiles(cuerpo)).toEqual(sinVolatiles(base));
     }
   });
 });

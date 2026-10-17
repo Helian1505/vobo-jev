@@ -50,6 +50,33 @@ describe("POST /api/evaluate", () => {
     expect(e.traza).toHaveProperty("costo_usd");
   });
 
+  it("agrega resumen_aprobacion y registro, y el registro es plano y coherente con la decisión", async () => {
+    vi.stubEnv("VOBO_JEV_MODE", "mock");
+    const e = await (await pedir({ ...valida, id: "ACC-9", destinatarios: 9000 })).json();
+    expect(typeof e.resumen_aprobacion).toBe("string");
+    expect(e.resumen_aprobacion).toContain("correo masivo a 9.000 destinatarios");
+    expect(e.resumen_aprobacion).toContain("id ACC-9");
+    expect(e.registro).toMatchObject({
+      request_id: e.request_id,
+      decision: e.decision,
+      piso_reglas: e.piso_reglas,
+      riesgo_jev: e.riesgo_jev,
+      modelo: e.traza.modelo,
+      jev_estado: e.jev_estado,
+      id_accion: "ACC-9",
+    });
+    expect(e.registro.reglas).toBe(e.reglas.map((r: { regla: string }) => r.regla).join(","));
+    expect(Date.parse(e.registro.timestamp)).not.toBeNaN();
+    for (const v of Object.values(e.registro)) expect(typeof v === "object" && v !== null).toBe(false);
+  });
+
+  it("sigue siendo schema_version 1: solo se agregaron campos, no se quitó ninguno", async () => {
+    vi.stubEnv("VOBO_JEV_MODE", "mock");
+    const e = await (await pedir(valida)).json();
+    expect(e.schema_version).toBe("1");
+    expect(Object.keys(e)).toEqual(expect.arrayContaining(["schema_version", "request_id", "decision", "modo", "piso_reglas", "reglas", "riesgo_jev", "senales_jev", "jev_estado", "jev_simulado", "perfil", "reversibilidad", "explicacion", "traza"]));
+  });
+
   it("cada solicitud tiene un request_id distinto", async () => {
     vi.stubEnv("VOBO_JEV_MODE", "mock");
     const a = await (await pedir(valida)).json();
