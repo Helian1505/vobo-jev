@@ -26,14 +26,15 @@ Los nombres son los que aparecen en la base de perfiles **[30X]**. El conteo es 
 
 | Programa (campo "Programa" del CRM) | Deals en la muestra | Precio público | Notas |
 |---|---|---|---|
-| AI Sales | 90 (30%) | — | El programa con más deals |
+| AI Sales | 90 (30%) | **USD 1.950** [Público] | El programa con más deals. Precio de 30x.com, 17 oct 2026, 6 p.m.; Helian confirmó que es USD |
 | 30X Executive Program | 67 (22%) | — | **[Inferencia]** Es la Inmersión Ejecutiva; en "programa sugerido" aparece con ese nombre |
 | AI for Executives | 35 (12%) | **USD 2.000** [Público] | Se usa en la regla de precio |
-| Sales Machine | 34 (11%) | — | |
+| Sales Machine | 34 (11%) | **USD 1.950** [Público] | Precio de 30x.com, 17 oct 2026, 6 p.m.; Helian confirmó que es USD |
 | AI Second Brain | 20 (7%) | — | |
-| AI for devs | 19 (6%) | USD 1.500 o 2.000 (las fuentes se contradicen) | **[Inferencia]** Equivale a "Hardcore AI" del programa sugerido |
+| AI for devs | 19 (6%) | **USD 1.500** [Público] | Precio de 30x.com, 17 oct 2026, 6 p.m. (antes las fuentes se contradecían: 1.500 o 2.000). **[Inferencia]** Equivale a "Hardcore AI" del programa sugerido |
 | Free Sales Training | 13 (4%) | **Gratuito** [Supuesto, por el nombre] | **[Inferencia]** En el CRM de 30X, "deal" incluye inscripciones gratuitas |
-| Negociación, Ventas con LinkedIn, Multipliers, B2B, Next Fellowship, Fundraising School | de 2 a 6 cada uno | — | |
+| Ventas con LinkedIn | de 2 a 6 | **USD 1.950** [Público] | Precio de 30x.com, 17 oct 2026, 6 p.m.; Helian confirmó que es USD |
+| Negociación, Multipliers, B2B, Next Fellowship, Fundraising School | de 2 a 6 cada uno | — | |
 
 **Programa sugerido** (lo que 30X recomienda para cada persona, sobre los 697 perfiles) **[30X]**:
 
@@ -182,7 +183,7 @@ Aprobadas por Helian el sáb 17 oct a las 12:30 p.m.
 | 1 | La demo usa los programas, roles y etapas reales de 30X; nada de "estudiantes" ni sesiones inventadas | Secciones 2 y 4; restricción del reto |
 | 2 | Regla `oferta_sin_afinidad`: programa pago por canal masivo, con 50% o más de la audiencia en afinidad 0–3 → **PEDIR VOBO** | Secciones 3.3 y 3.4. El umbral de 50% es [Supuesto] |
 | 3 | Marcar un deal como "Ganado…" es un cambio protegido (individual → PEDIR VOBO; masivo → BLOQUEAR). Las demás etapas se mueven sin freno | Sección 6: "ganado" equivale a registrar un pago |
-| 4 | Precio de referencia por programa cuando es público: AI for Executives USD 2.000 y Free Sales Training gratuito. El resto sigue con el supuesto de sesión abierta a USD 99 | Sección 2 |
+| 4 | Precio de referencia por programa cuando es público: AI for Executives 2.000, AI for devs 1.500, AI Sales, Sales Machine y Ventas con LinkedIn 1.950 (USD) y Free Sales Training gratuito. Un programa sin precio público **no tiene verificación de precio**; los USD 99 de la sesión abierta se usan solo cuando la acción no declara programa | Sección 2; cambio del 17 oct 6 p.m. (ver `docs/DESVIACIONES.md`) |
 | 5 | Los destinatarios de la demo se estiman con los factores de escala de la muestra | Sección 3.1 |
 | 6 | No se le pregunta a JEV por datos categóricos (rol, banda, etapa): eso lo resuelve el código | Principio de diseño; sección 5 |
 | 7 | Historia de impacto del pitch: unos 32.300 contactos, 83% de los deals en seguimiento y 3,4% de conversión de deal a pago en la muestra. Cada mensaje equivocado en masa cuesta reputación en un embudo donde convertir ya es difícil | Secciones 3 y 7 |
@@ -191,7 +192,7 @@ Aprobadas por Helian el sáb 17 oct a las 12:30 p.m.
 
 ## 9. Supuestos que siguen abiertos (para la mentoría)
 1. ¿30X otorga certificaciones oficiales o avales? Asumimos que no.
-2. Precios de los programas además de AI for Executives. ¿Existe una "sesión abierta" paga (asumimos USD 99)?
+2. Precios de los programas que no están en el catálogo (30X Executive Program, AI Second Brain, Negociación, etc.). ¿Existe una "sesión abierta" paga (asumimos USD 99, solo para acciones sin programa)?
 3. ¿Más de 5.000 destinatarios en un envío requiere revisión? ¿Hay un horario permitido para los envíos masivos?
 4. ¿Qué campos del CRM son sensibles? Asumimos: consentimiento, estado de pago, nivel de acceso, descuento aprobado y etapa "ganado".
 5. ¿"30X Executive Program" es la Inmersión Ejecutiva? ¿"AI for devs" es Hardcore AI?

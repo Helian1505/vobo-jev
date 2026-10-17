@@ -89,6 +89,7 @@ Con 150 casos, cada error mueve las métricas cerca de 0,7 puntos: es una demost
 ## 6. Límites honestos
 
 - **Las acciones son sintéticas** y la **política es de demostración** (supuestos por confirmar con 30X, p. ej. si 30X otorga certificaciones, el precio de la sesión abierta, el umbral de 5.000 destinatarios o el horario de envíos).
+- **Los programas fuera del catálogo no tienen verificación de precio.** La regla `precio_inconsistente` compara con el precio de catálogo solo para los 6 programas con precio público (AI for Executives, AI for devs, AI Sales, Sales Machine, Ventas con LinkedIn y Free Sales Training). Si la acción declara otro programa (p. ej. AI Second Brain), la regla no se activa; los USD 99 de la sesión abierta solo se usan cuando la acción no declara programa.
 - **Banco pequeño:** 150 acciones en el test. Los intervalos de confianza son amplios.
 - **Dev no sirve para reportar:** 174 de sus 250 etiquetas son la propuesta de diseño sin revisión humana, y los umbrales se ajustaron sobre esas mismas filas (sobreajuste posible, sobre todo en redes, con 40 filas, y CRM, con 37).
 - **JEV puede equivocarse con confianza**, no sirve para contar ni comparar fechas (eso va en el código), lee literal y no trata el texto como hostil. Por eso la capa de reglas es la que autoriza.

@@ -73,13 +73,14 @@ export function evaluarReglas(a: AccionAgente, P: Policy = POLICY): ResultadoReg
 
   if (a.precio_en_texto_usd !== undefined && a.precio_en_texto_usd !== null) {
     const prog = a.programa_ofrecido;
-    const delPrograma = prog ? P.catalogo_programas_usd[prog] : undefined;
-    const ref = delPrograma ?? P.catalogo_precios_usd.sesion_abierta;
-    if (Number(a.precio_en_texto_usd) !== ref) {
+    // Sin programa declarado: se compara con el precio de la sesión abierta. Con programa declarado: con su precio de
+    // catálogo; si el programa no está en el catálogo, no hay precio con qué comparar y la regla NO se activa.
+    const ref = prog ? P.catalogo_programas_usd[prog] : P.catalogo_precios_usd.sesion_abierta;
+    if (ref !== undefined && Number(a.precio_en_texto_usd) !== ref) {
       activar("precio_inconsistente", {
         precio_texto: a.precio_en_texto_usd,
         precio_catalogo: ref,
-        programa: delPrograma !== undefined ? prog : undefined,
+        programa: prog || undefined,
       });
     }
   }

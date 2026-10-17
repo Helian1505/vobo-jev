@@ -27,8 +27,13 @@
   },
   "catalogo_programas_usd": {
     "AI for Executives": 2000,
+    "AI for devs": 1500,
+    "Ventas con LinkedIn": 1950,
+    "Sales Machine": 1950,
+    "AI Sales": 1950,
     "Free Sales Training": 0
   },
+  "catalogo_programas_fuente": "30x.com, páginas de cada programa, 17 oct 2026, 6 p.m. (USD)",
   "programas_pagos": [
     "AI Sales",
     "Sales Machine",

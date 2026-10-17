@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseFechaEs } from "@/lib/vobo/fechas";
 import { evaluarReglas } from "@/lib/vobo/rules";
@@ -107,24 +109,65 @@ describe("fechas", () => {
   });
 });
 
-describe("precio", () => {
-  it("sin programa se compara con la sesión abierta (USD 99)", () => {
+describe("precio: sin programa se compara con USD 99; con programa, con su precio de catálogo", () => {
+  it("sin programa: 99 pasa y 79 se activa (referencia: la sesión abierta)", () => {
     expect(nombres(correo({ precio_en_texto_usd: 99 }))).toEqual([]);
+    expect(nombres(correo({ precio_en_texto_usd: 79 }))).toEqual(["precio_inconsistente"]);
     expect(nombres(correo({ precio_en_texto_usd: 149 }))).toEqual(["precio_inconsistente"]);
   });
 
-  it("con programa en el catálogo se compara con su precio", () => {
+  it("programa con precio de catálogo: AI for Executives con 2.000 pasa; con 1.200 se activa y dice el precio de catálogo", () => {
     expect(nombres(correo({ programa_ofrecido: "AI for Executives", precio_en_texto_usd: 2000 }))).toEqual([]);
-    expect(nombres(correo({ programa_ofrecido: "AI for Executives", precio_en_texto_usd: 1200 }))).toEqual(["precio_inconsistente"]);
+    const r = evaluarReglas(correo({ programa_ofrecido: "AI for Executives", precio_en_texto_usd: 1200 }));
+    expect(r.reglas.map((x) => x.regla)).toEqual(["precio_inconsistente"]);
+    expect(r.reglas[0]?.detalle).toMatchObject({ precio_texto: 1200, precio_catalogo: 2000, programa: "AI for Executives" });
   });
 
-  it("un programa fuera del catálogo cae al precio de la sesión abierta", () => {
-    expect(nombres(correo({ programa_ofrecido: "AI Sales", precio_en_texto_usd: 99 }))).toEqual([]);
+  it("los programas del catálogo se comparan con su propio precio (no con 99)", () => {
+    for (const [programa, precio] of [["AI for devs", 1500], ["Ventas con LinkedIn", 1950], ["Sales Machine", 1950], ["AI Sales", 1950]] as const) {
+      expect(nombres(correo({ programa_ofrecido: programa, precio_en_texto_usd: precio })), `${programa} ${precio}`).toEqual([]);
+      expect(nombres(correo({ programa_ofrecido: programa, precio_en_texto_usd: 99 })), `${programa} 99`).toEqual(["precio_inconsistente"]);
+    }
   });
 
-  it("un precio de 0 en un programa gratuito es válido; sin programa no", () => {
+  it("programa FUERA del catálogo con precio alto (o con 99): la regla no se activa; no hay precio con qué comparar", () => {
+    for (const precio of [5000, 99, 0, 12345]) {
+      expect(nombres(correo({ programa_ofrecido: "AI Second Brain", precio_en_texto_usd: precio })), `precio ${precio}`).toEqual([]);
+    }
+    expect(nombres(correo({ programa_ofrecido: "Programa inventado", precio_en_texto_usd: 12345 }))).toEqual([]);
+  });
+
+  it("un programa gratuito: 0 es válido y cualquier otro precio se activa", () => {
     expect(nombres(correo({ programa_ofrecido: "Free Sales Training", precio_en_texto_usd: 0 }))).toEqual([]);
-    expect(nombres(correo({ precio_en_texto_usd: 0 }))).toEqual(["precio_inconsistente"]);
+    expect(nombres(correo({ programa_ofrecido: "Free Sales Training", precio_en_texto_usd: 99 }))).toEqual(["precio_inconsistente"]);
+    expect(nombres(correo({ precio_en_texto_usd: 0 }))).toEqual(["precio_inconsistente"]); // sin programa, 0 ≠ 99
+  });
+
+  it("un programa vacío cuenta como sin programa", () => {
+    expect(nombres(correo({ programa_ofrecido: "", precio_en_texto_usd: 99 }))).toEqual([]);
+    expect(nombres(correo({ programa_ofrecido: "", precio_en_texto_usd: 79 }))).toEqual(["precio_inconsistente"]);
+  });
+
+  it("sin precio en el texto no se evalúa nada", () => {
+    expect(nombres(correo({ programa_ofrecido: "AI Sales" }))).toEqual([]);
+    expect(nombres(correo())).toEqual([]);
+  });
+
+  it("la tabla compartida con la referencia en Python (referencia/casos_precio.json) da lo mismo", () => {
+    const { casos } = JSON.parse(readFileSync(path.resolve(__dirname, "../referencia/casos_precio.json"), "utf8")) as {
+      casos: { nombre: string; programa_ofrecido: string | null; precio_en_texto_usd: number | null; se_activa: boolean; precio_catalogo?: number }[];
+    };
+    expect(casos.length).toBeGreaterThanOrEqual(20);
+    for (const c of casos) {
+      const accion = correo({
+        ...(c.programa_ofrecido !== null ? { programa_ofrecido: c.programa_ofrecido } : {}),
+        ...(c.precio_en_texto_usd !== null ? { precio_en_texto_usd: c.precio_en_texto_usd } : {}),
+      });
+      const r = evaluarReglas(accion);
+      expect(r.reglas.map((x) => x.regla), c.nombre).toEqual(c.se_activa ? ["precio_inconsistente"] : []);
+      expect(r.piso, c.nombre).toBe(c.se_activa ? "REVIEW" : "ALLOW");
+      if (c.se_activa) expect(r.reglas[0]?.detalle.precio_catalogo, c.nombre).toBe(c.precio_catalogo);
+    }
   });
 });
 

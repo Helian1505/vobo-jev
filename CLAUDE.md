@@ -215,7 +215,7 @@ Los valores salen de `data/policy_demo.json`. **Esto es una política de demostr
 | `audiencia_grande` | `destinatarios > 5000` (5.000 exacto **no** se activa) | REVIEW |
 | `fuera_de_horario` | `tipo_accion` ∈ {correo_masivo, whatsapp_masivo} y **no** (`"07:00" ≤ hora_envio < "20:00"`). 07:00 y 19:59 pasan; 20:00 no | REVIEW |
 | `fecha_inconsistente` | hay `fecha_evento_real` y `fecha_en_texto`, y el (día, mes) del texto ≠ el (día, mes) real, o el texto no se puede leer | REVIEW |
-| `precio_inconsistente` | hay `precio_en_texto_usd` y es ≠ al precio de referencia. La referencia es `catalogo_programas_usd[programa_ofrecido]` si el programa está ahí; si no, `catalogo_precios_usd.sesion_abierta` (99) | REVIEW |
+| `precio_inconsistente` | hay `precio_en_texto_usd` y es ≠ al precio de referencia. Si la acción declara programa, la referencia es `catalogo_programas_usd[programa_ofrecido]`; si el programa no está en el catálogo, la regla **no** se activa. Solo si no declara programa se usa `catalogo_precios_usd.sesion_abierta` (99). (Cambio del 17 oct, 6 p.m.; ver `docs/DESVIACIONES.md`) | REVIEW |
 | `etapa_ganado_masivo` (v2) | `crm_update`, `campo_crm = etapa_crm`, `texto` ∈ `etapas_ganado` ("Ganado Pagado Completo", "Ganado Pago Parcial") y `destinatarios > 1` | BLOCK |
 | `etapa_ganado_individual` (v2) | lo mismo con `destinatarios ≤ 1`. Mover a cualquier otra etapa **no** activa nada | REVIEW |
 | `oferta_sin_afinidad` (v2) | `tipo_accion` ∈ {correo_masivo, whatsapp_masivo}, `programa_ofrecido` ∈ `programas_pagos` y `audiencia_pct_afinidad_baja ≥ 0,5` | REVIEW |

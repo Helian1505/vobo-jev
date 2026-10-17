@@ -1,0 +1,31 @@
+{
+  "nota": "Tabla compartida de casos de la regla precio_inconsistente. La validan tests/rules.bordes.test.ts (TypeScript) y referencia/test_precio.py (Python), para que las dos implementaciones no se separen. La acción base es un correo masivo normal; solo cambian programa_ofrecido y precio_en_texto_usd.",
+  "casos": [
+    { "nombre": "programa con precio de catálogo: AI for Executives con 2.000", "programa_ofrecido": "AI for Executives", "precio_en_texto_usd": 2000, "se_activa": false },
+    { "nombre": "programa con precio distinto del catálogo: AI for Executives con 1.200", "programa_ofrecido": "AI for Executives", "precio_en_texto_usd": 1200, "se_activa": true, "precio_catalogo": 2000 },
+    { "nombre": "AI for devs con 1.500 (catálogo)", "programa_ofrecido": "AI for devs", "precio_en_texto_usd": 1500, "se_activa": false },
+    { "nombre": "AI for devs con 99", "programa_ofrecido": "AI for devs", "precio_en_texto_usd": 99, "se_activa": true, "precio_catalogo": 1500 },
+    { "nombre": "Ventas con LinkedIn con 1.950 (catálogo)", "programa_ofrecido": "Ventas con LinkedIn", "precio_en_texto_usd": 1950, "se_activa": false },
+    { "nombre": "Ventas con LinkedIn con 1.500", "programa_ofrecido": "Ventas con LinkedIn", "precio_en_texto_usd": 1500, "se_activa": true, "precio_catalogo": 1950 },
+    { "nombre": "Sales Machine con 1.950 (catálogo)", "programa_ofrecido": "Sales Machine", "precio_en_texto_usd": 1950, "se_activa": false },
+    { "nombre": "Sales Machine con 99: antes no se activaba (comparaba con 99); ahora sí", "programa_ofrecido": "Sales Machine", "precio_en_texto_usd": 99, "se_activa": true, "precio_catalogo": 1950 },
+    { "nombre": "AI Sales con 1.950 (catálogo)", "programa_ofrecido": "AI Sales", "precio_en_texto_usd": 1950, "se_activa": false },
+    { "nombre": "AI Sales con 99: antes pasaba por ser 99; ahora se activa", "programa_ofrecido": "AI Sales", "precio_en_texto_usd": 99, "se_activa": true, "precio_catalogo": 1950 },
+    { "nombre": "Free Sales Training con 0 (gratuito)", "programa_ofrecido": "Free Sales Training", "precio_en_texto_usd": 0, "se_activa": false },
+    { "nombre": "Free Sales Training con 99", "programa_ofrecido": "Free Sales Training", "precio_en_texto_usd": 99, "se_activa": true, "precio_catalogo": 0 },
+
+    { "nombre": "programa FUERA del catálogo con precio alto: AI Second Brain con 5.000", "programa_ofrecido": "AI Second Brain", "precio_en_texto_usd": 5000, "se_activa": false },
+    { "nombre": "programa fuera del catálogo con 99: ya no se compara con la sesión abierta", "programa_ofrecido": "AI Second Brain", "precio_en_texto_usd": 99, "se_activa": false },
+    { "nombre": "programa fuera del catálogo con 0", "programa_ofrecido": "Achievers", "precio_en_texto_usd": 0, "se_activa": false },
+    { "nombre": "programa que no existe, con cualquier precio", "programa_ofrecido": "Programa inventado", "precio_en_texto_usd": 12345, "se_activa": false },
+
+    { "nombre": "sin programa con 99 (precio de la sesión abierta)", "programa_ofrecido": null, "precio_en_texto_usd": 99, "se_activa": false },
+    { "nombre": "sin programa con 79", "programa_ofrecido": null, "precio_en_texto_usd": 79, "se_activa": true, "precio_catalogo": 99 },
+    { "nombre": "sin programa con 0", "programa_ofrecido": null, "precio_en_texto_usd": 0, "se_activa": true, "precio_catalogo": 99 },
+    { "nombre": "programa vacío cuenta como sin programa: con 99", "programa_ofrecido": "", "precio_en_texto_usd": 99, "se_activa": false },
+    { "nombre": "programa vacío cuenta como sin programa: con 79", "programa_ofrecido": "", "precio_en_texto_usd": 79, "se_activa": true, "precio_catalogo": 99 },
+
+    { "nombre": "sin precio en el texto no se evalúa, con o sin programa (AI Sales)", "programa_ofrecido": "AI Sales", "precio_en_texto_usd": null, "se_activa": false },
+    { "nombre": "sin precio en el texto no se evalúa (sin programa)", "programa_ofrecido": null, "precio_en_texto_usd": null, "se_activa": false }
+  ]
+}

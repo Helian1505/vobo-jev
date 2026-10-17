@@ -16,6 +16,7 @@ export const politicaSchema = z.object({
   campos_crm_protegidos: z.array(z.string()),
   catalogo_precios_usd: z.object({ sesion_abierta: z.number() }),
   catalogo_programas_usd: z.record(z.string(), z.number()),
+  catalogo_programas_fuente: z.string().optional(),
   programas_pagos: z.array(z.string()),
   regla_afinidad: z.object({
     aplica_a: z.array(tipoAccion),

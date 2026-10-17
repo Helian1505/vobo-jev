@@ -29,9 +29,20 @@ POLICY = {
     "campos_crm_protegidos": ["consentimiento_marketing", "estado_pago", "nivel_acceso",
                               "descuento_aprobado"],
     "catalogo_precios_usd": {"sesion_abierta": 99},
-    # Precios públicos encontrados en 30x.com (investigación del 16 oct). Solo se listan los que
-    # no se contradicen entre fuentes. "Free Sales Training" es gratuito por nombre (supuesto).
-    "catalogo_programas_usd": {"AI for Executives": 2000, "Free Sales Training": 0},
+    # Precios de lista de los programas, en USD. Solo entran los que tienen precio público.
+    # FUENTE: 30x.com, páginas de cada programa, consultadas el 17 oct 2026, 6 p.m. Helian confirmó que son USD.
+    # "Free Sales Training" es gratuito por nombre (supuesto).
+    # Un programa que NO está aquí no tiene verificación de precio: la regla precio_inconsistente no se activa
+    # para él. El precio de la sesión abierta (catalogo_precios_usd) se usa solo cuando la acción NO declara programa.
+    "catalogo_programas_usd": {
+        "AI for Executives": 2000,
+        "AI for devs": 1500,
+        "Ventas con LinkedIn": 1950,
+        "Sales Machine": 1950,
+        "AI Sales": 1950,
+        "Free Sales Training": 0,
+    },
+    "catalogo_programas_fuente": "30x.com, páginas de cada programa, 17 oct 2026, 6 p.m. (USD)",
     # Supuesto: todos los programas de la base son pagos salvo Free Sales Training.
     "programas_pagos": ["AI Sales", "Sales Machine", "Inmersión Ejecutiva", "30X Executive Program",
                         "AI for Executives", "Hardcore AI", "AI for devs", "AI Second Brain",
@@ -109,10 +120,14 @@ def rules_floor(r, P=POLICY):
             up("fecha_inconsistente")
     if not _vacio(r.get("precio_en_texto_usd")):
         prog = r.get("programa_ofrecido")
-        ref = P["catalogo_programas_usd"].get(prog) if not _vacio(prog) else None
-        if ref is None:
+        if _vacio(prog):
+            # Sin programa declarado: se compara con el precio de la sesión abierta.
             ref = P["catalogo_precios_usd"]["sesion_abierta"]
-        if float(r["precio_en_texto_usd"]) != ref:
+        else:
+            # Con programa declarado: su precio de catálogo. Si el programa no está en el catálogo, ref es None y
+            # la regla NO se activa (no hay precio con qué comparar; no se usa el de la sesión abierta).
+            ref = P["catalogo_programas_usd"].get(prog)
+        if ref is not None and float(r["precio_en_texto_usd"]) != ref:
             up("precio_inconsistente")
     ra = P["regla_afinidad"]
     if (tipo in ra["aplica_a"] and r.get("programa_ofrecido") in P["programas_pagos"]
