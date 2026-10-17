@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { accionSchema } from "@/lib/vobo/accion-schema";
 import { SCHEMA_VERSION, type RespuestaEvaluate } from "@/lib/vobo/api-contrato";
 import { resolverAudiencia } from "@/lib/vobo/audiencias";
@@ -6,6 +6,7 @@ import { estadoJev } from "@/lib/vobo/config";
 import { evaluateAction } from "@/lib/vobo/evaluate";
 import { LimitadorVentana } from "@/lib/vobo/rate-limit";
 import type { AccionAgente } from "@/lib/vobo/types";
+import { construirCarga, debeNotificar, enviarWebhook, urlWebhook } from "@/lib/vobo/webhook";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -20,6 +21,10 @@ function ipDe(req: Request): string {
 /** Estado de JEV para el banner de la UI (nunca expone la llave). */
 export function GET() {
   return NextResponse.json(estadoJev());
+}
+
+function registrarFallo(r: { enviado: boolean; error?: string; estado?: number }) {
+  if (!r.enviado) console.warn(`[vobo] el webhook de revisión no se entregó (${r.error ?? "desconocido"}${r.estado ? ` ${r.estado}` : ""})`);
 }
 
 export async function POST(req: Request) {
@@ -55,5 +60,17 @@ export async function POST(req: Request) {
   const request_id = crypto.randomUUID();
   const evaluacion = await evaluateAction(accion);
   const respuesta: RespuestaEvaluate = { schema_version: SCHEMA_VERSION, request_id, ...evaluacion };
+
+  // Webhook opcional: avisa a una persona cuando algo queda en PEDIR VOBO o BLOQUEAR. Va después de responder
+  // (after) y no puede bloquear ni cambiar la respuesta. Sin VOBO_REVIEW_WEBHOOK_URL no hace nada.
+  const destino = urlWebhook();
+  if (destino && debeNotificar(evaluacion.decision)) {
+    const aviso = () => enviarWebhook({ url: destino, carga: construirCarga(request_id, accion, evaluacion) }).then(registrarFallo);
+    try {
+      after(aviso);
+    } catch {
+      void aviso(); // fuera de una solicitud (pruebas): se lanza sin esperar
+    }
+  }
   return NextResponse.json(respuesta, { headers: { "x-request-id": request_id } });
 }
