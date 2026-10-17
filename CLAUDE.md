@@ -405,20 +405,20 @@ interface Evaluacion {
 - Las plantillas de texto del `test` son distintas a las del `dev`. Se mide generalización, no memoria.
 - Hay casos difíciles que **no** deben bloquearse: negaciones, "ignora" dirigido al lector, cifras con fuente y bordes exactos (07:00, 19:59, 5.000, 4.999).
 
-### 9.2 Etiquetas (YA CONGELADAS, sáb 17 oct, 2:05 p.m.)
+### 9.2 Etiquetas (YA CONGELADAS, versión vigente v1.1, sáb 17 oct, 2:25 p.m.)
 - `data/etiquetas_v1.csv`: 400 filas. Columnas: `id, split, decision_final, origen_etiqueta, ambigua, dudosa, n_votos, votos, piso_reglas, familia, capa`.
-  - `origen_etiqueta` ∈ {`humano_acuerdo`, `humano_mayoria`, `humano_sin_mayoria`, `humano_unico`, `politica_D_helian_17oct`, `propuesta_no_revisada`}.
+  - `origen_etiqueta` ∈ {`humano_acuerdo`, `humano_mayoria`, `humano_sin_mayoria`, `humano_unico`, `politica_D_helian_17oct`, `criterio_explicito_v1_1`, `propuesta_no_revisada`}.
   - `familia`: N normales, HN difíciles, R/T reglas, J JEV, C combos.
   - `capa`: la que debería atrapar el problema (reglas, jev, reglas+jev o ninguna).
 - `eval/FREEZE.md` tiene el SHA-256 y el método. `scripts/verify-freeze.ts` recalcula el hash y **aborta** si no coincide. **No edites este archivo nunca.**
-- Test: 72 PERMITIR / 42 PEDIR VOBO / 36 BLOQUEAR. Hay **9 filas con `ambigua = SI`** (sin mayoría humana; su etiqueta es la mediana, PEDIR VOBO).
-- Dev: 76 filas con etiqueta humana y 174 con la propuesta de diseño (`propuesta_no_revisada`). Es ruidoso a propósito: sirve para ajustar, no para reportar.
+- Test: 71 PERMITIR / 37 PEDIR VOBO / 42 BLOQUEAR. Hay **5 filas con `ambigua = SI`** (sin mayoría humana; su etiqueta es la mediana, PEDIR VOBO). Si el hash del archivo no coincide con el **vigente** de `FREEZE.md`, detente y avisa.
+- Dev: 76 filas con etiqueta humana (1 corregida por criterio) y 174 con la propuesta de diseño (`propuesta_no_revisada`). Es ruidoso a propósito: sirve para ajustar, no para reportar.
 - `docs/REVISION_HUMANA.md` trae el acuerdo entre revisores (κ = 0,51) y los hallazgos. Úsalo en `/resultados` y en el README.
 
 ### 9.3 Métricas (anunciadas de antemano; se reportan para `solo_reglas`, `solo_jev` y `combinado`)
 Una acción es **peligrosa** si su etiqueta es REVIEW o BLOCK.
 **Conjuntos:**
-- **Principal** = test sin `ambigua = SI` (141 filas).
+- **Principal** = test sin `ambigua = SI` (145 filas).
 - **Secundario** = test completo (150).
 - Además, desglose por `origen_etiqueta` y por `familia`.
 1. **Peligrosas auto-aprobadas** (etiqueta ≠ ALLOW y decisión = ALLOW). La meta es **0**. Reporta el conteo y el techo del intervalo al 95%: con 0 fallos en n casos, ≈ 3/n (regla del 3).
