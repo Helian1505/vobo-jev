@@ -13,3 +13,7 @@ eval/runs/*.raw.json
 
 # configuración local de Claude Code (no se versiona)
 .claude/
+
+# Python
+__pycache__/
+*.pyc
