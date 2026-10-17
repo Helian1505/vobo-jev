@@ -1,1 +1,153 @@
 @import "tailwindcss";
+
+/*
+ * Sistema de diseño 30X (docs/DESIGN_30X.md).
+ * Capa 1 · primitivos: los valores crudos, tomados de hackradar.30x.com (tokens publicados) y de 30x.com.
+ * Capa 2 · semánticos: lo que significa cada color en VoBo.
+ * Los componentes usan solo los semánticos, así se cambia un color en un solo lugar.
+ */
+@theme {
+  /* Primitivos · neutros de HackRadar */
+  --color-brand-black: #0b0b0c;
+  --color-brand-ink: #0e1013;
+  --color-brand-ink-2: #16181c;
+  --color-brand-graphite: #23262e;
+  --color-brand-paper: #f6f4f1;
+  --color-brand-soft: #d5d3ce;
+  --color-brand-dim: #a9ab9e;
+  --color-brand-olive: #82876f;
+  --color-brand-moss: #6e7163;
+
+  /* Primitivos · acento lima de 30x.com (botones "Aplica Ahora") */
+  --color-brand-lime: #e9ff7b;
+
+  /* Primitivos · estados pastel de HackRadar */
+  --color-brand-success: #9fd4ae;
+  --color-brand-warning: #e9c582;
+  --color-brand-danger: #f2a19b;
+  --color-brand-danger-solid: #b3413b;
+
+  /* Semánticos */
+  --color-canvas: var(--color-brand-black);
+  --color-surface: var(--color-brand-ink-2);
+  --color-field: var(--color-brand-ink);
+  --color-raised: var(--color-brand-graphite);
+  --color-line: #2e323b;
+  --color-line-strong: #3a3f4a;
+  --color-fg: var(--color-brand-paper);
+  --color-fg-soft: var(--color-brand-soft);
+  --color-fg-muted: var(--color-brand-dim);
+  --color-fg-faint: var(--color-brand-olive); /* solo placeholders sobre field/surface (≥ 4,7:1) */
+  --color-accent: var(--color-brand-lime);
+  --color-on-accent: var(--color-brand-black);
+  --color-allow: var(--color-brand-success);
+  --color-review: var(--color-brand-warning);
+  --color-block: var(--color-brand-danger);
+
+  /* Tipografía: Inter (cuerpo y títulos de interfaz) y Playfair Display solo en el título de la página, como HackRadar */
+  --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Forma: 8 px en botones y campos, 12 px en tarjetas, pastillas completas (las que usa 30x.com) */
+  --radius-field: 8px;
+  --radius-card: 12px;
+
+  /* Movimiento: salida rápida y firme (Emil Kowalski) */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background: var(--color-canvas);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: -0.006em;
+  font-feature-settings: "cv11", "ss03";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Las superficies que no dibujamos también llevan el diseño: selección, cursor, foco, scroll, números. */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+input,
+textarea,
+select {
+  caret-color: var(--color-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}
+
+::placeholder {
+  color: var(--color-fg-faint);
+  opacity: 1;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Títulos con la variante de tamaño óptico grande de Inter, que es la que usa 30x.com (Inter Display). */
+.display-sans {
+  font-family: var(--font-sans);
+  font-variation-settings: "opsz" 32;
+  letter-spacing: -0.03em;
+}
+
+/* El resultado entra una sola vez, rápido; no se anima nada que se repita cientos de veces. */
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.entra {
+  animation: entrada 180ms var(--ease-out-strong) both;
+}
+
+button:not(:disabled) {
+  transition:
+    transform 140ms var(--ease-out-strong),
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entra {
+    animation: none;
+  }
+  button:not(:disabled):active {
+    transform: none;
+  }
+}

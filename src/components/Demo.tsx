@@ -49,16 +49,16 @@ interface EstadoJevUi {
 const MAX_TEXTO = 2000;
 
 const claseCampo =
-  "mt-1 w-full rounded border border-slate-400 bg-white px-2 py-1.5 text-sm text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/30";
+  "mt-1.5 w-full rounded-field border border-line-strong bg-field px-3 py-2 text-sm text-fg hover:border-brand-moss focus:border-accent";
 
 function Campo({ etiqueta, ayuda, children, id }: { etiqueta: string; ayuda?: string; children: React.ReactNode; id: string }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-slate-900">
+      <label htmlFor={id} className="block text-sm font-medium text-fg-soft">
         {etiqueta}
       </label>
       {children}
-      {ayuda && <p className="mt-1 text-xs text-slate-700">{ayuda}</p>}
+      {ayuda && <p className="mt-1.5 text-xs text-fg-muted">{ayuda}</p>}
     </div>
   );
 }
@@ -73,15 +73,15 @@ function TarjetaPerfil({ p }: { p: Perfil }) {
     ["Temas de interés", p.temas_interes],
   ];
   return (
-    <div className="rounded border border-slate-300 bg-slate-50 p-3 text-sm">
-      <p className="font-semibold">
-        Perfil {p.id} <span className="font-normal text-slate-700">· muestra anónima de 30X, solo categorías</span>
+    <div className="rounded-field border border-line bg-field p-4 text-sm">
+      <p className="font-semibold text-fg">
+        Perfil {p.id} <span className="font-normal text-fg-muted">· muestra anónima de 30X, solo categorías</span>
       </p>
       <dl className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
         {filas.map(([k, v]) => (
           <div key={k}>
-            <dt className="text-xs text-slate-600">{k}</dt>
-            <dd>{v && v !== "—" ? v : "Sin dato"}</dd>
+            <dt className="text-xs text-fg-muted">{k}</dt>
+            <dd className="text-fg-soft">{v && v !== "—" ? v : "Sin dato"}</dd>
           </div>
         ))}
       </dl>
@@ -177,19 +177,19 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
   return (
     <div className="space-y-6">
       {jev && jev.modo === "live" && !jev.configurado && (
-        <p role="alert" className="rounded border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-900">
+        <p role="alert" className="rounded-field border border-block/40 bg-block/10 px-4 py-3 text-sm font-medium text-block">
           JEV real no configurado: falta la llave en el servidor. Las evaluaciones no funcionarán hasta configurarla.
         </p>
       )}
       {jev && jev.modo === "mock" && (
-        <p className="rounded border border-slate-500 bg-slate-100 px-3 py-2 text-sm text-slate-900">
-          <strong>JEV SIMULADO.</strong> Esta demo usa un JEV simulado con reglas de palabras clave. Sus resultados no son
+        <p className="rounded-field border border-line bg-surface px-4 py-3 text-sm text-fg-soft">
+          <strong className="font-semibold text-fg">JEV SIMULADO.</strong> Esta demo usa un JEV simulado con reglas de palabras clave. Sus resultados no son
           métricas del modelo real.
         </p>
       )}
 
-      <div className="rounded border border-slate-300 bg-white p-4">
-        <label htmlFor="ejemplo" className="block text-sm font-semibold">
+      <div className="rounded-card border border-line bg-surface p-5">
+        <label htmlFor="ejemplo" className="block text-sm font-semibold text-fg">
           Ejemplos de la demo
         </label>
         <select id="ejemplo" value={ejemploId} onChange={(e) => elegirEjemplo(e.target.value)} className={claseCampo}>
@@ -200,18 +200,18 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
             </option>
           ))}
         </select>
-        {ejemplo && <p className="mt-2 text-sm text-slate-800">{ejemplo.por_que}</p>}
+        {ejemplo && <p className="mt-3 text-sm text-fg-soft">{ejemplo.por_que}</p>}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <form
-          className="space-y-4 rounded border border-slate-300 bg-white p-4"
+          className="space-y-5 rounded-card border border-line bg-surface p-5 sm:p-6"
           onSubmit={(e) => {
             e.preventDefault();
             void evaluar(form);
           }}
         >
-          <h2 className="text-base font-semibold">Acción que propone el agente</h2>
+          <h2 className="display-sans text-lg font-semibold text-fg">Acción que propone el agente</h2>
 
           <Campo id="tipo" etiqueta="Tipo de acción">
             <select
@@ -278,7 +278,7 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
                 ))}
               </select>
               {audiencia && (
-                <p className="mt-1 text-xs text-slate-800">
+                <p className="tabular mt-1.5 text-xs text-fg-muted">
                   {audiencia.perfiles_en_muestra} perfiles en la muestra · ≈ {miles(audiencia.destinatarios_estimados)} personas
                   en la base · {pct(audiencia.pct_afinidad_baja)} con afinidad baja
                 </p>
@@ -414,7 +414,7 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
               onChange={(e) => cambiar({ texto: e.target.value })}
               className={claseCampo}
             />
-            <p className={`mt-1 text-xs ${textoRestante < 100 ? "text-red-800" : "text-slate-700"}`}>
+            <p className={`tabular mt-1.5 text-xs ${textoRestante < 100 ? "text-block" : "text-fg-muted"}`}>
               {miles(textoRestante)} caracteres restantes
             </p>
           </Campo>
@@ -422,20 +422,20 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
           <button
             type="submit"
             disabled={cargando}
-            className="w-full rounded bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+            className="w-full rounded-field bg-accent px-4 py-3 text-[15px] font-semibold text-on-accent hover:brightness-95 disabled:cursor-wait disabled:opacity-60"
           >
             {cargando ? "Evaluando…" : "Evaluar acción"}
           </button>
         </form>
 
-        <div className="rounded border border-slate-300 bg-slate-50 p-4">
+        <div className="min-h-48 rounded-card border border-line bg-surface p-5 sm:p-6">
           {error && (
-            <p role="alert" className="rounded border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-900">
+            <p role="alert" className="rounded-field border border-block/40 bg-block/10 px-4 py-3 text-sm font-medium text-block">
               {error}
             </p>
           )}
           {!error && !resultado && (
-            <p className="text-sm text-slate-700">
+            <p className="text-sm text-fg-muted">
               {cargando
                 ? "Evaluando…"
                 : "Elige un ejemplo o completa el formulario y pulsa «Evaluar acción». VoBo responde PERMITIR, PEDIR VOBO o BLOQUEAR, con el porqué."}

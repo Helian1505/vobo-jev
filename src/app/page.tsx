@@ -1,3 +1,4 @@
+import { Insignia } from "@/components/ResultadoPanel";
 import { Demo, type AudienciaResumen, type EjemploDemo } from "@/components/Demo";
 import ejemplosJson from "../../data/ejemplos_demo.json";
 import { AUDIENCIAS, resolverAudiencia } from "@/lib/vobo/audiencias";
@@ -28,14 +29,22 @@ export default function Home() {
 
   return (
     <>
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight">VoBo</h1>
-        <p className="mt-1 text-lg text-slate-800">El visto bueno antes de que un agente actúe.</p>
-        <p className="mt-2 max-w-3xl text-sm text-slate-700">
+      <header className="mb-10 max-w-3xl sm:mb-12">
+        <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">
+          El visto bueno antes de que un agente <span className="text-accent">actúe</span>.
+        </h1>
+        <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           VoBo revisa cada acción que propone un agente interno de 30X (correo masivo, WhatsApp masivo, publicación en
-          redes o cambio en el CRM) y responde PERMITIR, PEDIR VOBO humano o BLOQUEAR, con el porqué. Las reglas las
-          aplica el código; JEV, el modelo de TypeSafe, solo puede subir el riesgo; y ante la duda o un fallo decide una
-          persona.
+          redes o cambio en el CRM) y responde con una de tres decisiones, siempre con el porqué.
+        </p>
+        <ul className="mt-5 flex flex-wrap gap-2" aria-label="Las tres decisiones posibles">
+          <li><Insignia decision="ALLOW" /></li>
+          <li><Insignia decision="REVIEW" /></li>
+          <li><Insignia decision="BLOCK" /></li>
+        </ul>
+        <p className="mt-5 text-sm leading-relaxed text-fg-muted">
+          Las reglas las aplica el código. JEV, el modelo de TypeSafe, solo puede subir el riesgo, nunca bajarlo. Ante la
+          duda o un fallo, decide una persona.
         </p>
       </header>
       <Demo ejemplos={ejemplos} audiencias={audiencias} idsDeals={idsDeals} programas={programas} />
