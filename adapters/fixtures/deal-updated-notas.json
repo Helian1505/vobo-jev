@@ -1,0 +1,8 @@
+{
+  "event": "deal.updated",
+  "event_id": "evt_ejemplo_0002",
+  "occurred_at": "2026-10-17T15:42:00Z",
+  "deal": { "id": "D-1002" },
+  "change": { "field": "notes", "from": null, "to": "Pidió que le enviemos la grabación de la clase." },
+  "records_affected": 1
+}

@@ -1,0 +1,8 @@
+{
+  "event": "deal.updated",
+  "event_id": "evt_ejemplo_0001",
+  "occurred_at": "2026-10-17T15:30:00Z",
+  "deal": { "id": "D-1001" },
+  "change": { "field": "stage", "from": "En gestión", "to": "Ganado Pagado Completo" },
+  "records_affected": 1
+}
