@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import { combinar } from "@/lib/vobo/combine";
 import { interpretar, riesgoJev } from "@/lib/vobo/jev/interpret";
 import type { JevRespuesta, Respuesta } from "@/lib/vobo/jev/types";
-import { UMBRALES, perfilDe } from "@/lib/vobo/thresholds";
+import { perfilDe } from "@/lib/vobo/thresholds";
 
-const estricto = UMBRALES.perfiles.estricto; // T_accion 0,60 · T_revision 0,25 · T_segmento 0,60
-const laxo = UMBRALES.perfiles.laxo; // 0,80 · 0,50
+// Valores fijos (los iniciales de CLAUDE.md §6.4): estas pruebas no deben moverse cuando se reajusta data/thresholds.json.
+const estricto = { T_accion: 0.6, T_revision: 0.25, T_segmento: 0.6 };
+const laxo = { T_accion: 0.8, T_revision: 0.5, T_segmento: 0.6 };
 
 const choice = (probs: Record<string, number>): Respuesta => {
   const elegida = Object.entries(probs).sort((a, b) => b[1] - a[1])[0] as [string, number];

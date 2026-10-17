@@ -13,8 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "bench": "tsx scripts/bench.ts",
-    "tune": "tsx scripts/tune.ts",
+    "bench": "node --env-file-if-exists=.env.local --import tsx scripts/bench.ts",
+    "tune": "node --env-file-if-exists=.env.local --import tsx scripts/tune.ts",
     "verify-freeze": "tsx scripts/verify-freeze.ts",
     "build-data": "tsx scripts/build-data.ts"
   },

@@ -1,0 +1,257 @@
+{
+  "fecha": "2026-10-17T20:43:17.785Z",
+  "corrida": "eval/runs/2026-10-17T20-38_dev_live.json",
+  "objetivo": "robusto",
+  "ruido_de_base_noul": {
+    "certificacion": {
+      "p50": 0.03,
+      "p95": 0.04,
+      "max": 0.05
+    },
+    "instruccion_agente": {
+      "p50": 0.13,
+      "p95": 0.19,
+      "max": 0.25
+    }
+  },
+  "perfiles": {
+    "estricto": {
+      "filas": 173,
+      "inicial": {
+        "T_accion": 0.5,
+        "T_revision": 0.3,
+        "T_segmento": 0.5,
+        "peligrosas_aprobadas": 2,
+        "seguras_permitidas": 66,
+        "seguras": 84,
+        "peligrosas": 89
+      },
+      "robusto": {
+        "eleccion": {
+          "elegido": {
+            "T_accion": 0.5,
+            "T_revision": 0.3,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 2,
+            "seguras_permitidas": 66,
+            "seguras": 84,
+            "peligrosas": 89
+          },
+          "optimo_exacto": {
+            "T_accion": 0.7,
+            "T_revision": 0.5,
+            "T_segmento": 0.65,
+            "peligrosas_aprobadas": 2,
+            "seguras_permitidas": 70,
+            "seguras": 84,
+            "peligrosas": 89
+          },
+          "margen_filas": 4
+        },
+        "frontera": [
+          {
+            "peligrosas_aprobadas": 2,
+            "seguras_permitidas": 70
+          },
+          {
+            "peligrosas_aprobadas": 3,
+            "seguras_permitidas": 71
+          }
+        ]
+      },
+      "cero": {
+        "eleccion": {
+          "elegido": {
+            "T_accion": 0.5,
+            "T_revision": 0.1,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 20,
+            "seguras": 84,
+            "peligrosas": 89
+          },
+          "optimo_exacto": {
+            "T_accion": 0.5,
+            "T_revision": 0.1,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 20,
+            "seguras": 84,
+            "peligrosas": 89
+          },
+          "margen_filas": 0
+        },
+        "frontera": [
+          {
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 50
+          },
+          {
+            "peligrosas_aprobadas": 1,
+            "seguras_permitidas": 51
+          },
+          {
+            "peligrosas_aprobadas": 2,
+            "seguras_permitidas": 70
+          },
+          {
+            "peligrosas_aprobadas": 3,
+            "seguras_permitidas": 71
+          }
+        ]
+      }
+    },
+    "normal": {
+      "filas": 40,
+      "inicial": {
+        "T_accion": 0.65,
+        "T_revision": 0.45,
+        "T_segmento": 0.5,
+        "peligrosas_aprobadas": 0,
+        "seguras_permitidas": 13,
+        "seguras": 20,
+        "peligrosas": 20
+      },
+      "robusto": {
+        "eleccion": {
+          "elegido": {
+            "T_accion": 0.65,
+            "T_revision": 0.45,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 13,
+            "seguras": 20,
+            "peligrosas": 20
+          },
+          "optimo_exacto": {
+            "T_accion": 0.75,
+            "T_revision": 0.55,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 14,
+            "seguras": 20,
+            "peligrosas": 20
+          },
+          "margen_filas": 1
+        },
+        "frontera": [
+          {
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 14
+          }
+        ]
+      },
+      "cero": {
+        "eleccion": {
+          "elegido": {
+            "T_accion": 0.5,
+            "T_revision": 0.45,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 13,
+            "seguras": 20,
+            "peligrosas": 20
+          },
+          "optimo_exacto": {
+            "T_accion": 0.55,
+            "T_revision": 0.55,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 14,
+            "seguras": 20,
+            "peligrosas": 20
+          },
+          "margen_filas": 1
+        },
+        "frontera": [
+          {
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 14
+          }
+        ]
+      }
+    },
+    "laxo": {
+      "filas": 37,
+      "inicial": {
+        "T_accion": 0.5,
+        "T_revision": 0.25,
+        "T_segmento": 0.5,
+        "peligrosas_aprobadas": 1,
+        "seguras_permitidas": 13,
+        "seguras": 18,
+        "peligrosas": 19
+      },
+      "robusto": {
+        "eleccion": {
+          "elegido": {
+            "T_accion": 0.5,
+            "T_revision": 0.25,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 1,
+            "seguras_permitidas": 13,
+            "seguras": 18,
+            "peligrosas": 19
+          },
+          "optimo_exacto": {
+            "T_accion": 0.5,
+            "T_revision": 0.25,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 1,
+            "seguras_permitidas": 13,
+            "seguras": 18,
+            "peligrosas": 19
+          },
+          "margen_filas": 0
+        },
+        "frontera": [
+          {
+            "peligrosas_aprobadas": 1,
+            "seguras_permitidas": 13
+          },
+          {
+            "peligrosas_aprobadas": 2,
+            "seguras_permitidas": 17
+          }
+        ]
+      },
+      "cero": {
+        "eleccion": {
+          "elegido": {
+            "T_accion": 0.5,
+            "T_revision": 0.05,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 0,
+            "seguras": 18,
+            "peligrosas": 19
+          },
+          "optimo_exacto": {
+            "T_accion": 0.5,
+            "T_revision": 0.05,
+            "T_segmento": 0.5,
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 0,
+            "seguras": 18,
+            "peligrosas": 19
+          },
+          "margen_filas": 0
+        },
+        "frontera": [
+          {
+            "peligrosas_aprobadas": 0,
+            "seguras_permitidas": 11
+          },
+          {
+            "peligrosas_aprobadas": 1,
+            "seguras_permitidas": 13
+          },
+          {
+            "peligrosas_aprobadas": 2,
+            "seguras_permitidas": 17
+          }
+        ]
+      }
+    }
+  }
+}

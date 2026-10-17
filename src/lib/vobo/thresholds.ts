@@ -16,6 +16,8 @@ export const umbralesSchema = z.object({
   nota: z.string().optional(),
   fecha: z.string().nullable(),
   modelo: z.string().nullable(),
+  corrida: z.string().nullable().optional(),
+  objetivo: z.string().nullable().optional(),
   metricas_dev: z.unknown().nullable(),
   perfiles: z.object({ estricto: perfil, normal: perfil, laxo: perfil }),
 });
