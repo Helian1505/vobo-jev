@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Nav } from "@/components/Nav";
 import "./globals.css";
 
 // Fuentes auto-alojadas (licencia OFL), así no dependen de Google ni de la red al construir.
@@ -41,7 +42,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="font-display text-xl font-bold tracking-tight text-fg">VoBo</span>
               <span className="text-sm text-fg-muted">para 30X</span>
             </p>
-            <p className="rounded-full border border-line px-3 py-1 text-xs text-fg-muted">Reto JEV · Hackathon 30X</p>
+            <div className="flex items-center gap-3">
+              <Nav />
+              <p className="hidden rounded-full border border-line px-3 py-1 text-xs text-fg-muted sm:block">Reto JEV · Hackathon 30X</p>
+            </div>
           </div>
         </div>
 

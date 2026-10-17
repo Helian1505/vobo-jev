@@ -31,11 +31,11 @@ export const TIPOS_ACCION = [
   { valor: "crm_update", etiqueta: "Cambio en el CRM" },
 ] as const;
 
+// «estudiantes» existe en el banco sintético pero no en los datos de 30X: no se ofrece en la demo (docs/BASE_CONOCIMIENTO_30X.md §4).
 export const SEGMENTOS = [
   { valor: "founders", etiqueta: "Founders" },
   { valor: "ejecutivos", etiqueta: "Ejecutivos" },
   { valor: "equipos_tecnicos", etiqueta: "Equipos técnicos" },
-  { valor: "estudiantes", etiqueta: "Estudiantes" },
   { valor: "comunidad_general", etiqueta: "Comunidad general" },
 ] as const;
 
@@ -152,6 +152,9 @@ export function cuerpoDesdeEstado(e: FormEstado): Record<string, unknown> {
 export const miles = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 export const pct = (p: number) => `${Math.round(p * 100)}%`;
+
+/** Porcentaje con un decimal y coma decimal: 0,831 → «83,1%». */
+export const pct1 = (p: number | null) => (p === null ? "—" : `${(p * 100).toFixed(1).replace(".", ",")}%`);
 
 /** USD con los decimales justos para costos de fracciones de centavo. */
 export function usd(n: number): string {

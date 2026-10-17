@@ -16,7 +16,7 @@ export const ESTILO: Record<Decision, { caja: string; barra: string; texto: stri
 export function Insignia({ decision, grande = false }: { decision: Decision; grande?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border font-semibold ${ESTILO[decision].caja} ${
+      className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border font-semibold ${ESTILO[decision].caja} ${
         grande ? "px-4 py-2 text-lg tracking-tight" : "px-2.5 py-0.5 text-xs"
       }`}
     >
