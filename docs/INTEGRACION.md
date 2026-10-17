@@ -29,6 +29,15 @@ Así lo tradujimos:
 
 `POST /api/evaluate` · `Content-Type: application/json` · demo pública: `https://vobo-jev.vercel.app/api/evaluate`
 
+**Dos rutas, el mismo contrato.**
+
+| Ruta | Para qué | Acceso | Límite |
+|---|---|---|---|
+| `/api/evaluate` | La demo y las pruebas | **Abierta**, sin clave | 20 por minuto por IP |
+| `/api/v1/evaluate` | Integraciones | **Con clave**: `Authorization: Bearer <VOBO_API_KEY>` | 300 por minuto por IP; más de 10 intentos fallidos por minuto desde una IP reciben 429 |
+
+La ruta `v1` responde **401** (con `WWW-Authenticate: Bearer`) si falta la clave o no coincide, y **503** si la instancia no tiene `VOBO_API_KEY` configurada (o tiene menos de 16 caracteres): nunca queda abierta por olvido. Hay **una sola clave compartida**: no hay rotación, cuotas ni identidad por cliente, y viaja en un encabezado, así que hay que usar HTTPS. La demo pública de este repositorio no tiene la clave configurada, por lo que allí `v1` responde 503. El resto de este documento describe el contrato, igual en las dos rutas.
+
 **Petición**
 
 | Campo | Tipo | Obligatorio | Notas |
@@ -71,8 +80,9 @@ Los clientes deben **ignorar los campos que no conocen** y tratar un `schema_ver
 | HTTP | Cuándo | Cuerpo |
 |---|---|---|
 | 400 | JSON roto o acción inválida | `{ "error", "detalles": [...] }` |
-| 429 | Más de 20 solicitudes por minuto desde la misma IP (límite de la demo pública) | `{ "error" }` |
-| 503 | El modo es `live` y falta la llave de JEV en el servidor | `{ "error" }` |
+| 401 | Solo en `/api/v1/evaluate`: falta la clave o no es válida | `{ "error" }` |
+| 429 | Se pasó el límite por minuto de la ruta (20 en la demo, 300 en `v1`) | `{ "error" }` |
+| 503 | El modo es `live` y falta la llave de JEV en el servidor; o, en `v1`, falta `VOBO_API_KEY` | `{ "error" }` |
 
 **Un ejemplo real.** Petición (un correo a 7.500 personas que promete resultados):
 
@@ -202,6 +212,7 @@ Regla única: **si no hay una respuesta válida de VoBo, la acción no se ejecut
 | 200 con `decision: "BLOCK"` | BLOQUEAR |
 | 200 con `jev_estado: "fallo"` (JEV no respondió; el servidor ya subió el riesgo a `REVIEW`) | PEDIR VOBO |
 | Red caída, tiempo agotado, 5xx, 429, 503 | PEDIR VOBO |
+| 401 (la clave de la integración falta o no es válida: es un error de configuración) | PEDIR VOBO, y se registra para corregirlo |
 | 400 (la acción está mal armada: es un error del agente) | PEDIR VOBO, y se registra para corregirlo |
 | Cuerpo que no es JSON, `decision` inesperada o `schema_version` que el cliente no conoce | PEDIR VOBO |
 
@@ -254,7 +265,7 @@ Nada de esto está construido ni probado:
 - **Solo se evalúa lo que pasa por la compuerta.** Una llamada directa que no pase por el flujo de n8n ni por el envoltorio (un script que llama a una API por su cuenta, una herramienta sin envolver) **no se evalúa**.
 - **Cuatro tipos de acción.** VoBo modela correo masivo, WhatsApp masivo, publicación en redes y cambio en el CRM. El **«envío de información»** (compartir datos o documentos con terceros por API, por ejemplo) **no está modelado**: no hay reglas ni preguntas para eso.
 - **Mensajes uno a uno.** Se evalúa una acción a la vez. No modelamos mensajes personalizados por destinatario ni lotes con contenido distinto por persona: cada mensaje distinto es otra llamada.
-- **El endpoint es público.** La demo no tiene clave de API ni cuotas por cliente: solo un límite por IP, en memoria (en Vercel cada instancia lleva su propia cuenta, así que es de mejor esfuerzo).
+- **El endpoint de la demo es público** (`/api/evaluate`): sin clave y con un límite por IP en memoria (en Vercel cada instancia lleva su propia cuenta, así que es de mejor esfuerzo). Para integraciones existe `/api/v1/evaluate` con una clave Bearer, pero es **una sola clave compartida**, sin rotación, cuotas ni identidad por cliente.
 - **El texto de los mensajes viaja a JEV, un tercero** (TypeSafe). Hay que decidir qué contenido se puede mandar; todo lo que probamos es sintético.
 - **Garantías del webhook:** sin firma, sin reintentos y sin orden garantizado (a lo más una vez).
 - **VoBo no guarda nada.** Quien integra debe guardar el `request_id` y el `registro` si necesita auditoría.

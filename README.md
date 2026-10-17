@@ -132,6 +132,7 @@ Variables de entorno (`.env.example`):
 | `JEV_MODEL` | Modelo fijo, `jev-1.14.0` (no se usa `jev-latest`: los alias se mueven). |
 | `VOBO_JEV_MODE` | `live` (JEV real) o `mock` (simulado, sin red). Sin definir, es `mock`. |
 | `JEV_TIMEOUT_MS` | Opcional: tiempo límite por llamada (500–30000). Por defecto 3000. |
+| `VOBO_API_KEY` | Opcional: clave (mínimo 16 caracteres) para la ruta `/api/v1/evaluate`, que pide `Authorization: Bearer <clave>`. Sin ella esa ruta queda cerrada (503); la demo (`/api/evaluate`) sigue abierta. |
 | `VOBO_REVIEW_WEBHOOK_URL` | Opcional: si existe, avisa por POST JSON cuando una acción queda en PEDIR VOBO o BLOQUEAR (ver `docs/INTEGRACION.md`). |
 
 El banco de test no se puede volver a correr: `npm run bench -- --split test --corrida-unica` se niega si existe el candado.

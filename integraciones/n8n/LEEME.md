@@ -25,7 +25,7 @@ flowchart LR
 ## Cómo usarlo
 
 1. En n8n: **Workflows → Import from file** y elige `vobo-compuerta.workflow.json` (o `n8n import:workflow --input=...`).
-2. En el nodo **Evaluar con VoBo**, cambia la URL por la de tu instancia de VoBo (hoy apunta a la demo pública: `https://vobo-jev.vercel.app/api/evaluate`).
+2. En el nodo **Evaluar con VoBo**, cambia la URL por la de tu instancia de VoBo (hoy apunta a la demo pública: `https://vobo-jev.vercel.app/api/evaluate`, que es abierta). Si tu instancia protege la ruta de integraciones, usa `/api/v1/evaluate` y agrega en ese nodo el encabezado `Authorization: Bearer <tu clave>` (mejor con una credencial de tipo Header Auth, no pegada en el nodo). Con una clave inválida la ruta responde 401, y el flujo lo trata como falla: PEDIR VOBO.
 3. En los dos nodos de Slack, configura tu **credencial** y el **canal**. Mientras el canal sea el texto de relleno, n8n se niega a ejecutar el flujo: es a propósito, para que no corra a medias.
 4. Reemplaza **Ejecutar la acción (placeholder)** por la acción real y el webhook por el disparador real.
 5. **Registrar decisión (placeholder)** solo *arma* el registro (`registro` de la respuesta de VoBo y el `resultado`: ejecutada, rechazada o bloqueada). No escribe en ningún sistema.
