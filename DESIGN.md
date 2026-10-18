@@ -1,110 +1,152 @@
-# VoBo — Sistema de diseño v2 (DESIGN.md) · estructura Linear + marca 30X · sáb 17 oct 2026, 9:45 p.m.
+# DESIGN.md — Rediseño de la interfaz de VoBo (v3, sáb 17 oct 2026, 11:15 p.m.)
 
-> **Reemplaza a `DISENO_VoBo-30X_v1_17oct.md`** (estructura Ramp, tema claro). Lo pidió Juan a las 9:30 p.m.: la referencia de estructura es **Linear** («midnight precision instrument»), adaptada a las **fuentes y colores medidos en 30x.com**.
-> **Uso:** copiar a la raíz del repo como `DESIGN.md` (reemplaza a `docs/DESIGN_30X.md`) y pedirle a Claude Code que rediseñe las pantallas con él **en una rama aparte**, sin tocar la lógica (ver §8).
-> **Qué es hecho y qué es propuesta:** los colores y las fuentes de 30X (§1 y §2) son **valores medidos** en 30x.com el 17 oct. La estructura, los espaciados y los componentes vienen de la referencia de Linear y son **recomendación**.
-
-**Tema:** oscuro (como el hero de 30x.com y como Linear).
-**Idea:** un tablero de control nocturno y preciso. El negro es el sustrato; el texto es blanco y apretado; **el lima de 30X aparece solo donde hay una acción**. La única «imagen» es el producto mismo: tarjetas de decisión, el flujo agente → VoBo → canales y las cifras del test.
+> **Para Helian.** Este archivo es la referencia del diseño que ya está construido en la rama `rediseno-ui`. **No hay que replicarlo a mano.** Se aplica fusionando la rama, que ya tiene todo el código (sección 1). El resto del documento sirve para entender qué cambió y para mantenerlo igual en cualquier ajuste.
+>
+> Autor: Claude (sesión de Juan), con Juan David Cano. Aprobado por Juan en la vista previa de la rama.
 
 ---
 
-## 1. Colores
+## 1. Cómo aplicarlo a la página que está en línea
 
-### Marca 30X (medidos; reemplazan a los de Linear)
-| Token | Valor | Reemplaza en Linear | Uso |
+**Recomendado: fusionar la rama.** Copiarlo a mano tomaría horas y abriría errores. La rama ya compila en Vercel y no toca la lógica.
+
+1. Abre el pull request `rediseno-ui → main` en GitHub.
+2. En tu Claude Code, en el repo:
+   ```bash
+   git fetch origin && git switch rediseno-ui && git pull
+   npm ci                  # instala dependencias
+   npm test                # pruebas (paridad de reglas, ejemplos, perfiles, etc.)
+   npm run typecheck       # tipos
+   npm run build           # compilación de producción
+   npm run verify-freeze   # el hash de las etiquetas debe coincidir
+   ```
+3. Si todo pasa, fusiona el pull request. Vercel publica `main` en `https://vobo-jev.vercel.app`.
+4. Comprueba en la URL de producción: inicio, `/demo` (evalúa E09, debe dar BLOQUEAR), `/simulacion`, `/cola`, `/resultados` e `/integracion`. El pie de la demo debe decir `jev-1.14.0` y no «JEV SIMULADO».
+5. **Si algo falla después de fusionar**, revierte el merge desde GitHub (botón *Revert*) y la página vuelve a la versión anterior.
+
+**Qué NO cambia la rama:** `src/lib/` (reglas, JEV, combinador, explicación), `src/app/api/`, `data/`, `eval/`, `tests/`, `referencia/`, `integraciones/`, README ni `docs/` (salvo `docs/DESVIACIONES.md`, una fila). Las cifras que muestra salen de `eval/results/test.json`, sin recalcular nada.
+
+---
+
+## 2. Idea del diseño
+
+- **Estructura de Linear** (precisión, líneas finas, poco ruido) **con la marca de 30X** (negro, grises cálidos, Inter Display y el **lima como único acento**).
+- **Una idea por pantalla.** Primero el resumen y luego el detalle, plegado.
+- **Movimiento con propósito:** las cosas aparecen una vez, con un difuminado suave, y se quedan quietas. Quien tenga activado «reducir movimiento» ve todo quieto.
+- **Honestidad visible:** la meta de 0 que no se cumplió, los límites y lo que no está construido se muestran, no se esconden.
+
+---
+
+## 3. Tokens (todo vive en `src/app/globals.css`, bloque `@theme`)
+
+Los componentes usan **solo los nombres semánticos**. Para cambiar un color se cambia en un solo lugar.
+
+### 3.1 Color
+
+| Semántico | Valor | Uso |
+|---|---|---|
+| `canvas` | `#000000` | Fondo de la página |
+| `surface` | `#0a0a0a` | Tarjetas y paneles |
+| `field` | `#111111` | Campos y estado *hover* de tarjetas |
+| `raised` | `#1a1a1a` | Fondo de barras y celdas destacadas |
+| `line` / `line-strong` | `#232323` / `#383838` | Bordes finos (1 px) |
+| `fg` | `#f7f5f2` | Texto principal |
+| `fg-soft` | `#d4d4d4` | Texto de lectura |
+| `fg-muted` | `#a39e93` | Texto secundario |
+| `fg-faint` | `#868073` | Etiquetas, metadatos y figuras del fondo (gris cálido de 30X) |
+| `accent` | `#e9ff7b` | **Lima de 30X: único acento** (botón principal, VoBo, subrayado del menú) |
+| `allow` / `review` / `block` | `#7ee787` / `#f2cc60` / `#ffa198` | Solo para las decisiones PERMITIR / PEDIR VOBO / BLOQUEAR |
+
+### 3.2 Tipografía (igual en todas las páginas)
+
+Fuente: **Inter** auto-alojada (`src/app/fonts/`), con su corte Display por tamaño óptico. Para datos técnicos se usa mono (ids, `request_id`, modelo, latencia).
+
+| Elemento | Clases | Tamaño |
+|---|---|---|
+| Titular de página (`h1`) | `font-display text-4xl sm:text-5xl` | 36 → 48 px |
+| Titular del inicio | `font-display`, `clamp(2.75rem, min(4.6vw, 8.2vh), 4.25rem)` | Se encoge con la ventana para que el primer bloque quepa |
+| Etiqueta sobre titulares | `text-xs uppercase tracking-wider text-fg-faint` | 12 px |
+| Titular de sección (`h2`) | `font-display text-2xl sm:text-3xl` | 24 → 30 px |
+| Título de tarjeta (`h3`) | `font-display text-lg` | 18 px |
+| Texto de entrada de página | `text-base sm:text-lg text-fg-soft` | 16 → 18 px |
+| Texto de tarjeta | `text-sm text-fg-muted` | 14 px |
+| Metadatos | `mono text-[11px] text-fg-faint` | 11 px |
+
+`.font-display` = peso 600, tracking −0,04 em. **Nunca 700.**
+
+### 3.3 Forma y espacio
+- Radios: `rounded-field` 6 px (botones, campos), `rounded-card` 12 px (tarjetas), `rounded-full` (insignias).
+- Elevación por borde, no por sombra: clase `.hairline` (borde interior de 1 px). La única sombra es `.sombra-flotante` (panel de resultado de la demo).
+- Ancho máximo 1200 px; márgenes de 16 a 24 px.
+- Espacio entre secciones: `space-y-16 sm:space-y-20` en el inicio y `space-y-8` a `space-y-12` en las páginas internas.
+
+---
+
+## 4. Movimiento (clases en `globals.css`)
+
+| Efecto | Clase | Duración | Dónde |
 |---|---|---|---|
-| `--void` | `#000000` | Void `#08090a` | Lienzo de la página |
-| `--carbon` | `#0A0A0A` | Carbon `#0f1011` | Barra de navegación, tarjetas |
-| `--obsidian` | `#141414` | Obsidian `#161718` | Paneles elevados, panel de resultado |
-| `--graphite` | `#232323` | Graphite `#23252a` | Bordes finos (hairline), divisores |
-| `--smoke` | `#383838` | Smoke `#383b3f` | Bordes de mayor contraste, separadores de sección |
-| `--ash` | `#525252` | Ash `#62666d` | Texto apagado, íconos inactivos (gris medido en 30X) |
-| `--taupe` | `#868073` | Fog `#8a8f98` | Metadatos y micro-etiquetas: el **gris cálido** de 30X |
-| `--mist` | `#D4D4D4` | Mist `#d0d6e0` | Texto de cuerpo sobre negro |
-| `--sand` | `#F7F5F2` | Bone `#e5e5e6` | Texto casi blanco, botón blanco (fondo cálido medido en 30X) |
-| `--paper` | `#FFFFFF` | Paper | Titulares |
-| **`--lime`** | **`#E9FF7B`** | Acid Lime `#e4f222` | **Único acento:** botón primario, estado activo de la navegación, una palabra destacada en el titular, el foco |
-| `--lime-wash` | `rgba(233,255,123,0.08)` | — | Fondo sutil del ítem activo y del ejemplo seleccionado |
+| Entrada de cada página con difuminado | `.pagina-entra` (en `src/app/template.tsx`) | 700 ms | Todas las páginas, en cada cambio de pestaña |
+| Aparición al hacer scroll (desde abajo, con desenfoque) | `.revelar` + componente `Revelar` | 750 ms, escalonado 110–140 ms | Secciones y tarjetas del inicio, integración y resultados |
+| Filas del registro del inicio (entran desde la derecha) | `.fila-entra` | 800 ms, una cada 260 ms | Inicio |
+| Insignia de decisión «sello» | `.sello` | 500 ms | Inicio |
+| Barras que crecen | `.barra-crece` | 1,1 s | Resultados |
+| Línea que «fluye» en el diagrama | `.flujo` | Ciclo de 0,9 s | Integración |
+| Figuras del fondo | `.figura-a` / `.figura-b` + `FondoFiguras` | 40–80 s por ciclo, opacidad 12–16% | Todas las páginas, detrás del contenido |
+| Tarjeta que se eleva | `.elevar` | 260 ms, solo con mouse | Tarjetas del inicio e integración |
+| Cifras que cuentan | componente `Cifras` | 1,1 s | Inicio y resultados |
+| Resultado de la demo | `.entra` | 420 ms | Demo |
 
-### Estados de decisión de VoBo (funcionales, no son de marca)
-| Estado | Punto / borde | Fondo del chip (sobre negro) | Texto |
-|---|---|---|---|
-| PERMITIR | `#3FB950` | `rgba(63,185,80,0.12)` | `#7EE787` |
-| PEDIR VOBO | `#D29922` | `rgba(210,153,34,0.12)` | `#F2CC60` |
-| BLOQUEAR | `#F85149` | `rgba(248,81,73,0.12)` | `#FFA198` |
+**Reducir movimiento** (`prefers-reduced-motion`): sin desplazamientos ni desenfoques, figuras quietas, sin flujo ni ciclo automático del diagrama. Queda solo el cambio de opacidad.
 
-**Reglas:**
-- **El lima nunca marca un estado.** Si PERMITIR fuera lima, se confundiría con el botón de acción.
-- Los colores de estado solo aparecen en chips, puntos y bordes izquierdos de tarjetas; **nunca en texto de cuerpo**.
-- Los acentos extra de Linear (teal, violeta, lavanda, coral) **no se usan**.
+---
 
-## 2. Tipografía (30X)
-| Rol | Fuente | Peso | Tamaño / interlineado | Tracking |
-|---|---|---|---|---|
-| Display (hero) | Inter (corte Display con `font-optical-sizing: auto`) | 600 | 64–72 px / 1.0 | −0.04 em (30X; Linear usa −0.022) |
-| Titular de sección | Inter Display | 600 | 40–48 px / 1.05 | −0.04 em |
-| Subtítulo | Inter Display | 500 | 24–32 px / 1.2 | −0.03 em |
-| Cuerpo grande | Inter | 400 | 18–20 px / 1.5 | −0.01 em |
-| Cuerpo | Inter | 400 | 16 px / 1.5 | 0 |
-| Navegación | Inter Tight | 600 | 14 px | −0.01 em |
-| Etiqueta / micro | Inter | 500 | 12 px / 1.4 | −0.02 em, mayúsculas solo en micro-etiquetas |
-| **Datos técnicos** (`E09`, `request_id`, `jev-1.14.0`, `399 ms`, probabilidades) | **JetBrains Mono** (en lugar de Berkeley Mono) | 400 | 12–14 px | −0.01 em |
+## 5. Páginas y navegación
 
-- **Pesos permitidos:** 400, 500 y 600. Nunca 700 o más (regla de Linear, compatible con 30X).
-- **Se elimina la serif actual** (Playfair Display) de los titulares: no es de la marca 30X.
-- Carga: Inter, Inter Tight y JetBrains Mono desde Google Fonts o `next/font/google`, con `display: swap`.
+**Barra** (fija, con vidrio oscuro): el logo lleva al inicio. Le siguen cinco páginas, en el orden en que se cuenta la historia: **Demo → Simulación → Cola → Resultados → Integración**. A la derecha, «Código en GitHub». No hay anclas ni botones duplicados. En celular, un menú con «Inicio» más las cinco páginas.
 
-## 3. Espaciado, forma y elevación (Linear)
-- **Base de 4 px.** Ritmo 8 / 12 / 16 / 24 / 32 / 48 / 64 / **96** (separación entre secciones).
-- **Ancho máximo:** 1200 px. Padding de tarjeta: 24 px.
-- **Radios:** botones e inputs 6 px · tarjetas 12 px · pastillas 9999 px. Nada mayor a 12 px en tarjetas.
-- **Elevación por bordes, no por sombras:** borde interior de 1 px `--graphite` (`box-shadow: inset 0 0 0 1px var(--graphite)`). La única sombra real es la del panel flotante del resultado (`0 4px 32px rgba(0,0,0,0.6)`).
-- **Única excepción decorativa:** un «piso» degradado muy sutil bajo la tarjeta del producto en el hero (de `--void` a `rgba(233,255,123,0.06)`).
+Todas las páginas internas arrancan desde arriba con el mismo encabezado (`EncabezadoPagina`): etiqueta, titular y una o dos líneas.
 
-## 4. Componentes
-| Componente | Especificación |
+| Ruta | Contenido |
 |---|---|
-| **Barra de navegación (fija)** | `position: sticky; top: 0`, `backdrop-filter: blur(12px)`, fondo `rgba(0,0,0,0.72)`, borde inferior hairline al hacer scroll. Izquierda: marca «VoBo» (Inter 600 16 px) + «para 30X» en `--taupe`. Centro: Cómo funciona · Demo · Simulación · Resultados · Integración (Inter Tight 14 px, `--mist`; activo con subrayado lima de 2 px). Derecha: botón primario lima «Probar la demo». En móvil: menú hamburguesa |
-| **Botón primario** | Fondo `--lime`, texto `#0A0A0A`, Inter 600 14 px, radio 6 px, padding 10×16. **Uno por vista.** Hover: brillo +5% y desplazamiento de 1 px |
-| **Botón secundario** | Transparente, borde 1 px `--graphite`, texto `--mist`. Hover: borde `--smoke` |
-| **Chip de ejemplo** | Pastilla `rgba(255,255,255,0.05)`, texto `--mist` 13 px, con el ID en mono (`E09`) y un punto del color de la decisión esperada. Seleccionado: borde lima + `--lime-wash` |
-| **Tarjeta de decisión** | Fondo `--carbon`, borde interior hairline, radio 12 px, **borde izquierdo de 3 px del color del estado**. Arriba: canal y tipo (micro-etiqueta `--taupe`) + `request_id` en mono. Centro: chip de estado grande + titular de la explicación. Abajo: razones en lista y probabilidades de JEV como barras finas (4 px) |
-| **Barra de probabilidad** | Pista `--graphite`, relleno `--mist`, o del color del estado si supera el umbral; marca vertical en el umbral (T_acción) |
-| **Tarjeta de métrica** | Número en Inter Display 600 48 px blanco + etiqueta 13 px `--taupe` + nota en mono 12 px (p. ej., «IC 95%: 1,4–11,3%») |
-| **Badge** | Radio 4 px, fondo `rgba(255,255,255,0.05)`, texto 12 px `--taupe` |
-| **Input** | Fondo `rgba(255,255,255,0.02)`, borde 1 px `rgba(255,255,255,0.08)`, radio 6 px; foco: borde `--lime` |
-| **Panel lateral pegajoso** | En la demo, el resultado queda `position: sticky; top: 88px` en escritorio, para no tener que hacer scroll |
+| `/` Inicio | (1) Hero que cabe en la ventana: titular, dos botones y el «registro de decisiones» con 3 acciones reales evaluadas con JEV el 17 oct. (2) Cuatro cifras del test. (3) «Cómo funciona» en 3 tarjetas plegables. (4) «Recorre VoBo»: 5 tarjetas a las 5 páginas. (5) Lectura honesta. |
+| `/demo` | Antes estaba en `/#demo`. 16 ejemplos como botones, formulario con ajustes avanzados plegados y resultado fijo al lado en escritorio. Llama a JEV real. |
+| `/simulacion` | Sin cambios de lógica; encabezado común y texto más corto. |
+| `/cola` | Sin cambios de lógica; encabezado común y nota más corta. |
+| `/resultados` | (1) Cuatro números. (2) «Por qué combinar»: barras con solo reglas, solo JEV y VoBo (34 / 31 / 3 de 74 peligrosas pasan; autonomía 100 / 83,1 / 83,1%). (3) Lectura honesta en 3 tarjetas. (4) Detalle en 6 bloques plegables: tabla completa, matriz de confusión, aporte de JEV, cada error con su texto, dev y umbrales, integridad. **No se quitó ningún dato.** |
+| `/integracion` | Nueva. Diagrama interactivo (agente → puerta de salida → VoBo → PERMITIR / PEDIR VOBO / BLOQUEAR, más el registro). Cuatro principios y la tabla «Qué está construido y qué no», tomada de `docs/INTEGRACION.md`. |
 
-## 5. Imágenes (adaptadas, sin fotos)
-Como en Linear: **el producto es la imagen.** Todo se construye en SVG o HTML, sin fotos de stock:
-1. **Hero:** tarjeta grande que simula un turno de VoBo: tres tarjetas de decisión que entran una tras otra (PERMITIR → PEDIR VOBO → BLOQUEAR), con contador de ms y costo.
-2. **Diagrama «la puerta de salida»:** Agente → **VoBo** (reglas en código + JEV) → HubSpot · WhatsApp · Redes, con una flecha lateral «lo dudoso → Slack» y una línea punteada «registro». Líneas hairline y nodos con borde fino; VoBo es el único nodo con borde lima.
-3. **Íconos:** de línea, 1,5 px, en `--mist` (un solo estilo).
+---
 
-## 6. Arquitectura de la página de inicio (nueva distribución)
-| # | Sección | Contenido | Interacción |
-|---|---|---|---|
-| 0 | **Navegación fija** | Ver §4 | Resalta la sección visible (scroll-spy) |
-| 1 | **Hero** | Micro-etiqueta «Reto JEV · Hackathon 30X». Titular: «La puerta de salida de los **agentes** de 30X» (una palabra en lima). Subtítulo: «Cada correo, WhatsApp, publicación o cambio en HubSpot pasa por VoBo. JEV decide en milisegundos: lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo indebido no sale.» CTA lima «Probar la demo» + secundario «Ver resultados». A la derecha o debajo: la tarjeta animada (§5.1) | Animación en bucle; se pausa al pasar el mouse |
-| 2 | **Franja de cifras** | 4 tarjetas de métrica: **34 → 3** peligrosas sin persona (de 74) · **83,1%** seguras salen solas · **399 ms** p50 · **USD 0,064** por 1.000 decisiones. Nota: «Test de una sola corrida, JEV real. Detalle en Resultados.» | Las cifras cuentan hacia arriba al entrar en pantalla (una vez) |
-| 3 | **Cómo decide** | Tres columnas: 1 Reglas en código (lo que un modelo no debe hacer) · 2 JEV, 7 preguntas tipadas en una llamada · 3 El más severo gana; ante la duda, una persona | Cada tarjeta se expande con su detalle |
-| 4 | **Pruébalo (demo)** | Izquierda: **chips de ejemplos** (E16, E05, E09, E02, E12, …) en lugar del menú desplegable + formulario compacto (tipo, canal, destinatarios y texto visibles; el resto en «Ajustes avanzados», plegado). Derecha: **panel de resultado pegajoso** con la tarjeta de decisión | Un clic en un chip llena el formulario y evalúa; el resultado aparece con una transición corta |
-| 5 | **Cómo se pone en 30X** | El diagrama (§5.2) + 4 puntos: puerta única dentro de la herramienta del agente · llaves solo en la puerta · falla cerrada · JEV solo ve el texto. Enlace a `docs/INTEGRACION.md` y a la puerta MCP | Hover en cada nodo del diagrama muestra su explicación |
-| 6 | **Evidencia** | Resumen de resultados con la frase honesta («la meta era 0 y no se cumplió: 3 de 74») + botón a `/resultados` | — |
-| 7 | **Footer** | Datos sintéticos, política de demostración, muestra de perfiles de ejemplo para el reto, enlaces a repo, playbook y equipo | — |
+## 6. Componentes nuevos o cambiados (`src/components/`)
 
-Las páginas `/simulacion`, `/cola` y `/resultados` heredan los tokens y componentes (navegación fija, tarjetas, tablas con filas hairline y números en mono), sin cambiar su contenido ni su lógica.
+| Archivo | Qué hace |
+|---|---|
+| `Nav.tsx` | Barra por páginas, menú móvil, contador de pendientes en «Cola» |
+| `EncabezadoPagina.tsx` | `EncabezadoPagina` (h1 de página), `EncabezadoSeccion` (h2 con etiqueta y nota) y `Plegable` (bloque desplegable) |
+| `HeroVivo.tsx` | Registro de 3 decisiones reales del inicio (servidor, sin estado) |
+| `Cifras.tsx` | Franja de cifras que cuentan al entrar en pantalla |
+| `DiagramaPuerta.tsx` | Diagrama de integración (SVG): botones o mouse resaltan un camino, recorre los tres solo hasta que alguien elige y muestra debajo el ejemplo real. En celular se ve como lista |
+| `Revelar.tsx` | Aparición al hacer scroll (IntersectionObserver). Sin JavaScript, el contenido se ve igual (regla `noscript` en `layout.tsx`) |
+| `FondoFiguras.tsx` | 10 figuras SVG decorativas, fijas detrás del contenido; `aria-hidden`, sin clics |
+| `Demo.tsx` | Ejemplos como botones con su intención, ajustes avanzados plegados y panel de resultado fijo |
+| `src/app/template.tsx` | Envuelve cada página para el difuminado de entrada |
 
-## 7. Movimiento
-- Transiciones de 150–250 ms con `ease-out`. Nada que rebote.
-- Respetar `prefers-reduced-motion`: sin animaciones y con las cifras finales directo.
-- La animación del hero y el conteo de cifras son las únicas animaciones «de marketing».
+---
 
-## 8. Reglas para implementarlo sin romper nada
-1. **Rama aparte** (`rediseno-ui`). Vercel genera una URL de vista previa; **no se fusiona a `main` hasta que Juan la apruebe** y las pruebas pasen.
-2. **Solo** `src/app/**` (páginas y `globals.css`), `src/components/**`, fuentes y `DESIGN.md`. **No tocar** `src/lib/vobo/**`, `src/app/api/**`, `data/`, `eval/`, `scripts/` ni `tests/` (salvo una prueba de UI que haya que ajustar por un texto, sin cambiar lo que comprueba).
-3. Mantener los textos honestos que ya existen (banner de JEV real o simulado, «acciones sintéticas», «política de demostración», la frase de integridad de `/resultados`) y **todas las cifras exactamente iguales**.
-4. Frases prohibidas: «cero», «integrado con HubSpot», incidentes de 30X, n8n como integración principal.
-5. Accesibilidad: contraste AA (el lima solo como fondo de botón o sobre negro), foco visible, navegación con teclado, `alt`/`aria-label` en el diagrama.
-6. Antes de fusionar: `npm test`, `npx tsc --noEmit`, `npm run build`, `npm run verify-freeze`, y probar en escritorio y en móvil (375 px).
+## 7. Reglas de contenido que el diseño respeta
+
+- **Cifras** solo de `eval/results/test.json` (conjunto principal de 145 acciones): 3 de 74 · 83,1% · 25,5% · p50 399 ms · p95 650 ms · USD 0,064 por 1.000 · 1.534 tokens. Se escriben con coma decimal.
+- **Principio D-013:** «JEV opina, el código autoriza y una persona decide lo dudoso». Nunca «JEV decide».
+- **HubSpot** se nombra, pero nunca se dice «integrado con HubSpot» (D-027). La ejecución en HubSpot y WhatsApp es un ejemplo, no está conectada.
+- **Perfiles:** «muestra de perfiles de ejemplo compartida para el reto (anónima, solo categorías)» (D-028).
+- No se citan incidentes de 30X (D-015). No se usa otro modelo (D-025). No se habla de n8n como integración principal.
+- El pie de todas las páginas dice que las acciones son sintéticas y la política es de demostración.
+
+---
+
+## 8. Pendiente o por verificar
+
+- **Celular:** no se pudo verificar desde la sesión de Claude. Revisar en un teléfono antes de grabar.
+- **Guion y tomas:** la demo ahora está en `/demo`. Donde el guion diga «bajar hasta la demo», ahora es «clic en Demo».
+- Las clases `.pulso` y `.tarjeta-entra` quedaron sin uso. Se pueden borrar después de la entrega.
