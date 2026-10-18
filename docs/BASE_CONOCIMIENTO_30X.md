@@ -5,7 +5,7 @@ Versión 1 · sáb 17 oct 2026, 12:45 p.m. (Bogotá) · Equipo VoBo (Helian Fier
 Este documento reúne lo que sabemos de 30X y de dónde sale cada dato. Es la base para las decisiones del prototipo, el playbook y el pitch. Si un dato de aquí cambia, cambia también donde se usa (política, ejemplos de la demo, README).
 
 **Fuentes:**
-- **[30X]** Base de perfiles anónimos que 30X compartió para el reto: `data/perfiles_30x.csv` (697 de los 699 perfiles de la muestra; en la extracción faltan P-295 y P-299).
+- **[30X]** Muestra de perfiles de ejemplo compartida para el reto (anónima, solo categorías): `data/perfiles_30x.csv` (697 de los 699 perfiles de la muestra; en la extracción faltan P-295 y P-299).
 - **[Público]** Investigación web del 16 oct (30x.com, hackathon.30x.com, prensa y documentación de TypeSafe). No está verificada con 30X.
 - **[Inferencia]** Una lectura nuestra a partir de los datos. No es un dato.
 - **[Supuesto]** Un valor de demostración que hay que confirmar con 30X.
@@ -54,11 +54,11 @@ Los nombres son los que aparecen en la base de perfiles **[30X]**. El conteo es 
 ## 3. La base de contactos y el embudo
 
 ### 3.1 Tamaño
-- **[30X]** La base real tiene unas **24.800 personas con deal en el CRM** y unas **7.500 leads sin deal**, en total cerca de **32.300 contactos**.
-- **[30X]** La muestra (699 perfiles; 697 en la extracción) se armó en la misma proporción por afinidad que la base real, para que no quede sesgada hacia los mejor calificados.
-- **Factores de escala** de la muestra a la base: cada deal de la muestra ≈ **83,2 personas** reales y cada lead ≈ **18,8** (`data/audiencias_demo.json`). Con eso, la demo convierte una audiencia de la muestra en "destinatarios estimados".
+- **[30X]** Las notas de método de la muestra dan una estimación de unas **24.800 personas con deal en el CRM** y unas **7.500 leads sin deal**, en total cerca de **32.300 contactos**. Es una cifra de las notas de la muestra, no una cifra verificada de la base de 30X; no se usa para extrapolar.
+- **[30X]** Según sus notas, la muestra (699 perfiles; 697 en la extracción) se armó en la misma proporción por afinidad que la base de origen, para que no quede sesgada hacia los mejor calificados.
+- **Factores de escala** de la muestra a la base: cada deal de la muestra ≈ **83,2 personas** estimadas y cada lead ≈ **18,8** (`data/audiencias_demo.json`). Con eso, la demo convierte una audiencia de la muestra en "destinatarios estimados".
 
-### 3.2 Estado de los 298 deals de la muestra **[30X]**
+### 3.2 Estado de los 298 deals, en la muestra **[30X]**
 
 | Estado | Deals | Etapas del CRM |
 |---|---|---|
@@ -66,7 +66,7 @@ Los nombres son los que aparecen en la base de perfiles **[30X]**. El conteo es 
 | Oportunidad perdida | 40 (13%) | Cierre perdido 40 |
 | Cliente (pagó) | 10 (3,4%; IC 95%: 1,8–6,1%) | Ganado Pagado Completo 8 · Ganado Pago Parcial 2 |
 
-### 3.3 Qué pasa según la afinidad (deals de la muestra) **[30X]**
+### 3.3 Qué pasa según la afinidad, en la muestra **[30X]**
 
 | Banda de afinidad | Deals | Pagaron | % pagó (IC 95%) | Perdidas | Siguen en proceso |
 |---|---|---|---|---|---|
@@ -173,7 +173,7 @@ De los 7 clientes que tenían programa sugerido, solo 1 compró ese mismo progra
 
 ## 7. Contexto de entregabilidad **[Público]**
 - Gmail exige a quien envía más de 5.000 correos al día una tasa de spam menor a 0,3%, baja con un clic y atender las bajas en 48 horas. Con 10.000 envíos, 30 denuncias ya son el 0,3%. Eso sustenta el umbral de 5.000 destinatarios de la política.
-- **[Inferencia]** Con unos 32.300 contactos y el 83% de los deals "en proceso", cualquier envío masivo de un agente a la base completa cruza ese umbral.
+- **[Inferencia]** Una audiencia de miles de personas (como las que estima la demo desde la muestra) supera con facilidad ese umbral. Es contexto general, no una cifra de 30X.
 
 ## 8. Decisiones de VoBo que salen de esta base
 Aprobadas por Helian el sáb 17 oct a las 12:30 p.m.
@@ -186,9 +186,9 @@ Aprobadas por Helian el sáb 17 oct a las 12:30 p.m.
 | 4 | Precio de referencia por programa cuando es público: AI for Executives 2.000, AI for devs 1.500, AI Sales, Sales Machine y Ventas con LinkedIn 1.950 (USD) y Free Sales Training gratuito. Un programa sin precio público **no tiene verificación de precio**; los USD 99 de la sesión abierta se usan solo cuando la acción no declara programa | Sección 2; cambio del 17 oct 6 p.m. (ver `docs/DESVIACIONES.md`) |
 | 5 | Los destinatarios de la demo se estiman con los factores de escala de la muestra | Sección 3.1 |
 | 6 | No se le pregunta a JEV por datos categóricos (rol, banda, etapa): eso lo resuelve el código | Principio de diseño; sección 5 |
-| 7 | Historia de impacto del pitch: unos 32.300 contactos, 83% de los deals en seguimiento y 3,4% de conversión de deal a pago en la muestra. Cada mensaje equivocado en masa cuesta reputación en un embudo donde convertir ya es difícil | Secciones 3 y 7 |
+| 7 | Historia de impacto del pitch: los agentes de 30X toman miles de decisiones repetitivas al día; VoBo las vuelve una política que se ejecuta y se mide. Cifras de contexto, siempre rotuladas «en la muestra»: 83% de los deals en seguimiento y 3,4% de conversión de deal a pago. No se extrapolan a la base real | Secciones 3 y 7 |
 | 8 | Hoja de ruta: JEV para clasificar dolor y objetivo desde texto libre (hoy, 55% de acierto según 30X) | Sección 5 |
-| 9 | El repo es público y estos datos van en él (aprobado por Helian) | Material compartido por 30X para el reto, sin datos personales |
+| 9 | El repo es público y esta muestra va en él (aprobado por Helian) | Muestra de perfiles de ejemplo compartida para el reto (anónima, solo categorías) |
 
 ## 9. Supuestos que siguen abiertos (para la mentoría)
 1. ¿30X otorga certificaciones oficiales o avales? Asumimos que no.

@@ -1,13 +1,16 @@
 # VoBo — el visto bueno antes de que un agente actúe
 
-**VoBo es una compuerta de políticas para los agentes internos de 30X.** Revisa cada acción que propone un agente (correo masivo, WhatsApp masivo, publicación en redes, cambio en el CRM) y responde **PERMITIR**, **PEDIR VOBO humano** o **BLOQUEAR**, siempre con el porqué. Las reglas las aplica el código; **JEV** (el modelo de TypeSafe) opina en milisegundos y solo puede subir el riesgo; ante la duda o un fallo, decide una persona.
+**VoBo es la puerta de salida de los agentes de 30X.** Cada correo, WhatsApp, publicación o cambio en HubSpot que un agente quiera hacer pasa por ella. **JEV** (el modelo de TypeSafe) decide en milisegundos si se ajusta a los guardrails de 30X: lo seguro sale solo, lo dudoso llega a una persona (por Slack) con su porqué y lo indebido no sale. Cada decisión queda registrada.
+
+Cubre dos de las ideas que 30X planteó en el reto: guardrails para agentes internos y calificación de contenido (las publicaciones en redes se aprueban o se frenan con reglas claras y lo dudoso pasa al equipo).
 
 Proyecto del equipo VoBo para el Hackathon 30X (reto JEV), 16–18 oct 2026.
 
 - **Demo:** https://vobo-jev.vercel.app/ (usa JEV real, `jev-1.14.0`)
 - **Resultados del banco:** https://vobo-jev.vercel.app/resultados
 - **Simulación en vivo:** https://vobo-jev.vercel.app/simulacion (un agente propone acciones una tras otra y VoBo decide cada una, con contadores y costo acumulado) y **cola de VoBo humano:** https://vobo-jev.vercel.app/cola (demostración: el estado vive solo en el navegador)
-- **Cómo integrarlo:** [`docs/INTEGRACION.md`](docs/INTEGRACION.md): un paso de compuerta dentro de los flujos de n8n (`integraciones/n8n/`), un envoltorio de Python como complemento (`integraciones/python/`), la falla cerrada, lo que es solo diseño y los límites
+- **Cómo integrarlo:** [`docs/INTEGRACION.md`](docs/INTEGRACION.md): la puerta de salida dentro de las herramientas del agente (puerta MCP, **en construcción**, y un envoltorio de Python en `integraciones/python/`), n8n como adaptador para los flujos que viven fuera de tecnología (`integraciones/n8n/`), la falla cerrada, lo que es solo diseño y los límites
+<!-- TODO: completar el enlace a integraciones/mcp/ cuando exista en main (Helian avisará). -->
 
 ![VoBo bloquea una acción con promesa de resultados: la decisión, las razones y las respuestas de JEV con su probabilidad](docs/assets/demo-bloquear.jpg)
 
@@ -15,17 +18,16 @@ Proyecto del equipo VoBo para el Hackathon 30X (reto JEV), 16–18 oct 2026.
 
 ## 1. El problema
 
-30X convierte un embudo gratuito grande (clases abiertas, bootcamps, newsletters y comunidad) en programas de pago. Cada agente que toca ese embudo, sea para enviar un correo, escribir en WhatsApp, cambiar el CRM o publicar, puede dañar la reputación, la entregabilidad o los datos de la base. Según su página de empleo, en 30X «todos crean agentes» [Público].
+Los agentes de 30X ya envían correos y WhatsApp, publican en redes y actualizan HubSpot. Cada acción que sale es una decisión repetitiva (miles al día) que hoy se resuelve con guardrails consensuados con los usuarios. VoBo convierte esos guardrails en una política que se ejecuta y se mide en cada acción, para que los agentes puedan hacer más solos, con evidencia de que lo seguro sale sin molestar a nadie y lo dudoso llega a una persona.
 
-Qué tan grande es la base y qué tan difícil es convertir en ella (muestra anónima que compartió 30X, [30X]):
+La demo usa una muestra de perfiles de ejemplo compartida para el reto (anónima, solo categorías). Algunas cifras de esa muestra, solo como contexto y sin extrapolarlas a la base real de 30X:
 
-| Dato | Cifra |
+| Dato (en la muestra) | Cifra |
 |---|---|
-| Contactos en la base real | unos **32.300**: ≈ 24.800 con deal en el CRM y ≈ 7.500 leads sin deal |
 | Deals que siguen «en proceso» | **83%** (248 de los 298 deals de la muestra) |
 | Conversión de deal a pago | **3,4%** (10 de 298; IC 95%: 1,8–6,1%) |
 
-Con ese embudo, un mensaje equivocado enviado en masa cuesta reputación en un lugar donde convertir ya es difícil. Además, Gmail exige a quien envía más de 5.000 correos al día una tasa de spam menor a 0,3% [Público, requisitos de Google para remitentes masivos]; con 32.300 contactos, un envío a la base completa cruza ese umbral.
+Como contexto general, Gmail exige a quien envía más de 5.000 correos al día una tasa de spam menor a 0,3% [Público, requisitos de Google para remitentes masivos]; por eso la política de demostración pide VoBo humano por encima de 5.000 destinatarios.
 
 Fuentes y matices de cada cifra: [`docs/BASE_CONOCIMIENTO_30X.md`](docs/BASE_CONOCIMIENTO_30X.md).
 
@@ -51,14 +53,28 @@ flowchart LR
 
 La política (`data/policy_demo.json`) es de demostración, con supuestos; no es la política real de 30X.
 
-## 3. Por qué JEV
+## 3. Qué datos salen hacia JEV
+
+Según [`src/lib/vobo/jev/state.ts`](src/lib/vobo/jev/state.ts), a JEV le llega solo:
+
+- el **texto** de la acción, marcado como contenido no confiable;
+- el **tipo de acción** y el **canal**;
+- un **contexto fijo** de 30X (quién es, qué programas tiene, qué no ofrece).
+
+**No recibe** destinatarios, identificadores, correos, segmento, fechas ni precios: eso lo resuelve el código. VoBo no usa ningún otro modelo; las explicaciones son plantillas sobre datos.
+
+**Hoja de ruta:** detectar en código los datos personales evidentes (correo, teléfono, documento) y bloquear sin enviar el texto a JEV.
+
+*Análisis posterior, no medido en la corrida del test:* las 4 acciones del test con un correo o teléfono visibles (B313, B314, B315 y B339) están etiquetadas BLOQUEAR, y ninguna acción segura del test tiene esos patrones.
+
+## 4. Por qué JEV
 
 - **Decide, no conversa:** cada pregunta devuelve una respuesta tipada con su probabilidad (`noul`, `choice`, `score`). Eso permite umbrales, escalar la duda y explicar el «cuánto».
 - **Una llamada responde las 7 preguntas.** En el test: latencia **p50 de 399 ms y p95 de 650 ms**, con 1.534 tokens de entrada por decisión.
 - **Costo:** USD 0,042 por millón de tokens de entrada y la salida es gratis. Medido: **≈ USD 0,064 por 1.000 decisiones**.
 - Esa combinación (milisegundos y fracciones de centavo) es lo que permite poner la compuerta delante de *cada* acción de *cada* agente.
 
-## 4. Resultados del banco
+## 5. Resultados del banco
 
 400 acciones sintéticas, 250 para ajustar (dev) y 150 para medir (test). **El test se corrió una sola vez, con JEV real (`jev-1.14.0`), y se reporta tal cual.** Conjunto principal: las 150 del test sin las 5 sin mayoría humana (145 acciones: 74 peligrosas y 71 seguras).
 
@@ -68,6 +84,8 @@ La política (`data/policy_demo.json`) es de demostración, con supuestos; no es
 | Solo JEV | 31 de 74 | 83,1% | 15,2% | 2 de 71 | 3 de 42 |
 | **Combinado (VoBo)** | **3 de 74** | **83,1%** | **25,5%** | **2 de 71** | **0 de 42** |
 
+**Carga humana.** El 25,5% de escaladas sale de un banco con 51% de acciones peligrosas por diseño. Con las mismas tasas por clase, si solo el 5–10% del tráfico fuera problemático, le llegaría a una persona cerca del 15–16% (estimación, no medición). La mayor parte son falsas alarmas sobre acciones seguras (10 de 71); eso es lo que baja el modo sombra con el tráfico real.
+
 - **Lo que aporta JEV:** de las 34 peligrosas que las reglas solas dejan pasar, el combinado atrapa 31.
 - **La meta de cero no se cumplió:** 3 de 74 peligrosas se aprobaron sin persona (4,1%; IC 95%: 1,4–11,3%); en el conjunto completo son 4 de 79. Son textos de apariencia inocua que una persona etiquetó «PEDIR VOBO»; tres de los cuatro los etiquetó un solo revisor. No afirmamos que esas etiquetas estén mal. Cada uno aparece con su texto en [`/resultados`](https://vobo-jev.vercel.app/resultados).
 - **Autonomía:** el 83,1% de las acciones seguras pasa sin molestar a nadie (IC 95%: 72,7–90,1%).
@@ -76,7 +94,7 @@ La política (`data/policy_demo.json`) es de demostración, con supuestos; no es
 
 Con 150 casos, cada error mueve las métricas cerca de 0,7 puntos: es una demostración, no estadística sólida. La exactitud de la capa de reglas es una prueba unitaria; la evidencia real es lo que aporta JEV.
 
-## 5. Integridad del resultado
+## 6. Integridad del resultado
 
 - **Banco ciego:** las 400 acciones se publicaron sin la decisión correcta. De las 150 del test, 129 las etiquetaron personas del equipo sin ver la propuesta de diseño; 15 siguen una decisión de política de Helian (17 oct) y 6 una corrección por criterio explícito (v1.1, declarada en [`eval/FREEZE.md`](eval/FREEZE.md)). Del dev, 74 son etiquetas humanas, 1 sigue una decisión de política y 1 una corrección v1.1; las otras 174 usan la propuesta de diseño tal cual, por eso el dev no se usa para reportar. El acuerdo entre revisores (κ = 0,51, moderado) se calculó solo sobre las 133 filas obligatorias que tuvieron dos votos (oro y test), con el piso de reglas aplicado; no cubre las demás ([`docs/REVISION_HUMANA.md`](docs/REVISION_HUMANA.md)).
 - **División dev/test por plantillas:** los textos del test usan plantillas distintas a las del dev, así que se mide generalización y no memoria.
@@ -86,7 +104,7 @@ Con 150 casos, cada error mueve las métricas cerca de 0,7 puntos: es una demost
 - **Cero métricas con JEV simulado:** el mock sirve para pruebas y para la demo sin red, y la interfaz lo marca siempre como «JEV SIMULADO».
 - Las decisiones que se apartaron del plan original están en [`docs/DESVIACIONES.md`](docs/DESVIACIONES.md).
 
-## 6. Límites honestos
+## 7. Límites honestos
 
 - **Las acciones son sintéticas** y la **política es de demostración** (supuestos por confirmar con 30X, p. ej. si 30X otorga certificaciones, el precio de la sesión abierta, el umbral de 5.000 destinatarios o el horario de envíos).
 - **Los programas fuera del catálogo no tienen verificación de precio.** La regla `precio_inconsistente` compara con el precio de catálogo solo para los 6 programas con precio público (AI for Executives, AI for devs, AI Sales, Sales Machine, Ventas con LinkedIn y Free Sales Training). Si la acción declara otro programa (p. ej. AI Second Brain), la regla no se activa; los USD 99 de la sesión abierta solo se usan cuando la acción no declara programa.
@@ -103,13 +121,13 @@ Con 150 casos, cada error mueve las métricas cerca de 0,7 puntos: es una demost
 | Qué | Origen |
 |---|---|
 | Banco de 400 acciones (`data/banco_acciones_v1_ciego.csv`) | **Sintético**, escrito por el equipo |
-| 697 perfiles (`data/perfiles_30x.csv`) | **Real y anónimo**, compartido por 30X para el reto: solo categorías, sin nombres, correos ni texto libre |
+| 697 perfiles (`data/perfiles_30x.csv`) | **Muestra de perfiles de ejemplo compartida para el reto (anónima, solo categorías)**, sin nombres, correos ni texto libre |
 | Programas, etapas del CRM y cifras del embudo | De esos perfiles y de fuentes públicas; cada dato con su fuente en [`docs/BASE_CONOCIMIENTO_30X.md`](docs/BASE_CONOCIMIENTO_30X.md) |
 | Etiquetas (`data/etiquetas_v1.csv`) | Revisión humana del equipo (test y 76 filas de dev); 174 filas de dev son la propuesta de diseño |
 
 Nunca se presenta un perfil como una persona con nombre. El diseño visual sigue el de 30X ([`docs/DESIGN_30X.md`](docs/DESIGN_30X.md)).
 
-## 7. Cómo correrlo
+## 8. Cómo correrlo
 
 Requiere Node 20 o superior.
 
@@ -138,13 +156,15 @@ Variables de entorno (`.env.example`):
 
 El banco de test no se puede volver a correr: `npm run bench -- --split test --corrida-unica` se niega si existe el candado.
 
-## 8. Hoja de ruta
+## 9. Hoja de ruta
 
+- **Datos personales en código:** detectar correos, teléfonos y documentos evidentes y bloquear sin enviar el texto a JEV.
+- **HubSpot (propuesta):** suscribirse a los webhooks de HubSpot sobre cambios de deals y contactos para auditar lo que no pasó por la puerta.
 - **Modo sombra → etiquetar → ajustar umbrales → aplicar → monitorear:** poner VoBo primero al lado de un agente real sin frenarlo, etiquetar lo que escala, reajustar con datos reales y solo entonces activarlo.
 - **El mismo patrón para el enrutador de prospectos.** Según 30X, el dolor y el objetivo de los perfiles aciertan 55%; JEV podría clasificar el texto libre de una inscripción, con su probabilidad, y mandar a una persona los casos dudosos.
 - **Segmento de líderes comerciales:** el 16% de los roles con dato no tiene segmento propio en el banco.
 - **Variantes en dev:** instrucciones en inglés frente a español, detector determinista de inyección y prueba del orden de opciones.
 
-## 9. Equipo
+## 10. Equipo
 
 Helian Fierro, Juan David Cano y Angie Tamara — equipo **VoBo**. Construido con Claude Code.

@@ -2,26 +2,37 @@
 
 VoBo es un servicio HTTP: recibe la acción que alguien quiere hacer y responde **PERMITIR**, **PEDIR VOBO humano** o **BLOQUEAR**, con el porqué. Este documento dice cómo lo conectamos a la forma de trabajar que 30X nos describió, qué quedó construido y probado, qué es solo diseño y cuáles son los límites.
 
-> **Alcance.** Lo marcado **[dicho 30X]** es lo que 30X nos contó en sus respuestas del 17 de octubre; no lo hemos verificado y **no conocemos su instancia de n8n, su Slack ni su CRM**. Todo lo demás describe VoBo y ejemplos genéricos. Los números de latencia y costo salen del banco de pruebas sintético.
+> **Alcance.** Lo marcado **[dicho 30X]** es lo que 30X nos contó en sus respuestas del 17 de octubre; no lo hemos verificado y **no conocemos su Slack ni su CRM**. El CRM de 30X es HubSpot; lo nombramos, pero **no hay ninguna integración con HubSpot**: lo de HubSpot es una **propuesta**. Todo lo demás describe VoBo y ejemplos genéricos. Los números de latencia y costo salen del banco de pruebas sintético.
+
+## Propuesta tecnológica
+
+| Tema | Propuesta |
+|---|---|
+| **Punto de salida** | Una **puerta única** por la que sale todo lo que un agente quiere hacer hacia afuera (correo, WhatsApp, redes, HubSpot). Las llaves de salida viven solo ahí. |
+| **HubSpot** | **Antes (propuesta):** la herramienta que escribe en HubSpot pasa por VoBo. **Después (hoja de ruta):** suscripción a los webhooks de HubSpot sobre cambios de deals y contactos, para auditar lo que no pasó por la puerta. Nada de esto está integrado ni probado. |
+| **Identificador** | El **ID de registro de HubSpot** más el `request_id` de VoBo. El correo de la persona nunca va a JEV. |
+| **Falla y espera** | **Falla cerrada:** sin respuesta válida, la acción espera a una persona. Cada llamada a JEV tiene un tiempo límite de 3 s y hasta 2 reintentos (§2.5). Latencia medida: p50 399 ms, p95 650 ms. |
+| **Datos** | A JEV solo le llega el texto de la acción (marcado como contenido no confiable), el tipo de acción, el canal y un contexto fijo de 30X (§4). No recibe destinatarios, identificadores, correos, segmento, fechas ni precios. |
 
 ## 1. Lo que 30X nos contó
 
-- **[dicho 30X]** Sus agentes corren en **Python, con n8n**.
+- **[dicho 30X]** Sus agentes corren en **Python**. Nos dijo también que el equipo de tecnología **no usa n8n**; por eso n8n queda como adaptador para los flujos que viven fuera de tecnología (§2.3).
 - **[dicho 30X]** Las acciones salen hacia afuera por **API** (Google Workspace, Slack, CRM), por **tool calling / MCP** y por **webhooks**.
 - **[dicho 30X]** Lo que quieren de una compuerta:
-  1. **Un paso dentro de los flujos** por el que pase todo lo que sale hacia afuera.
+  1. **Un paso por el que pase todo lo que sale hacia afuera.**
   2. **La consulta del agente solo como complemento**, no como el mecanismo principal.
   3. **Aprobación por Slack** (WhatsApp para lo urgente, correo de respaldo) y **el CRM solo como registro**.
 
-Así lo tradujimos:
+Así lo tradujimos. La integración principal es la **puerta de salida dentro de las herramientas del agente**: si las llaves de salida viven solo en la puerta, el agente no tiene otra vía para enviar. Si el agente conserva sus propias llaves, la puerta se puede esquivar (ver §5).
 
 | Lo que pidieron | Qué hay | Estado |
 |---|---|---|
-| Un paso dentro de los flujos | Flujo de n8n con VoBo como compuerta de salida (`integraciones/n8n/`) | **Construido y probado** (enrutamiento) |
-| Consulta del agente como complemento | Envoltorio de Python (`integraciones/python/`) y un agente de ejemplo en TypeScript | **Construido y probado** |
-| Aprobación en Slack | Nodo «Send and Wait» de n8n con el `resumen_aprobacion`; aparte, el aviso de `VOBO_REVIEW_WEBHOOK_URL` llega a Slack por Incoming Webhook | **Aviso probado contra un Slack de prueba** (17 oct); los botones de aprobar, configurados y no probados |
+| Un paso por el que pase lo que sale | **Puerta de salida:** servidor MCP (`integraciones/mcp/`) y envoltorio de Python dentro de las herramientas del agente (`integraciones/python/`) | MCP: **en construcción** (TODO: completar el enlace cuando exista en `main`). Envoltorio de Python: **construido y probado** |
+| Adaptador para flujos fuera de tecnología | Flujo de n8n con VoBo como paso de salida (`integraciones/n8n/`) | **Construido y probado** (enrutamiento) |
+| Consulta del agente como complemento | Un agente de ejemplo en TypeScript | **Construido y probado** |
+| Aprobación en Slack | Nodo «Send and Wait» de n8n con el `resumen_aprobacion`; aparte, el aviso de `VOBO_REVIEW_WEBHOOK_URL` llega a Slack por Incoming Webhook | **Aviso probado contra un Slack de prueba** (17 oct); los botones de aprobar, configurados y **no probados** |
 | WhatsApp para urgentes, correo de respaldo | El `resumen_aprobacion` ya viene en un formato que sirve para WhatsApp | **Solo diseño** |
-| CRM solo como registro | El campo `registro` (objeto plano) y un nodo que lo arma | **Solo diseño**: no se escribe en ningún CRM |
+| CRM (HubSpot) solo como registro | El campo `registro` (objeto plano) y un nodo que lo arma | **Solo diseño**: no se escribe en ningún CRM |
 
 ## 2. Qué construimos
 
@@ -159,21 +170,14 @@ Respuesta, capturada con JEV real (`jev-1.14.0`). Se recortaron `traza.respuesta
 
 Las reglas por sí solas habrían dicho PEDIR VOBO (audiencia grande); fue JEV quien lo subió a BLOQUEAR por la promesa. **JEV solo puede subir el riesgo, nunca bajarlo.**
 
-### 2.2 El paso dentro del flujo de n8n (el principal)
+### 2.2 La puerta de salida: dentro de las herramientas del agente (integración principal)
 
-`integraciones/n8n/vobo-compuerta.workflow.json` es un flujo importable que pone a VoBo como el paso por el que pasa lo que sale hacia afuera:
+La idea: el agente no envía por su cuenta. Sus herramientas de salida (enviar correo, enviar WhatsApp, publicar, actualizar HubSpot) pasan primero por VoBo. **Esto solo vale si las llaves de salida viven únicamente en la puerta**: si el agente tiene otra vía para enviar, la puerta no lo detiene. Dos formas, la misma regla:
 
-**Webhook** (simula la salida de un agente) → **Armar la acción** → **Evaluar con VoBo** (HTTP Request, tiempo límite 5 s) → **Decidir** (Switch por `decision`):
+- **Servidor MCP (`integraciones/mcp/`): en construcción.** Expone las herramientas de salida al agente a través de VoBo. <!-- TODO: completar con el enlace y el estado real cuando integraciones/mcp/ exista en main (Helian avisará). -->
+- **Envoltorio de Python (`integraciones/python/`): construido y probado**, descrito abajo.
 
-- **PERMITIR** → ejecuta la acción.
-- **PEDIR VOBO** → Slack «Send and Wait for Response» con el `resumen_aprobacion`; si aprueban, ejecuta; si rechazan, detiene.
-- **BLOQUEAR** → avisa en Slack y detiene.
-- **Error de la llamada a VoBo** (la salida de error del HTTP Request) o una decisión desconocida → la rama de PEDIR VOBO. **Nunca a PERMITIR.**
-- Todas las ramas terminan en **Registrar decisión**, un nodo placeholder que arma el `registro`.
-
-**Qué se probó.** El 17 de octubre, en un n8n 2.43.7 local (instalado con npm en una carpeta temporal): el archivo importa; el flujo enruta las cuatro decisiones y las cuatro fallas (VoBo caído, VoBo colgado —corta a los 5 s—, VoBo con 500 y VoBo con una decisión desconocida) a PEDIR VOBO sin ejecutar, y solo ejecuta con una aprobación humana explícita. **Qué no:** los nodos de Slack reales no se ejecutaron contra Slack (sin credencial); el enrutamiento se probó con simuladores del mismo nombre, y con un canal en formato válido n8n aceptó los nodos reales y fallaron solo por la credencial ausente. El detalle, la lista de pruebas y cómo configurarlo están en [`integraciones/n8n/LEEME.md`](../integraciones/n8n/LEEME.md). Es un ejemplo: reemplaza los placeholders por tus acciones reales.
-
-### 2.3 El envoltorio de Python (complemento)
+#### Envoltorio de Python
 
 `integraciones/python/vobo_gate.py` (solo biblioteca estándar) envuelve las funciones-herramienta de un agente en Python:
 
@@ -201,6 +205,20 @@ VOBO_URL=https://vobo-jev.vercel.app python integraciones/python/demo_vobo_gate.
 
 Las pruebas cubren los tres veredictos, el callback (rechazo, sin callback, que falla, que devuelve algo «verdadero» pero que no es `True`), el modo sombra, las funciones `async` y cada falla: 500, 503, 429, 400, 401, 204, HTML, JSON que no es un objeto, `schema_version` desconocido, decisión inválida, servidor colgado (tiempo agotado), servidor caído y URLs inválidas.
 
+### 2.3 n8n: adaptador para flujos fuera de tecnología
+
+30X nos dijo que el equipo de tecnología no usa n8n. Este adaptador existe para los flujos que viven fuera de tecnología y sí lo usen. `integraciones/n8n/vobo-compuerta.workflow.json` es un flujo importable que pone a VoBo como el paso por el que pasa lo que sale hacia afuera:
+
+**Webhook** (simula la salida de un agente) → **Armar la acción** → **Evaluar con VoBo** (HTTP Request, tiempo límite 5 s) → **Decidir** (Switch por `decision`):
+
+- **PERMITIR** → ejecuta la acción.
+- **PEDIR VOBO** → Slack «Send and Wait for Response» con el `resumen_aprobacion`; si aprueban, ejecuta; si rechazan, detiene.
+- **BLOQUEAR** → avisa en Slack y detiene.
+- **Error de la llamada a VoBo** (la salida de error del HTTP Request) o una decisión desconocida → la rama de PEDIR VOBO. **Nunca a PERMITIR.**
+- Todas las ramas terminan en **Registrar decisión**, un nodo placeholder que arma el `registro`.
+
+**Qué se probó.** El 17 de octubre, en un n8n 2.43.7 local (instalado con npm en una carpeta temporal): el archivo importa; el flujo enruta las cuatro decisiones y las cuatro fallas (VoBo caído, VoBo colgado —corta a los 5 s—, VoBo con 500 y VoBo con una decisión desconocida) a PEDIR VOBO sin ejecutar, y solo ejecuta con una aprobación humana explícita. **Qué no:** los nodos de Slack reales no se ejecutaron contra Slack (sin credencial); el enrutamiento se probó con simuladores del mismo nombre, y con un canal en formato válido n8n aceptó los nodos reales y fallaron solo por la credencial ausente. El detalle, la lista de pruebas y cómo configurarlo están en [`integraciones/n8n/LEEME.md`](../integraciones/n8n/LEEME.md). Es un ejemplo: reemplaza los placeholders por tus acciones reales.
+
 ### 2.4 Falla cerrada
 
 Regla única: **si no hay una respuesta válida de VoBo, la acción no se ejecuta sola: se trata como PEDIR VOBO.** Un error nunca debe equivaler a PERMITIR.
@@ -216,7 +234,7 @@ Regla única: **si no hay una respuesta válida de VoBo, la acción no se ejecut
 | 400 (la acción está mal armada: es un error del agente) | PEDIR VOBO, y se registra para corregirlo |
 | Cuerpo que no es JSON, `decision` inesperada o `schema_version` que el cliente no conoce | PEDIR VOBO |
 
-El flujo de n8n y el envoltorio de Python implementan esta tabla, y ambos se probaron contra servidores falsos que fallan de esas formas.
+El envoltorio de Python y el flujo de n8n implementan esta tabla, y ambos se probaron contra servidores falsos que fallan de esas formas.
 
 ### 2.5 Latencia y costo (medidos)
 
@@ -245,7 +263,7 @@ Si defines `VOBO_REVIEW_WEBHOOK_URL`, cada vez que una acción queda en PEDIR VO
 
 ### 2.8 Patrón complementario: el agente consulta antes de actuar
 
-Dos ejemplos en TypeScript, que **no son el paso principal** (el principal es la compuerta dentro del flujo, §2.2):
+Dos ejemplos en TypeScript, que **no son el paso principal** (el principal es la puerta de salida dentro de las herramientas del agente, §2.2):
 
 - `examples/agente-demo.ts` (`npm run agente-demo`): un agente simulado con tres herramientas, una cola en memoria y la falla cerrada.
 - `adapters/crm-webhook.ts`: traduce un webhook genérico `deal.updated` a una acción de VoBo. Está rotulado como ejemplo: el mapeo real depende del stack de cada empresa.
@@ -262,15 +280,29 @@ Nada de esto está construido ni probado:
 - **Escritura en el CRM como registro.** El `registro` es un objeto plano listo para guardar, y el nodo **Registrar decisión** lo arma, pero **no escribe en ningún sistema**.
 - **Una cola de aprobación real.** La cola del agente de ejemplo vive en la memoria del proceso y la página `/cola` de la demo guarda su estado solo en el navegador. Con n8n, la «cola» es la espera de Slack: no hay un tablero propio, ni estado persistente fuera de n8n.
 
-## 4. Límites
+## 4. Qué datos salen hacia JEV
 
-- **Solo se evalúa lo que pasa por la compuerta.** Una llamada directa que no pase por el flujo de n8n ni por el envoltorio (un script que llama a una API por su cuenta, una herramienta sin envolver) **no se evalúa**.
+Según `src/lib/vobo/jev/state.ts`, JEV recibe solo:
+
+- el **texto** de la acción, marcado como contenido no confiable;
+- el **tipo de acción** y el **canal**;
+- un **contexto fijo** de 30X.
+
+**No recibe** destinatarios, identificadores, correos, segmento, fechas ni precios. VoBo no usa ningún otro modelo: las explicaciones son plantillas sobre datos.
+
+**Hoja de ruta:** detectar en código los datos personales evidentes (correo, teléfono, documento) y bloquear sin enviar el texto a JEV.
+
+*Análisis posterior, no medido en la corrida del test:* las 4 acciones del test con un correo o teléfono visibles (B313, B314, B315 y B339) están etiquetadas BLOQUEAR, y ninguna acción segura del test tiene esos patrones.
+
+## 5. Límites
+
+- **Solo se evalúa lo que pasa por la puerta.** Una llamada directa que no pase por la puerta de salida ni por el flujo de n8n (un script que llama a una API por su cuenta, una herramienta sin envolver, un agente que conserve sus propias llaves de salida) **no se evalúa**. Auditar lo que no pasó por la puerta (webhooks de HubSpot) es hoja de ruta.
 - **Cuatro tipos de acción.** VoBo modela correo masivo, WhatsApp masivo, publicación en redes y cambio en el CRM. El **«envío de información»** (compartir datos o documentos con terceros por API, por ejemplo) **no está modelado**: no hay reglas ni preguntas para eso.
 - **Mensajes uno a uno.** Se evalúa una acción a la vez. No modelamos mensajes personalizados por destinatario ni lotes con contenido distinto por persona: cada mensaje distinto es otra llamada.
 - **El endpoint de la demo es público** (`/api/evaluate`): sin clave y con un límite por IP en memoria (en Vercel cada instancia lleva su propia cuenta, así que es de mejor esfuerzo). Para integraciones existe `/api/v1/evaluate` con una clave Bearer, pero es **una sola clave compartida**, sin rotación, cuotas ni identidad por cliente.
-- **El texto de los mensajes viaja a JEV, un tercero** (TypeSafe). Hay que decidir qué contenido se puede mandar; todo lo que probamos es sintético.
+- **El texto de los mensajes viaja a JEV, un tercero** (TypeSafe), y nada más (§4). Hay que decidir qué contenido se puede mandar; todo lo que probamos es sintético.
 - **Garantías del webhook:** sin firma, sin reintentos y sin orden garantizado (a lo más una vez).
 - **VoBo no guarda nada.** Quien integra debe guardar el `request_id` y el `registro` si necesita auditoría.
 - **Tráfico real.** Solo probamos con el banco sintético y casos de demostración; no hicimos pruebas de carga.
 - **La política es de demostración** (`data/policy_demo.json`, con supuestos por confirmar con 30X) y los umbrales se ajustaron con el banco sintético.
-- **El stack real de 30X.** No conocemos su n8n, su Slack ni su CRM; el flujo y los adaptadores son ejemplos y el mapeo real hay que escribirlo contra los sistemas reales.
+- **El stack real de 30X.** No conocemos su Slack ni su HubSpot; el flujo y los adaptadores son ejemplos y el mapeo real hay que escribirlo contra los sistemas reales.
