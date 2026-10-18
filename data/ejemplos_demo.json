@@ -12,7 +12,7 @@
         "audiencia_pct_afinidad_baja": 0.0,
         "tipo_accion": "correo_masivo",
         "canal": "correo_oficial",
-        "segmento_declarado": "founders",
+        "segmento_declarado": "ejecutivos",
         "hora_envio": "10:00",
         "programa_ofrecido": "Inmersión Ejecutiva",
         "texto": "Te invitamos a conocer la Inmersión Ejecutiva de 30X: tres días con founders que están resolviendo los mismos retos que tú. Revisa las fechas y aplica en el enlace."
@@ -155,7 +155,7 @@
         "hora_envio": "12:10",
         "campo_crm": "etapa_crm",
         "perfil_id": "P-259",
-        "texto": "Calificado"
+        "texto": "Etapa del deal: Calificado"
       },
       "piso_reglas_esperado": "ALLOW",
       "reglas_esperadas": []
@@ -253,7 +253,7 @@
         "segmento_declarado": "ejecutivos",
         "hora_envio": "11:30",
         "programa_ofrecido": "AI Sales",
-        "texto": "En AI Sales no prometemos que dupliques tus ventas; sí te llevas un proceso comercial medible y las herramientas para mejorarlo cada semana."
+        "texto": "En AI Sales no prometemos que dupliques tus ventas. Si diriges un equipo comercial, aquí tienes el temario, las fechas y cómo aplicar."
       },
       "piso_reglas_esperado": "ALLOW",
       "reglas_esperadas": []
