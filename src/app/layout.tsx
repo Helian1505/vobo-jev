@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import Link from "next/link";
 import { FondoFiguras } from "@/components/FondoFiguras";
@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     "Cada acción que un agente de 30X quiere hacer hacia afuera pasa por VoBo: en milisegundos, reglas en código y JEV (TypeSafe) la revisan; lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo indebido no sale.",
 };
 
+// Barra del navegador del teléfono del mismo color que la página.
+export const viewport: Viewport = { themeColor: "#000000", colorScheme: "dark" };
+
 const REPO = "https://github.com/Helian1505/vobo-jev";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -31,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <style>{`.revelar{opacity:1!important;transform:none!important;filter:none!important}`}</style>
         </noscript>
       </head>
-      <body className="min-h-screen">
+      <body className="min-h-dvh">
         <ScrollArriba />
         <FondoFiguras />
         <a
@@ -52,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <div className="relative z-[1] mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1200px] flex-col px-4 sm:px-6">
+        <div className="relative z-[1] mx-auto flex min-h-[calc(100dvh-4rem)] max-w-[1200px] flex-col px-4 sm:px-6">
           <main id="contenido" className="flex-1 py-8 sm:py-12">
             {children}
           </main>
