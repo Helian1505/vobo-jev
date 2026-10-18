@@ -1,59 +1,59 @@
 @import "tailwindcss";
 
 /*
- * Sistema de diseño 30X (docs/DESIGN_30X.md).
- * Capa 1 · primitivos: los valores crudos, tomados de hackradar.30x.com (tokens publicados) y de 30x.com.
+ * Sistema de diseño v2 (DESIGN.md): estructura de Linear («midnight precision instrument») con la marca 30X.
+ * Capa 1 · primitivos: colores medidos en 30x.com (negro, grises, gris cálido, arena y el lima como único acento).
  * Capa 2 · semánticos: lo que significa cada color en VoBo.
  * Los componentes usan solo los semánticos, así se cambia un color en un solo lugar.
  */
 @theme {
-  /* Primitivos · neutros de HackRadar */
-  --color-brand-black: #0b0b0c;
-  --color-brand-ink: #0e1013;
-  --color-brand-ink-2: #16181c;
-  --color-brand-graphite: #23262e;
-  --color-brand-paper: #f6f4f1;
-  --color-brand-soft: #d5d3ce;
-  --color-brand-dim: #a9ab9e;
-  --color-brand-olive: #82876f;
-  --color-brand-moss: #6e7163;
+  /* Primitivos · neutros (30x.com) */
+  --color-brand-black: #000000;
+  --color-brand-ink: #0a0a0a;
+  --color-brand-ink-2: #111111;
+  --color-brand-graphite: #1a1a1a;
+  --color-brand-paper: #f7f5f2;
+  --color-brand-soft: #d4d4d4;
+  --color-brand-dim: #a39e93;
+  --color-brand-olive: #868073; /* el gris cálido de 30X */
+  --color-brand-moss: #525252;
 
-  /* Primitivos · acento lima de 30x.com (botones "Aplica Ahora") */
+  /* Primitivo · el único acento: lima de 30x.com */
   --color-brand-lime: #e9ff7b;
 
-  /* Primitivos · estados pastel de HackRadar */
-  --color-brand-success: #9fd4ae;
-  --color-brand-warning: #e9c582;
-  --color-brand-danger: #f2a19b;
+  /* Primitivos · estados de decisión (funcionales, no son de marca) */
+  --color-brand-success: #7ee787;
+  --color-brand-warning: #f2cc60;
+  --color-brand-danger: #ffa198;
   --color-brand-danger-solid: #b3413b;
 
   /* Semánticos */
   --color-canvas: var(--color-brand-black);
-  --color-surface: var(--color-brand-ink-2);
-  --color-field: var(--color-brand-ink);
+  --color-surface: var(--color-brand-ink);
+  --color-field: var(--color-brand-ink-2);
   --color-raised: var(--color-brand-graphite);
-  --color-line: #2e323b;
-  --color-line-strong: #3a3f4a;
+  --color-line: #232323;
+  --color-line-strong: #383838;
   --color-fg: var(--color-brand-paper);
   --color-fg-soft: var(--color-brand-soft);
   --color-fg-muted: var(--color-brand-dim);
-  --color-fg-faint: var(--color-brand-olive); /* solo placeholders sobre field/surface (≥ 4,7:1) */
+  --color-fg-faint: var(--color-brand-olive); /* metadatos y placeholders (≥ 4,7:1 sobre negro) */
   --color-accent: var(--color-brand-lime);
-  --color-on-accent: var(--color-brand-black);
+  --color-on-accent: var(--color-brand-ink);
   --color-allow: var(--color-brand-success);
   --color-review: var(--color-brand-warning);
   --color-block: var(--color-brand-danger);
 
-  /* Tipografía: Inter (cuerpo y títulos de interfaz) y Playfair Display solo en el título de la página, como HackRadar */
+  /* Tipografía: Inter (con su corte Display por tamaño óptico, el de 30x.com) en todo; mono solo para datos técnicos */
   --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: var(--font-inter), "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Forma: 8 px en botones y campos, 12 px en tarjetas, pastillas completas (las que usa 30x.com) */
-  --radius-field: 8px;
+  /* Forma (Linear): 6 px en botones y campos, 12 px en tarjetas, pastillas completas */
+  --radius-field: 6px;
   --radius-card: 12px;
 
-  /* Movimiento: salida rápida y firme (Emil Kowalski) */
+  /* Movimiento: salida rápida y firme */
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -64,6 +64,12 @@
 html {
   background: var(--color-canvas);
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/* La barra de navegación es fija: las anclas aterrizan debajo de ella. */
+[id] {
+  scroll-margin-top: 88px;
 }
 
 body {
@@ -78,7 +84,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Las superficies que no dibujamos también llevan el diseño: selección, cursor, foco, scroll, números. */
 ::selection {
   background: var(--color-accent);
   color: var(--color-on-accent);
@@ -109,11 +114,58 @@ select {
   font-variant-numeric: tabular-nums;
 }
 
-/* Títulos con la variante de tamaño óptico grande de Inter, que es la que usa 30x.com (Inter Display). */
+/* Titulares: Inter Display (tamaño óptico grande), peso 600 y tracking apretado, como 30x.com. Nunca 700. */
+.font-display,
 .display-sans {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-variation-settings: "opsz" 32;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+/* Datos técnicos: ids, request_id, modelo, latencia. */
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+
+/* Barra de navegación fija con vidrio oscuro. */
+.nav-glass {
+  background: rgb(0 0 0 / 0.72);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  backdrop-filter: saturate(140%) blur(12px);
+}
+
+/* Elevación por bordes, no por sombras (Linear). */
+.hairline {
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+/* Único elemento decorativo: un piso de luz lima muy tenue bajo el producto del hero. */
+.piso-hero {
+  background:
+    radial-gradient(60% 55% at 72% 38%, rgb(233 255 123 / 0.08), transparent 70%),
+    radial-gradient(40% 40% at 20% 0%, rgb(255 255 255 / 0.04), transparent 70%);
+}
+
+/* Panel flotante: la única sombra real del sistema. */
+.sombra-flotante {
+  box-shadow: 0 4px 32px rgb(0 0 0 / 0.6);
+}
+
+/* Detalles plegables sin el triángulo del navegador. */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .gira {
+  transform: rotate(45deg);
+}
+.gira {
+  transition: transform 180ms var(--ease-out-strong);
 }
 
 /* El resultado entra una sola vez, rápido; no se anima nada que se repita cientos de veces. */
@@ -132,11 +184,41 @@ select {
   animation: entrada 180ms var(--ease-out-strong) both;
 }
 
+@keyframes tarjeta {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.tarjeta-entra {
+  animation: tarjeta 420ms var(--ease-out-strong) both;
+}
+
+@keyframes pulso {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.pulso {
+  animation: pulso 1.6s ease-in-out infinite;
+}
+
 button:not(:disabled) {
   transition:
     transform 140ms var(--ease-out-strong),
     background-color 140ms ease,
-    border-color 140ms ease;
+    border-color 140ms ease,
+    filter 140ms ease;
 }
 
 button:not(:disabled):active {
@@ -144,8 +226,16 @@ button:not(:disabled):active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .entra {
+  html {
+    scroll-behavior: auto;
+  }
+  .entra,
+  .tarjeta-entra,
+  .pulso {
     animation: none;
+  }
+  .gira {
+    transition: none;
   }
   button:not(:disabled):active {
     transform: none;
