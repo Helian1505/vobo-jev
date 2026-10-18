@@ -105,10 +105,19 @@ Copia el bloque de `claude_desktop_config.ejemplo.json` en `~/Library/Applicatio
 
 Cada consulta tardó entre 0,5 y 0,6 s de punta a punta. Antes de instalar `certifi`, los tres casos dieron **PEDIR VOBO por «error de red»** y ninguno se ejecutó: fue una prueba no planeada, pero real, de la falla cerrada.
 
+**A mano con Claude Desktop como agente de ejemplo** (sáb 17 oct 2026, de 10:15 a 10:25 p. m.; prueba de Angie). Dos casos:
+
+| Caso | Resultado | Evidencia |
+|---|---|---|
+| Recordatorio de una clase | **PERMITIR**, ejecutada | Una línea en `registro_salidas.jsonl` con el mismo `request_id` que mostró el chat |
+| Oferta de AI Sales | **PEDIR VOBO**, no ejecutada | Aviso en `#vobo-aprobaciones` |
+
+El caso BLOQUEAR se probó solo con MCP Inspector.
+
 ## Qué NO se probó o no existe
 
 - **No hay HubSpot ni WhatsApp reales.** El ejecutor (`ejecutor.py`) es un placeholder: no envía nada y escribe una línea en `registro_salidas.jsonl`. Esa línea es el registro que se escribiría como nota en HubSpot.
-- **No se probó en Claude Desktop** ni con un agente de 30X: solo con MCP Inspector.
+- **No se probó con un agente de 30X**; Claude Desktop fue un agente de ejemplo.
 - **El identificador propuesto es el ID de registro de HubSpot** (va como `perfil_id`). VoBo lo usa para el registro y la explicación; **nunca se envía a JEV**, que solo recibe el texto, el tipo y el canal (`src/lib/vobo/jev/state.ts`).
 - **El correo de la persona no se usa ni se envía.** Las herramientas reciben cuántos destinatarios hay, no quiénes.
 - **El aviso a Slack** en PEDIR VOBO depende del webhook configurado en el servidor de VoBo (`VOBO_REVIEW_WEBHOOK_URL`), no de esta puerta.
