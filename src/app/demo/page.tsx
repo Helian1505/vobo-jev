@@ -35,7 +35,7 @@ export default function PaginaDemo() {
 
   return (
     <div className="space-y-8">
-      <EncabezadoPagina etiqueta="Demo" titulo="Elige una acción y mira qué decide VoBo.">
+      <EncabezadoPagina titulo="Elige una acción y mira qué decide VoBo.">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Cada evaluación llama a JEV real. Los 16 ejemplos usan programas, etapas y audiencias de 30X; también puedes escribir tu
           propia acción.

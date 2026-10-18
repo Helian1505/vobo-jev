@@ -106,13 +106,13 @@ export default function Home() {
               indebido no sale.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Link
+              <Link scroll={false}
                 href="/demo"
                 className="rounded-field bg-accent px-5 py-3 text-[15px] font-semibold text-on-accent transition hover:brightness-105"
               >
                 Probar la demo
               </Link>
-              <Link
+              <Link scroll={false}
                 href="/resultados"
                 className="rounded-field border border-line-strong px-5 py-3 text-[15px] font-medium text-fg-soft transition hover:border-fg-faint hover:text-fg"
               >
@@ -129,7 +129,6 @@ export default function Home() {
         <Revelar>
           <EncabezadoSeccion
             id="titulo-cifras"
-            etiqueta="Resultados del test"
             titulo="Más autonomía para los agentes, con evidencia."
             nota="Una sola corrida, con JEV real, sobre 145 acciones que no se usaron para ajustar."
           />
@@ -144,7 +143,6 @@ export default function Home() {
         <Revelar>
           <EncabezadoSeccion
             id="titulo-como"
-            etiqueta="Cómo funciona"
             titulo="JEV opina, el código autoriza y una persona decide lo dudoso."
             nota="Abre cada paso para ver el detalle."
           />
@@ -184,7 +182,6 @@ export default function Home() {
         <Revelar>
           <EncabezadoSeccion
             id="titulo-recorrido"
-            etiqueta="Recorre VoBo"
             titulo="De una acción suelta a todo el flujo."
             nota="Las mismas cinco páginas de la barra, en el mismo orden."
           />
@@ -193,7 +190,7 @@ export default function Home() {
           {RECORRIDO.map((r, i) => (
             <li key={r.href}>
               <Revelar retraso={i * 110} className="h-full">
-                <Link href={r.href} className="elevar group hairline flex h-full flex-col rounded-card bg-surface p-5 hover:bg-field">
+                <Link scroll={false} href={r.href} className="elevar group hairline flex h-full flex-col rounded-card bg-surface p-5 hover:bg-field">
                   <span className="flex items-center justify-between">
                     <span className="mono text-xs text-fg-faint">0{i + 1}</span>
                     <span
@@ -227,13 +224,13 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-col items-start gap-3 lg:items-end">
-            <Link
+            <Link scroll={false}
               href="/resultados"
               className="rounded-field border border-line-strong px-5 py-3 text-[15px] font-medium text-fg transition hover:border-fg-faint"
             >
               Ver todos los resultados →
             </Link>
-            <Link href="/simulacion" className="text-sm text-fg-muted underline underline-offset-4 hover:text-fg">
+            <Link scroll={false} href="/simulacion" className="text-sm text-fg-muted underline underline-offset-4 hover:text-fg">
               O mira 20 acciones seguidas en la simulación
             </Link>
           </div>

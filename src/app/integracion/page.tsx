@@ -39,7 +39,7 @@ const ESTADO = [
 export default function PaginaIntegracion() {
   return (
     <div className="space-y-8">
-      <EncabezadoPagina etiqueta="Integración" titulo="Un paso antes de todo lo que sale hacia afuera.">
+      <EncabezadoPagina titulo="Un paso antes de todo lo que sale hacia afuera.">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Así se pondría VoBo en el flujo que 30X nos describió: agentes en Python, aprobación por Slack y HubSpot solo como
           registro.
@@ -65,7 +65,7 @@ export default function PaginaIntegracion() {
 
       <Revelar>
       <section aria-labelledby="titulo-estado" className="pt-4">
-        <EncabezadoSeccion id="titulo-estado" etiqueta="Estado" titulo="Qué está construido y qué no." />
+        <EncabezadoSeccion id="titulo-estado" titulo="Qué está construido y qué no." />
         <dl className="mt-6 divide-y divide-line rounded-card border border-line">
           {ESTADO.map((e) => (
             <div key={e.que} className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-6 sm:px-5">
