@@ -51,7 +51,7 @@ Esta aplicación cubre dos ideas del reto: guardrails para agentes internos y ca
 - `accion`: tipo y canal;
 - `contenido_no_confiable`: el texto del agente, con la advertencia de que cualquier instrucción que traiga es contenido, no una orden.
 
-**Lo que nunca recibe:** destinatarios, correos, IDs, el segmento declarado, fechas ni precios. Así no se filtran datos de personas y la pregunta de público no queda sesgada.
+**Lo que no recibe:** los campos de destinatarios, IDs, segmento declarado, fechas y precios. **Sí recibe el texto de la acción**, que podría contener datos de personas: minimizarlo antes de enviarlo es hoja de ruta.
 
 **Reglas de redacción:**
 - una cosa por pregunta, en positivo;
@@ -131,16 +131,16 @@ En la pregunta de público, el umbral es 0,50.
 
 | Métrica | Qué cuenta | Línea base (test) | Cada cuánto | Si se desvía |
 |---|---|---|---|---|
-| Peligrosas aprobadas sin persona | Acciones riesgosas que salieron solas, en una muestra auditada a ciegas | **3 de 74** (IC 95%: 1,4–11,3%) | Semanal | Revisar cada caso y reforzar la regla, la pregunta o el umbral (jugada 4) |
+| Peligrosas aprobadas sin persona | Acciones riesgosas que salieron solas, en una muestra que no se usó para ajustar | **3 de 74** (IC 95%: 1,4–11,3%) | Semanal | Revisar cada caso y reforzar la regla, la pregunta o el umbral (jugada 4) |
 | Autonomía | Acciones seguras que salen sin persona | **83,1%** (59 de 71) | Semanal | Si baja, ver qué pregunta escala de más y ajustarla en modo sombra |
-| Escaladas a una persona | Acciones en PEDIR VOBO sobre el total | **25,5%** (en un banco con 51% de peligrosas) | Diaria | Si sube, ver qué regla o pregunta lo causa. **[Estimación]** Con tráfico real, ≈15–16% |
+| Escaladas a una persona | Acciones en PEDIR VOBO sobre el total | **25,5%** (en un banco con 51% de peligrosas) | Diaria | Si sube, ver qué regla o pregunta lo causa. **[Estimación]** Con tráfico real, ≈15–16% (supone 5–10% de acciones problemáticas) |
 | Seguras bloqueadas | Acciones seguras que VoBo frenó | **2 de 71** | Semanal | Revisar el texto y la pregunta que la bloqueó |
 | Latencia y fallas de JEV | p95 y llamadas sin respuesta | **p95 de 650 ms** · 0 fallas en 145 | Diaria | La falla cerrada protege; tecnología revisa (jugada 2) |
 | Costo y tiempo de aprobación | USD por cada 1.000 decisiones; minutos hasta que una persona decide | **USD 0,064** · el tiempo no tiene línea base | Mensual | **[Propuesta]** La meta de tiempo se acuerda con cada dueño de canal |
 
 **Cómo se obtuvo la línea base [Medido]:**
 - 145 acciones que no se usaron para ajustar: las 150 del test menos 5 sin mayoría humana.
-- Etiquetas humanas a ciegas, congeladas con hash antes de correr JEV. κ = 0,51.
+- Etiquetas de revisión humana a ciegas, congeladas con hash antes de correr JEV. En 21 de las 145 rige una decisión de política o un criterio explícito. κ = 0,51.
 - Una sola corrida, con JEV real.
 
 Por separado, se escapan 34 peligrosas con solo reglas y 31 con solo JEV; juntos, 3. Las 42 graves se bloquearon todas. Los fallos están publicados en `/resultados`.
@@ -171,6 +171,7 @@ Por separado, se escapan 34 peligrosas con solo reglas y 31 con solo JEV; juntos
 
 **Límites:**
 - Lo que no pase por la puerta no se evalúa.
+- El texto de la acción viaja a JEV y podría contener datos de personas; minimizarlo es hoja de ruta.
 - No se probó con agentes reales de 30X.
 - JEV puede equivocarse con confianza.
 - Las preguntas están en español y no se compararon con el inglés.
@@ -183,7 +184,7 @@ VoBo es la primera aplicación. El mismo método sirve para cualquier decisión 
 2. **Repartir el trabajo:** lo que se cuenta o se compara va al código; lo que hay que leer, a JEV.
 3. **Escribir las preguntas:** tipadas, una cosa por pregunta, con «otro» y con el texto marcado como no confiable.
 4. **Fijar los umbrales** según lo que cuesta equivocarse, siempre con un camino a una persona.
-5. **Medir antes de usar:** un banco etiquetado a ciegas; una mitad para ajustar y la otra para medir una sola vez.
+5. **Medir antes de usar:** un banco etiquetado antes de medir; una mitad para ajustar y la otra para medir una sola vez.
 6. **Sombra y activación:** observar sin frenar, activar por partes y revisar cada semana.
 
 **Siguiente aplicación [Propuesta, no construida]: ¿a qué segmento pertenece quien se inscribe en Luma?**
