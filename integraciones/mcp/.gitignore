@@ -1,0 +1,5 @@
+# registro local de decisiones (placeholder del registro en HubSpot)
+registro_salidas.jsonl
+# entorno virtual local
+.venv/
+.DS_Store

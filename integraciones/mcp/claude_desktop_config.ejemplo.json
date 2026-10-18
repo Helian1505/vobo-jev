@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "vobo-salidas": {
+      "command": "/RUTA/A/vobo-jev/integraciones/mcp/.venv/bin/python",
+      "args": ["/RUTA/A/vobo-jev/integraciones/mcp/vobo_salidas.py"],
+      "env": {
+        "VOBO_URL": "https://vobo-jev.vercel.app"
+      }
+    }
+  }
+}
