@@ -109,7 +109,7 @@ export function DiagramaPuerta() {
             </marker>
           ))}
           <linearGradient id="vobo-relleno" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#e9ff7b" stopOpacity="0.12" />
+            <stop offset="0%" stopColor="#e9ff7b" stopOpacity="0.07" />
             <stop offset="100%" stopColor="#e9ff7b" stopOpacity="0.02" />
           </linearGradient>
           <filter id="vobo-brillo" x="-30%" y="-30%" width="160%" height="160%">
@@ -128,7 +128,7 @@ export function DiagramaPuerta() {
         <text x={270} y={195} className="fill-fg" fontSize={17} fontWeight={600}>Puerta de salida</text>
         <text x={270} y={213} className="fill-fg-muted" fontSize={12}>Las llaves viven aquí</text>
 
-        <rect x={510} y={130} width={180} height={100} rx={16} fill="#e9ff7b" opacity={0.18} filter="url(#vobo-brillo)" />
+        <rect x={510} y={130} width={180} height={100} rx={16} fill="#e9ff7b" opacity={0.08} filter="url(#vobo-brillo)" />
         <rect x={500} y={120} width={200} height={120} rx={16} fill="url(#vobo-relleno)" className="stroke-accent" strokeWidth={1.5} />
         <text x={522} y={156} className="fill-accent" fontSize={10.5} fontWeight={600} letterSpacing="0.08em">03</text>
         <text x={522} y={184} className="fill-fg" fontSize={26} fontWeight={600} letterSpacing="-0.02em">VoBo</text>

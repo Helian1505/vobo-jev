@@ -43,7 +43,7 @@ export function FondoFiguras() {
           viewBox="0 0 24 24"
           width={f.t * 1.6}
           height={f.t * 1.6}
-          className={`absolute ${f.tipo === "a" ? "figura-a" : "figura-b"} ${f.lima ? "text-accent opacity-[0.16]" : "text-fg-faint opacity-[0.22]"}`}
+          className={`absolute ${f.tipo === "a" ? "figura-a" : "figura-b"} ${f.lima ? "text-accent opacity-[0.12]" : "text-fg-faint opacity-[0.16]"}`}
           style={{ left: f.x, top: f.y, "--duracion": `${f.dur}s`, animationDelay: `${f.retraso}s` } as CSSProperties}
         >
           <Figura forma={f.forma} />
