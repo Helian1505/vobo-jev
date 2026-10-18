@@ -98,13 +98,12 @@ export function Cola() {
     <div className="space-y-8">
       <EncabezadoPagina etiqueta="Cola" titulo="Cola de VoBo humano">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
-          Las acciones que quedaron en <Insignia decision="REVIEW" /> en la demo y en la simulación esperan aquí a que una persona las apruebe o las rechace.
+          Lo que quedó en <Insignia decision="REVIEW" /> en la demo o la simulación espera aquí a que una persona lo apruebe o lo rechace.
         </p>
-        <p role="note" className="mt-4 rounded-field border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-fg-muted">
-          <strong className="font-semibold text-fg">Es una demostración.</strong> El estado vive solo en este navegador: se guarda aquí y no sale de tu
-          equipo, y aprobar no ejecuta nada de verdad. En una integración real, esta cola sería un sistema de tareas o aprobaciones (
-          <a className="text-fg underline underline-offset-4 hover:text-accent" href="https://github.com/Helian1505/vobo-jev/blob/main/docs/INTEGRACION.md">ver cómo integrarlo</a>
-          ).
+        <p role="note" className="mt-3 text-sm text-fg-muted">
+          <strong className="font-semibold text-fg-soft">Demostración:</strong> vive solo en este navegador y aprobar no ejecuta nada. En 30X, esto
+          llegaría por Slack (
+          <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/integracion">ver integración</Link>).
         </p>
       </EncabezadoPagina>
 

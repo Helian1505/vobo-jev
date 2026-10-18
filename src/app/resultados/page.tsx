@@ -9,7 +9,9 @@ import devJson from "../../../eval/results/dev.json";
 import tuneJson from "../../../eval/results/tune_dev.json";
 import testJson from "../../../eval/results/test.json";
 import lockJson from "../../../eval/runs/TEST_LOCK.json";
-import { EncabezadoPagina } from "@/components/EncabezadoPagina";
+import { Cifras, type Cifra } from "@/components/Cifras";
+import { EncabezadoPagina, EncabezadoSeccion, Plegable } from "@/components/EncabezadoPagina";
+import { Revelar } from "@/components/Revelar";
 
 export const metadata: Metadata = {
   title: "Resultados del banco — VoBo",
@@ -32,18 +34,6 @@ const fraccion = (k: number, n: number) => `${k} de ${n}`;
 
 function ic(p: { ic95: [number, number] | null }) {
   return p.ic95 ? `IC 95%: ${pct1(p.ic95[0])} a ${pct1(p.ic95[1])}` : "";
-}
-
-function Seccion({ id, titulo, children, intro }: { id: string; titulo: string; children: React.ReactNode; intro?: React.ReactNode }) {
-  return (
-    <section aria-labelledby={id} className="border-t border-line pt-8">
-      <h2 id={id} className="display-sans text-2xl font-semibold text-fg">
-        {titulo}
-      </h2>
-      {intro && <div className="mt-2 max-w-3xl text-sm leading-relaxed text-fg-muted">{intro}</div>}
-      <div className="mt-5">{children}</div>
-    </section>
-  );
 }
 
 function TablaMetricas({ conjunto }: { conjunto: ResumenConjunto }) {
@@ -263,6 +253,27 @@ function ValorJev({ c }: { c: ResumenConjunto }) {
   );
 }
 
+/** Barra horizontal con su etiqueta y su valor; la del combinado (VoBo) va en lima. */
+function Barra({ nombre, nota, valor, texto, destacada }: { nombre: string; nota: string; valor: number; texto: string; destacada: boolean }) {
+  return (
+    <li className="grid grid-cols-[7.5rem_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[9rem_minmax(0,1fr)]">
+      <span>
+        <span className={`block text-sm font-semibold ${destacada ? "text-accent" : "text-fg"}`}>{nombre}</span>
+        <span className="block text-xs text-fg-faint">{nota}</span>
+      </span>
+      <span className="flex items-center gap-3">
+        <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-raised">
+          <span
+            className={`barra-crece block h-full rounded-full ${destacada ? "bg-accent" : "bg-fg-faint"}`}
+            style={{ width: `${Math.max(1.5, valor * 100)}%` }}
+          />
+        </span>
+        <span className="tabular w-20 text-right text-sm font-semibold text-fg">{texto}</span>
+      </span>
+    </li>
+  );
+}
+
 export default function Resultados() {
   const p = test.conjuntos.principal as ResumenConjunto;
   const s = test.conjuntos.secundario as ResumenConjunto;
@@ -274,178 +285,246 @@ export default function Resultados() {
   const aprobadas = s.combinado.errores.filter((e) => e.tipo === "peligrosa_aprobada");
   const aprobadasUnico = aprobadas.filter((e) => e.origen === "humano_unico").length;
   const fecha = new Date(test.fecha).toLocaleString("es-CO", { dateStyle: "long", timeStyle: "short", timeZone: "America/Bogota" });
+  const aPct = (x: number | null) => Math.round((x ?? 0) * 1000) / 10;
+
+  // Todas las cifras salen de eval/results/test.json (conjunto principal); aquí solo se presentan.
+  const cifras: Cifra[] = [
+    {
+      valor: comb.peligrosas_auto_aprobadas,
+      despues: ` de ${comb.peligrosas}`,
+      etiqueta: "peligrosas aprobadas sin persona. La meta era 0.",
+      nota: ic(proporcion(comb.peligrosas_auto_aprobadas, comb.peligrosas)),
+    },
+    {
+      valor: aPct(comb.autonomia.pct),
+      decimales: 1,
+      despues: "%",
+      etiqueta: "de las acciones seguras sale sola.",
+      nota: `${fraccion(comb.autonomia.k, comb.autonomia.n)} · ${ic(comb.autonomia)}`,
+    },
+    {
+      valor: aPct(comb.escalado.pct),
+      decimales: 1,
+      despues: "%",
+      etiqueta: "del total va a una persona (PEDIR VOBO).",
+      nota: fraccion(comb.escalado.k, comb.escalado.n),
+    },
+    {
+      valor: p.costo_latencia.latencia_p50_ms ?? 0,
+      despues: " ms",
+      etiqueta: `por decisión. ${usd(p.costo_latencia.costo_por_1000_decisiones_usd ?? 0)} por cada 1.000.`,
+      nota: `p95: ${p.costo_latencia.latencia_p95_ms} ms · ${miles(p.costo_latencia.tokens_entrada_media ?? 0)} tokens`,
+    },
+  ];
+
+  const modos = MODOS.map((m) => ({ ...m, met: p[m.id] }));
 
   return (
-    <div className="space-y-10">
-      <EncabezadoPagina etiqueta="Resultados" titulo="Resultados del banco">
+    <div className="space-y-12">
+      <EncabezadoPagina etiqueta="Resultados" titulo="Resultados del test">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
-          400 acciones sintéticas, con etiquetas de revisión humana y de decisiones de política (el detalle está en «Cómo sabemos que el resultado es creíble», abajo), partidas en 250 para ajustar (dev) y 150 para medir (test). El test se corrió{" "}
-          <strong className="font-semibold text-fg">una sola vez</strong>, con JEV real, y se reporta tal cual, fallos incluidos.
+          Una sola corrida, con JEV real, sobre {p.n} acciones que no se usaron para ajustar. Se reporta tal cual, fallos incluidos.
         </p>
       </EncabezadoPagina>
 
-      <section aria-labelledby="lectura" className="rounded-card border border-line bg-surface p-5 sm:p-6">
-        <h2 id="lectura" className="display-sans text-xl font-semibold text-fg">
-          Lectura honesta
-        </h2>
-        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-fg-soft marker:text-fg-muted">
-          <li>
-            <strong className="font-semibold text-fg">La meta era 0 peligrosas aprobadas sin persona y no se cumplió:</strong> el combinado dejó pasar{" "}
-            {fraccion(comb.peligrosas_auto_aprobadas, comb.peligrosas)} en el conjunto principal ({ic(proporcion(comb.peligrosas_auto_aprobadas, comb.peligrosas))}).
-          </li>
-          <li>
-            {aprobadas.length === 0
-              ? "No hubo peligrosas aprobadas sin persona en el conjunto completo."
-              : `Los ${aprobadas.length} casos del conjunto completo son textos de apariencia inocua que una persona etiquetó «PEDIR VOBO»; ${aprobadasUnico} de ellos los etiquetó un solo revisor.`}{" "}
-            No afirmamos que esas etiquetas estén mal: lo dejamos a la vista para que lo juzgues.
-          </li>
-          <li>
-            Con {p.n} acciones, cada error mueve las métricas cerca de 0,7 puntos. Es una demostración, no estadística sólida. La exactitud de
-            la capa de reglas es una prueba unitaria; la evidencia real es lo que aporta JEV.
-          </li>
-          <li>El banco es sintético y la política es de demostración (supuestos), no la política real de 30X.</li>
-        </ul>
+      {/* 1 · En cuatro números */}
+      <section aria-labelledby="t-numeros" className="space-y-6">
+        <EncabezadoSeccion id="t-numeros" etiqueta="En cuatro números" titulo={`Lo que hizo VoBo con las ${p.n} acciones.`} nota={`${comb.peligrosas} peligrosas y ${comb.autonomia.n} seguras, según las etiquetas humanas.`} />
+        <Cifras cifras={cifras} />
       </section>
 
-      <Seccion
-        id="principal"
-        titulo={`Test · conjunto principal (${p.n} acciones)`}
-        intro={
-          <>
-            Las 150 acciones del test sin las 5 que no tienen mayoría humana (<code className="font-mono text-xs">ambigua = SI</code>). De las {p.n}, {p.combinado.peligrosas} son
-            peligrosas (etiqueta PEDIR VOBO o BLOQUEAR) y {p.combinado.autonomia.n} seguras.
-          </>
-        }
-      >
-        <TablaMetricas conjunto={p} />
-      </Seccion>
-
-      <Seccion
-        id="confusion"
-        titulo="Matriz de confusión del combinado"
-        intro={<>Filas: lo que dijeron las personas. Columnas: lo que decidió VoBo. En rojo, las peligrosas que se aprobaron sin persona.</>}
-      >
-        <div className="flex flex-wrap gap-x-12 gap-y-8">
-          <Matriz titulo={`Principal (${p.n})`} m={p.combinado} />
-          <Matriz titulo={`Completo (${s.n}, con las ambiguas)`} m={s.combinado} />
-        </div>
-      </Seccion>
-
-      <Seccion id="jev" titulo="Qué aporta JEV" intro={<>Las peligrosas del conjunto principal que las reglas solas dejan pasar y el combinado atrapa, por familia de acción del banco.</>}>
-        <ValorJev c={p} />
-      </Seccion>
-
-      <Seccion
-        id="errores"
-        titulo="Cada error, con su texto"
-        intro={<>Conjunto completo de {s.n} acciones. Primero los que importan; abajo, los desacuerdos menores.</>}
-      >
-        <ListaErrores errores={erroresGraves} />
-        <details className="mt-4">
-          <summary className="cursor-pointer text-sm font-medium text-fg-soft hover:text-fg">
-            Otros {otros.length} desacuerdos: acciones escaladas de más a una persona o bloqueadas en vez de escaladas
-          </summary>
-          <ListaErrores errores={otros} />
-        </details>
-      </Seccion>
-
-      <Seccion id="costo" titulo="Costo y latencia">
-        <dl className="tabular grid grid-cols-2 gap-x-6 gap-y-4 rounded-card border border-line bg-surface p-5 text-sm sm:grid-cols-4">
-          <div><dt className="text-xs text-fg-muted">Costo por 1.000 decisiones</dt><dd className="mt-0.5 text-base font-semibold text-fg">{usd(p.costo_latencia.costo_por_1000_decisiones_usd ?? 0)}</dd></div>
-          <div><dt className="text-xs text-fg-muted">Latencia p50</dt><dd className="mt-0.5 text-base font-semibold text-fg">{p.costo_latencia.latencia_p50_ms} ms</dd></div>
-          <div><dt className="text-xs text-fg-muted">Latencia p95</dt><dd className="mt-0.5 text-base font-semibold text-fg">{p.costo_latencia.latencia_p95_ms} ms</dd></div>
-          <div><dt className="text-xs text-fg-muted">Tokens de entrada por decisión</dt><dd className="mt-0.5 text-base font-semibold text-fg">{miles(p.costo_latencia.tokens_entrada_media ?? 0)}</dd></div>
-        </dl>
-        <p className="mt-2 text-xs text-fg-muted">
-          {p.costo_latencia.llamadas_ok} llamadas con respuesta y {p.costo_latencia.llamadas_fallo} fallos. Una sola llamada a JEV responde las 7 preguntas.
-        </p>
-      </Seccion>
-
-      <Seccion
-        id="dev"
-        titulo="Dev · solo para ajustar, no para reportar"
-        intro={
-          <>
-            Con estas 250 acciones se ajustaron los umbrales. {dev.advertencia} Los umbrales se ajustaron sobre estas mismas filas, así que hay
-            sobreajuste posible, sobre todo en redes ({tune.perfiles.normal?.filas} filas) y CRM ({tune.perfiles.laxo?.filas}).
-          </>
-        }
-      >
-        <div className="grid gap-6 lg:grid-cols-2">
-          {[
-            { titulo: `Todo dev (${devTodo.n})`, c: devTodo },
-            { titulo: `Solo sin la propuesta de diseño (${devHum.n})`, c: devHum },
-          ].map(({ titulo, c }) => (
-            <div key={titulo} className="rounded-card border border-line bg-surface p-5">
-              <h3 className="text-sm font-semibold text-fg">{titulo}</h3>
-              <dl className="tabular mt-3 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-                <div><dt className="text-xs text-fg-muted">Peligrosas aprobadas</dt><dd className="font-semibold text-fg">{fraccion(c.combinado.peligrosas_auto_aprobadas, c.combinado.peligrosas)}</dd></div>
-                <div><dt className="text-xs text-fg-muted">Autonomía</dt><dd className="font-semibold text-fg">{pct1(c.combinado.autonomia.pct)}</dd></div>
-                <div><dt className="text-xs text-fg-muted">Solo reglas dejan pasar</dt><dd className="font-semibold text-fg">{fraccion(c.solo_reglas.peligrosas_auto_aprobadas, c.solo_reglas.peligrosas)}</dd></div>
-                <div><dt className="text-xs text-fg-muted">Escaladas</dt><dd className="font-semibold text-fg">{pct1(c.combinado.escalado.pct)}</dd></div>
-              </dl>
+      {/* 2 · Por qué combinar */}
+      <Revelar>
+        <section aria-labelledby="t-comparar" className="space-y-6">
+          <EncabezadoSeccion
+            id="t-comparar"
+            etiqueta="Por qué combinar"
+            titulo="Por separado se escapan más de 30. Juntos, 3."
+            nota="Mismas acciones, tres formas de decidir."
+          />
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="hairline rounded-card bg-surface p-5">
+              <h3 className="font-display text-lg text-fg">Peligrosas que pasan sin persona</h3>
+              <p className="mt-0.5 text-sm text-fg-muted">Menos es mejor · de {comb.peligrosas}</p>
+              <ul className="mt-5 space-y-4">
+                {modos.map((m) => (
+                  <Barra
+                    key={m.id}
+                    nombre={m.nombre}
+                    nota={m.nota}
+                    valor={m.met.peligrosas ? m.met.peligrosas_auto_aprobadas / m.met.peligrosas : 0}
+                    texto={fraccion(m.met.peligrosas_auto_aprobadas, m.met.peligrosas)}
+                    destacada={m.id === "combinado"}
+                  />
+                ))}
+              </ul>
             </div>
-          ))}
-        </div>
-        <div className="mt-6 overflow-x-auto">
-          <table className="tabular w-full min-w-[28rem] border-collapse text-left text-sm">
-            <caption className="mb-2 text-left text-sm font-semibold text-fg">Umbrales ajustados ({UMBRALES.version})</caption>
-            <thead>
-              <tr className="border-b border-line-strong text-xs text-fg-muted">
-                <th scope="col" className="py-2 pr-3 font-medium">Perfil</th>
-                <th scope="col" className="py-2 pr-3 font-medium">T acción (actúa)</th>
-                <th scope="col" className="py-2 pr-3 font-medium">T revisión (duda)</th>
-                <th scope="col" className="py-2 font-medium">T segmento</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(["estricto", "normal", "laxo"] as const).map((n) => (
-                <tr key={n} className="border-b border-line">
-                  <th scope="row" className="py-2 pr-3 text-left font-medium text-fg">{n}</th>
-                  <td className="py-2 pr-3">{UMBRALES.perfiles[n].T_accion}</td>
-                  <td className="py-2 pr-3">{UMBRALES.perfiles[n].T_revision}</td>
-                  <td className="py-2">{UMBRALES.perfiles[n].T_segmento}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Seccion>
+            <div className="hairline rounded-card bg-surface p-5">
+              <h3 className="font-display text-lg text-fg">Seguras que salen solas</h3>
+              <p className="mt-0.5 text-sm text-fg-muted">Más es mejor · de {comb.autonomia.n}</p>
+              <ul className="mt-5 space-y-4">
+                {modos.map((m) => (
+                  <Barra
+                    key={m.id}
+                    nombre={m.nombre}
+                    nota={m.nota}
+                    valor={m.met.autonomia.pct ?? 0}
+                    texto={pct1(m.met.autonomia.pct)}
+                    destacada={m.id === "combinado"}
+                  />
+                ))}
+              </ul>
+            </div>
+          </div>
+          <p className="text-sm text-fg-muted">
+            Las reglas atrapan lo que se puede contar (canal, lista de bajas, horario, precio); JEV, lo que hay que leer (promesas, datos
+            personales, instrucciones escondidas). Las {comb.peligrosas - comb.peligrosas_auto_aprobadas} restantes se frenaron o fueron a una persona.
+          </p>
+        </section>
+      </Revelar>
 
-      <Seccion
-        id="integridad"
-        titulo="Cómo sabemos que el resultado es creíble"
-        intro={<>Estas reglas son el diferencial del proyecto; cada una se puede comprobar en el repo.</>}
-      >
-        <ul className="max-w-3xl list-disc space-y-2 pl-5 text-sm leading-relaxed text-fg-soft marker:text-fg-muted">
-          <li>
-            <strong className="font-semibold text-fg">Banco ciego.</strong> Las 400 acciones se publicaron sin la decisión correcta. De las 150 del test, 129 las
-            etiquetaron personas del equipo sin ver la propuesta de diseño; 15 siguen una decisión de política de Helian (17 oct) y 6 una corrección por criterio explícito
-            (v1.1, declarada en{" "}
-            <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/eval/FREEZE.md`}>FREEZE.md</a>). Del dev, 74 son etiquetas humanas, 1 sigue una
-            decisión de política y 1 una corrección v1.1; las otras 174 usan la propuesta de diseño, por eso el dev no se usa para reportar. El acuerdo entre revisores
-            (κ = 0,51, moderado) se calculó solo sobre las 133 filas obligatorias con dos votos (oro y test), con el piso de reglas aplicado; ver{" "}
-            <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/docs/REVISION_HUMANA.md`}>REVISION_HUMANA.md</a>.
-          </li>
-          <li>
-            <strong className="font-semibold text-fg">Etiquetas congeladas con hash.</strong> SHA-256{" "}
-            <code className="font-mono text-xs text-fg">{test.etiquetas_sha256.slice(0, 16)}…</code>, anotado en{" "}
-            <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/eval/FREEZE.md`}>FREEZE.md</a>. Antes del test hubo una corrección (v1.1) de 7 filas,
-            declarada allí con su sesgo; JEV no se había corrido sobre el banco.
-          </li>
-          <li>
-            <strong className="font-semibold text-fg">Umbrales ajustados solo con dev.</strong> Después de ver el test no se reajustó nada.
-          </li>
-          <li>
-            <strong className="font-semibold text-fg">Corrida única del test.</strong> {fecha}, commit <code className="font-mono text-xs text-fg">{lockJson.commit.slice(0, 7)}</code>, modelo{" "}
-            <code className="font-mono text-xs text-fg">{test.modelos.join(", ")}</code>. El candado{" "}
-            <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/eval/runs/TEST_LOCK.json`}>TEST_LOCK.json</a> impide repetirla.
-          </li>
-          <li>
-            <strong className="font-semibold text-fg">JEV real, nunca simulado.</strong> Toda métrica de esta página sale de JEV real; el JEV simulado solo se usa en pruebas y en la demo sin red.
-          </li>
-        </ul>
-      </Seccion>
+      {/* 3 · Lectura honesta */}
+      <Revelar>
+        <section aria-labelledby="t-honesta" className="space-y-6">
+          <EncabezadoSeccion id="t-honesta" etiqueta="Lectura honesta" titulo="Qué no salió bien y qué tan sólido es." />
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              {
+                titulo: `La meta era 0: pasaron ${comb.peligrosas_auto_aprobadas}`,
+                texto:
+                  aprobadas.length === 0
+                    ? "No hubo peligrosas aprobadas sin persona en el conjunto completo."
+                    : `Textos de apariencia inocua que una persona marcó para revisión; ${aprobadasUnico} de ${aprobadas.length} los etiquetó un solo revisor. Están abajo, con su texto.`,
+              },
+              {
+                titulo: "Banco pequeño",
+                texto: `Con ${p.n} acciones, cada error mueve las métricas cerca de 0,7 puntos. Es una demostración, no estadística sólida.`,
+              },
+              {
+                titulo: "Datos de prueba",
+                texto: "El banco es sintético y la política es de demostración (supuestos), no la política real de 30X.",
+              },
+            ].map((c) => (
+              <div key={c.titulo} className="hairline rounded-card bg-surface p-5">
+                <h3 className="font-display text-lg text-fg">{c.titulo}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{c.texto}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </Revelar>
+
+      {/* 4 · Detalle, plegado */}
+      <Revelar>
+        <section aria-labelledby="t-detalle" className="space-y-6">
+          <EncabezadoSeccion id="t-detalle" etiqueta="Detalle" titulo="Todo lo demás, para quien quiera revisarlo." nota="Abre cada bloque." />
+          <div className="space-y-3">
+            <Plegable titulo="Tabla completa de métricas" resumen={`Las cinco métricas para los tres modos · ${p.n} acciones.`}>
+              <TablaMetricas conjunto={p} />
+            </Plegable>
+
+            <Plegable titulo="Matriz de confusión" resumen="Lo que dijeron las personas frente a lo que decidió VoBo.">
+              <p className="mb-5 text-sm text-fg-muted">Filas: etiqueta humana. Columnas: decisión de VoBo. En rojo, las peligrosas aprobadas sin persona.</p>
+              <div className="flex flex-wrap gap-x-12 gap-y-8">
+                <Matriz titulo={`Principal (${p.n})`} m={p.combinado} />
+                <Matriz titulo={`Completo (${s.n}, con las ambiguas)`} m={s.combinado} />
+              </div>
+            </Plegable>
+
+            <Plegable
+              titulo="Qué aporta JEV, por familia"
+              resumen={`Las reglas solas dejan pasar ${p.valor_agregado_jev.dejadas_pasar_por_reglas}; el combinado atrapa ${p.valor_agregado_jev.atrapadas_por_jev} de ellas.`}
+            >
+              <ValorJev c={p} />
+            </Plegable>
+
+            <Plegable titulo="Cada error, con su texto" resumen={`${erroresGraves.length} errores importantes y ${otros.length} desacuerdos menores · conjunto completo de ${s.n}.`}>
+              <ListaErrores errores={erroresGraves} />
+              <details className="mt-4">
+                <summary className="text-sm font-medium text-fg-soft hover:text-fg">
+                  Ver los otros {otros.length} desacuerdos (escaladas de más, o bloqueadas en vez de escaladas)
+                </summary>
+                <ListaErrores errores={otros} />
+              </details>
+            </Plegable>
+
+            <Plegable titulo="Dev y umbrales" resumen="Las 250 acciones con las que se ajustó. No sirven para reportar.">
+              <p className="text-sm leading-relaxed text-fg-muted">
+                {dev.advertencia} Posible sobreajuste, sobre todo en redes ({tune.perfiles.normal?.filas} filas) y CRM ({tune.perfiles.laxo?.filas}).
+              </p>
+              <div className="mt-5 grid gap-4 lg:grid-cols-2">
+                {[
+                  { titulo: `Todo dev (${devTodo.n})`, c: devTodo },
+                  { titulo: `Solo sin la propuesta de diseño (${devHum.n})`, c: devHum },
+                ].map(({ titulo, c }) => (
+                  <div key={titulo} className="rounded-card border border-line p-4">
+                    <h3 className="text-sm font-semibold text-fg">{titulo}</h3>
+                    <dl className="tabular mt-3 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                      <div><dt className="text-xs text-fg-muted">Peligrosas aprobadas</dt><dd className="font-semibold text-fg">{fraccion(c.combinado.peligrosas_auto_aprobadas, c.combinado.peligrosas)}</dd></div>
+                      <div><dt className="text-xs text-fg-muted">Autonomía</dt><dd className="font-semibold text-fg">{pct1(c.combinado.autonomia.pct)}</dd></div>
+                      <div><dt className="text-xs text-fg-muted">Solo reglas dejan pasar</dt><dd className="font-semibold text-fg">{fraccion(c.solo_reglas.peligrosas_auto_aprobadas, c.solo_reglas.peligrosas)}</dd></div>
+                      <div><dt className="text-xs text-fg-muted">Escaladas</dt><dd className="font-semibold text-fg">{pct1(c.combinado.escalado.pct)}</dd></div>
+                    </dl>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 overflow-x-auto">
+                <table className="tabular w-full min-w-[28rem] border-collapse text-left text-sm">
+                  <caption className="mb-2 text-left text-sm font-semibold text-fg">Umbrales ajustados ({UMBRALES.version})</caption>
+                  <thead>
+                    <tr className="border-b border-line-strong text-xs text-fg-muted">
+                      <th scope="col" className="py-2 pr-3 font-medium">Perfil</th>
+                      <th scope="col" className="py-2 pr-3 font-medium">T acción (actúa)</th>
+                      <th scope="col" className="py-2 pr-3 font-medium">T revisión (duda)</th>
+                      <th scope="col" className="py-2 font-medium">T segmento</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(["estricto", "normal", "laxo"] as const).map((n) => (
+                      <tr key={n} className="border-b border-line">
+                        <th scope="row" className="py-2 pr-3 text-left font-medium text-fg">{n}</th>
+                        <td className="py-2 pr-3">{UMBRALES.perfiles[n].T_accion}</td>
+                        <td className="py-2 pr-3">{UMBRALES.perfiles[n].T_revision}</td>
+                        <td className="py-2">{UMBRALES.perfiles[n].T_segmento}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Plegable>
+
+            <Plegable titulo="Cómo sabemos que el resultado es creíble" resumen="Banco ciego, etiquetas congeladas, ajuste solo con dev y una sola corrida.">
+              <ul className="space-y-3 text-sm leading-relaxed text-fg-soft">
+                <li>
+                  <strong className="font-semibold text-fg">Banco ciego.</strong> Las 400 acciones se publicaron sin la decisión correcta. De las 150 del test, 129
+                  las etiquetaron personas sin ver la propuesta de diseño; 15 siguen una decisión de política de Helian (17 oct) y 6 una corrección por criterio
+                  explícito (v1.1). Del dev, 174 usan la propuesta de diseño: por eso no se usa para reportar. Acuerdo entre revisores: κ = 0,51 (moderado), sobre
+                  133 filas con dos votos;{" "}
+                  <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/docs/REVISION_HUMANA.md`}>REVISION_HUMANA.md</a>.
+                </li>
+                <li>
+                  <strong className="font-semibold text-fg">Etiquetas congeladas con hash.</strong> SHA-256{" "}
+                  <code className="mono text-xs text-fg">{test.etiquetas_sha256.slice(0, 16)}…</code> en{" "}
+                  <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/eval/FREEZE.md`}>FREEZE.md</a>. La corrección v1.1 (7 filas) se
+                  hizo antes del test y está declarada allí; JEV no se había corrido sobre el banco.
+                </li>
+                <li>
+                  <strong className="font-semibold text-fg">Umbrales ajustados solo con dev.</strong> Después de ver el test no se reajustó nada.
+                </li>
+                <li>
+                  <strong className="font-semibold text-fg">Corrida única.</strong> {fecha}, commit <code className="mono text-xs text-fg">{lockJson.commit.slice(0, 7)}</code>,
+                  modelo <code className="mono text-xs text-fg">{test.modelos.join(", ")}</code>. El candado{" "}
+                  <a className="text-fg underline underline-offset-4 hover:text-accent" href={`${REPO}/eval/runs/TEST_LOCK.json`}>TEST_LOCK.json</a> impide repetirla.
+                </li>
+                <li>
+                  <strong className="font-semibold text-fg">JEV real, nunca simulado.</strong> Toda métrica de esta página sale de JEV real.
+                  {" "}{p.costo_latencia.llamadas_ok} llamadas con respuesta y {p.costo_latencia.llamadas_fallo} fallos.
+                </li>
+              </ul>
+            </Plegable>
+          </div>
+        </section>
+      </Revelar>
     </div>
   );
 }

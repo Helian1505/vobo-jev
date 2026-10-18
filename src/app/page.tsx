@@ -2,6 +2,7 @@ import Link from "next/link";
 import { HeroVivo } from "@/components/HeroVivo";
 import { Cifras, type Cifra } from "@/components/Cifras";
 import { Revelar } from "@/components/Revelar";
+import { EncabezadoSeccion } from "@/components/EncabezadoPagina";
 
 // Cifras de la corrida única del test (eval/results/test.json, conjunto principal de 145 acciones). No se recalculan aquí.
 const CIFRAS: Cifra[] = [
@@ -157,7 +158,7 @@ export default function Home() {
                     <span className="mono text-xs text-fg-faint">{p.numero}</span>
                     <span className="gira inline-block text-lg leading-none text-accent" aria-hidden="true">+</span>
                   </span>
-                  <span className="font-display mt-3 text-xl text-fg">{p.titulo}</span>
+                  <span className="font-display mt-3 text-lg text-fg">{p.titulo}</span>
                   <span className="mt-2 text-sm leading-relaxed text-fg-muted">{p.resumen}</span>
                   <span className="mt-4 text-sm font-medium text-fg-soft group-hover:text-fg">
                     <span className="group-open:hidden">Ver detalle</span>
@@ -243,17 +244,3 @@ export default function Home() {
   );
 }
 
-/** Encabezado de sección del inicio: etiqueta, titular y una nota corta a la derecha. Mismo patrón en todas. */
-function EncabezadoSeccion({ id, etiqueta, titulo, nota }: { id: string; etiqueta: string; titulo: string; nota?: string }) {
-  return (
-    <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
-      <div className="max-w-3xl">
-        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">{etiqueta}</p>
-        <h2 id={id} className="font-display mt-3 text-3xl leading-[1.08] text-fg sm:text-[38px]">
-          {titulo}
-        </h2>
-      </div>
-      {nota && <p className="max-w-xs text-sm leading-relaxed text-fg-muted lg:text-right">{nota}</p>}
-    </div>
-  );
-}

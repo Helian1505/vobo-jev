@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DiagramaPuerta } from "@/components/DiagramaPuerta";
-import { EncabezadoPagina } from "@/components/EncabezadoPagina";
+import { EncabezadoPagina, EncabezadoSeccion } from "@/components/EncabezadoPagina";
 import { Revelar } from "@/components/Revelar";
 
 const REPO = "https://github.com/Helian1505/vobo-jev";
@@ -56,7 +56,7 @@ export default function PaginaIntegracion() {
         {PUNTOS.map((p, i) => (
           <Revelar key={p.titulo} retraso={i * 110} className="h-full">
             <div className="elevar hairline h-full rounded-card bg-surface p-5">
-              <p className="font-display text-base text-fg">{p.titulo}</p>
+              <p className="font-display text-lg leading-snug text-fg">{p.titulo}</p>
               <p className="mt-2 text-sm leading-relaxed text-fg-muted">{p.texto}</p>
             </div>
           </Revelar>
@@ -64,11 +64,9 @@ export default function PaginaIntegracion() {
       </div>
 
       <Revelar>
-      <section aria-labelledby="titulo-estado" className="border-t border-line pt-8">
-        <h2 id="titulo-estado" className="font-display text-xl text-fg">
-          Qué está construido y qué no
-        </h2>
-        <dl className="mt-4 divide-y divide-line rounded-card border border-line">
+      <section aria-labelledby="titulo-estado" className="pt-4">
+        <EncabezadoSeccion id="titulo-estado" etiqueta="Estado" titulo="Qué está construido y qué no." />
+        <dl className="mt-6 divide-y divide-line rounded-card border border-line">
           {ESTADO.map((e) => (
             <div key={e.que} className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-6 sm:px-5">
               <dt className="text-sm font-medium text-fg">{e.que}</dt>

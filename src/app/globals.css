@@ -337,6 +337,20 @@ button:not(:disabled):active {
   animation: deriva-b var(--duracion, 60s) ease-in-out infinite;
 }
 
+/* Barras de la página de resultados: crecen desde la izquierda una vez. */
+@keyframes crece {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.barra-crece {
+  transform-origin: left center;
+  animation: crece 1100ms var(--ease-out-strong) 300ms both;
+}
+
 /* Diagrama: el camino activo «fluye». */
 @keyframes flujo {
   to {
@@ -376,6 +390,7 @@ button:not(:disabled):active {
   }
   .fila-entra,
   .sello,
+  .barra-crece,
   .figura-a,
   .figura-b,
   .flujo {
