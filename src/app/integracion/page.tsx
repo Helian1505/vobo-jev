@@ -30,7 +30,7 @@ const PUNTOS = [
 ];
 
 const ESTADO = [
-  { que: "Puerta de salida MCP en Python", estado: "Construida y probada contra la demo (PERMITIR, PEDIR VOBO y BLOQUEAR)." },
+  { que: "Puerta de salida MCP en Python", estado: "Construida y probada contra la demo con MCP Inspector (PERMITIR, PEDIR VOBO y BLOQUEAR) y con Claude Desktop como agente de ejemplo." },
   { que: "Aviso a Slack de lo que pide VoBo", estado: "Probado contra un Slack de prueba." },
   { que: "Ejecución en HubSpot y WhatsApp", estado: "Ejemplo, no conectado a los sistemas de 30X." },
   { que: "Registro en HubSpot", estado: "Solo diseño: no se escribe en ningún CRM." },

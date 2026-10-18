@@ -108,7 +108,7 @@ Cada consulta tardó entre 0,5 y 0,6 s de punta a punta. Antes de instalar `cert
 ## Qué NO se probó o no existe
 
 - **No hay HubSpot ni WhatsApp reales.** El ejecutor (`ejecutor.py`) es un placeholder: no envía nada y escribe una línea en `registro_salidas.jsonl`. Esa línea es el registro que se escribiría como nota en HubSpot.
-- **No se probó en Claude Desktop** ni con un agente de 30X: solo con MCP Inspector.
+- **Claude Desktop (17 oct, ≈10:15–10:25 p.m., prueba de Angie):** con la puerta registrada en `claude_desktop_config.json` y Claude como agente de ejemplo, el recordatorio dio PERMITIR y dejó en `registro_salidas.jsonl` el mismo `request_id` que mostró el chat; la oferta de AI Sales dio PEDIR VOBO, no se ejecutó y el aviso llegó al Slack de prueba (#vobo-aprobaciones). **No se probó con un agente de 30X.**
 - **El identificador propuesto es el ID de registro de HubSpot** (va como `perfil_id`). VoBo lo usa para el registro y la explicación; **nunca se envía a JEV**, que solo recibe el texto, el tipo y el canal (`src/lib/vobo/jev/state.ts`).
 - **El correo de la persona no se usa ni se envía.** Las herramientas reciben cuántos destinatarios hay, no quiénes.
 - **El aviso a Slack** en PEDIR VOBO depende del webhook configurado en el servidor de VoBo (`VOBO_REVIEW_WEBHOOK_URL`), no de esta puerta.
