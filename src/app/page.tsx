@@ -1,15 +1,6 @@
 import Link from "next/link";
-import { Insignia } from "@/components/ResultadoPanel";
-import { Demo, type AudienciaResumen, type EjemploDemo } from "@/components/Demo";
 import { HeroVivo } from "@/components/HeroVivo";
 import { Cifras, type Cifra } from "@/components/Cifras";
-import { DiagramaPuerta } from "@/components/DiagramaPuerta";
-import ejemplosJson from "../../data/ejemplos_demo.json";
-import { AUDIENCIAS, resolverAudiencia } from "@/lib/vobo/audiencias";
-import { DEAL, PERFILES } from "@/lib/vobo/perfiles";
-import { POLICY } from "@/lib/vobo/policy";
-
-const REPO = "https://github.com/Helian1505/vobo-jev";
 
 // Cifras de la corrida única del test (eval/results/test.json, conjunto principal de 145 acciones). No se recalculan aquí.
 const CIFRAS: Cifra[] = [
@@ -77,68 +68,44 @@ const PASOS_DECISION = [
   },
 ];
 
-const PUNTOS_INTEGRACION = [
-  {
-    titulo: "Una sola puerta, dentro de la herramienta del agente",
-    texto: "Las herramientas de salida (correo, WhatsApp, redes, HubSpot) llaman a VoBo antes de ejecutar. El agente no se la puede saltar.",
-  },
-  {
-    titulo: "Las llaves viven solo en la puerta",
-    texto: "Los agentes no tienen las credenciales de HubSpot ni de WhatsApp: todo lo que sale pasa por el mismo punto auditable.",
-  },
-  {
-    titulo: "Falla cerrada",
-    texto: "Si VoBo no responde, tarda o devuelve algo inválido, la acción espera a una persona. Probado contra servidores caídos y colgados.",
-  },
-  {
-    titulo: "Un solo modelo, con lo mínimo",
-    texto: "JEV es el único modelo y solo ve el texto que va a salir. Sin otro LLM y sin datos de las personas.",
-  },
+// El mismo orden que la barra de navegación: probar, verlo en flujo, la persona decide, la evidencia y cómo se conecta.
+const RECORRIDO = [
+  { href: "/demo", titulo: "Demo", texto: "Elige una acción y mira la decisión con su porqué." },
+  { href: "/simulacion", titulo: "Simulación", texto: "Un agente propone acciones seguidas; VoBo decide cada una." },
+  { href: "/cola", titulo: "Cola", texto: "Lo que pidió VoBo espera aquí a que una persona decida." },
+  { href: "/resultados", titulo: "Resultados", texto: "El test completo, corrido una sola vez, fallos incluidos." },
+  { href: "/integracion", titulo: "Integración", texto: "Dónde va VoBo en el flujo de 30X y qué está construido." },
 ];
 
 export default function Home() {
-  const ejemplos = ejemplosJson.ejemplos as EjemploDemo[];
-
-  // Las cifras de cada audiencia las calcula el servidor desde los perfiles; el navegador no recibe los 697 perfiles.
-  const audiencias: AudienciaResumen[] = AUDIENCIAS.flatMap((a) => {
-    const r = resolverAudiencia(a.id);
-    return r
-      ? [
-          {
-            id: r.id,
-            nombre: r.nombre,
-            perfiles_en_muestra: r.perfiles_en_muestra,
-            destinatarios_estimados: r.destinatarios_estimados,
-            pct_afinidad_baja: r.pct_afinidad_baja,
-          },
-        ]
-      : [];
-  });
-
-  const idsDeals = PERFILES.filter((p) => p.relacion === DEAL).map((p) => p.id);
-  const programas = [...POLICY.programas_pagos, "Free Sales Training"];
-
   return (
     <div className="space-y-24 sm:space-y-28">
-      {/* 1 · Hero */}
-      <section id="inicio" aria-labelledby="titulo-inicio" className="piso-hero -mx-4 -mt-10 px-4 pt-10 sm:-mx-6 sm:-mt-14 sm:px-6 sm:pt-16">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:gap-14">
+      {/* 1 · Hero: ocupa el alto de la ventana (menos la barra) y su contenido se encoge con ella para que quepa entero. */}
+      <section
+        id="inicio"
+        aria-labelledby="titulo-inicio"
+        className="piso-hero -mx-4 -mt-10 px-4 pb-6 pt-8 sm:-mx-6 sm:-mt-14 sm:px-6 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-center lg:py-8"
+      >
+        <div className="grid w-full items-center gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:gap-14">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 text-xs text-fg-soft">
               <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
               Reto JEV · Hackathon 30X
             </p>
-            <h1 id="titulo-inicio" className="font-display mt-6 text-[42px] leading-[1.02] text-fg sm:text-6xl lg:text-[68px]">
+            <h1
+              id="titulo-inicio"
+              className="font-display mt-5 text-[40px] leading-[1.03] text-fg sm:text-[52px] lg:text-[clamp(2.75rem,min(4.6vw,8.2vh),4.25rem)]"
+            >
               La puerta de salida de los <span className="text-accent">agentes</span> de 30X.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-soft">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-fg-soft lg:text-[clamp(1rem,2.3vh,1.125rem)]">
               Cada correo, WhatsApp, publicación o cambio en HubSpot que un agente quiere hacer pasa primero por VoBo. En
               milisegundos, las reglas y JEV lo revisan: lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo
               indebido no sale.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
-                href="#demo"
+                href="/demo"
                 className="rounded-field bg-accent px-5 py-3 text-[15px] font-semibold text-on-accent transition hover:brightness-105"
               >
                 Probar la demo
@@ -150,11 +117,6 @@ export default function Home() {
                 Ver resultados →
               </Link>
             </div>
-            <ul className="mt-8 flex flex-wrap gap-2" aria-label="Las tres decisiones posibles">
-              <li><Insignia decision="ALLOW" /></li>
-              <li><Insignia decision="REVIEW" /></li>
-              <li><Insignia decision="BLOCK" /></li>
-            </ul>
           </div>
           <HeroVivo />
         </div>
@@ -205,48 +167,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4 · Demo */}
-      <section id="demo" aria-labelledby="titulo-demo">
-        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Pruébalo</p>
-        <div className="mt-3 mb-8 flex flex-wrap items-end justify-between gap-4">
-          <h2 id="titulo-demo" className="font-display max-w-2xl text-3xl text-fg sm:text-[44px] sm:leading-[1.05]">
-            Elige una acción y mira qué decide VoBo.
-          </h2>
-          <p className="max-w-sm text-sm text-fg-muted">
-            Cada evaluación llama a JEV real. Los ejemplos usan programas, etapas y audiencias de 30X.
-          </p>
-        </div>
-        <Demo ejemplos={ejemplos} audiencias={audiencias} idsDeals={idsDeals} programas={programas} />
-      </section>
-
-      {/* 5 · Integración */}
-      <section id="integracion" aria-labelledby="titulo-integracion">
-        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Cómo se pone en 30X</p>
-        <h2 id="titulo-integracion" className="font-display mt-3 max-w-3xl text-3xl text-fg sm:text-[44px] sm:leading-[1.05]">
-          Un paso antes de todo lo que sale hacia afuera.
+      {/* 4 · Recorrido: las mismas páginas que la barra, en el mismo orden */}
+      <section aria-labelledby="titulo-recorrido">
+        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Recorre VoBo</p>
+        <h2 id="titulo-recorrido" className="font-display mt-3 max-w-3xl text-3xl text-fg sm:text-[44px] sm:leading-[1.05]">
+          De una acción suelta a todo el flujo.
         </h2>
-        <div className="hairline mt-10 rounded-card bg-surface p-4 sm:p-8">
-          <DiagramaPuerta />
-        </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {PUNTOS_INTEGRACION.map((p) => (
-            <div key={p.titulo} className="hairline rounded-card bg-surface p-5">
-              <p className="font-display text-base text-fg">{p.titulo}</p>
-              <p className="mt-2 text-sm leading-relaxed text-fg-muted">{p.texto}</p>
-            </div>
+        <ol className="mt-10 grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-2 lg:grid-cols-5">
+          {RECORRIDO.map((r, i) => (
+            <li key={r.href} className="bg-surface">
+              <Link href={r.href} className="group flex h-full flex-col p-5 transition-colors hover:bg-field">
+                <span className="mono text-xs text-fg-faint">0{i + 1}</span>
+                <span className="font-display mt-3 flex items-center justify-between text-lg text-fg">
+                  {r.titulo}
+                  <span className="text-fg-faint transition-colors group-hover:text-accent" aria-hidden="true">→</span>
+                </span>
+                <span className="mt-2 text-sm leading-relaxed text-fg-muted">{r.texto}</span>
+              </Link>
+            </li>
           ))}
-        </div>
-        <p className="mt-6 text-sm text-fg-muted">
-          Ejemplos probados (no conectados a los sistemas de 30X):{" "}
-          <a className="text-fg-soft underline underline-offset-4 hover:text-fg" href={`${REPO}/tree/main/integraciones/mcp`}>
-            puerta de salida MCP en Python
-          </a>
-          {" · "}
-          <a className="text-fg-soft underline underline-offset-4 hover:text-fg" href={`${REPO}/blob/main/docs/INTEGRACION.md`}>
-            guía de integración
-          </a>
-          .
-        </p>
+        </ol>
       </section>
 
       {/* 6 · Evidencia */}

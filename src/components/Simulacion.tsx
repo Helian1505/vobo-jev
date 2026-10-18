@@ -8,6 +8,7 @@ import { encolar } from "@/lib/vobo/cola-local";
 import { TIPOS_ACCION, miles, usd } from "@/lib/vobo/ui-datos";
 import { useCola } from "@/lib/vobo/use-cola";
 import type { Decision } from "@/lib/vobo/types";
+import { EncabezadoPagina } from "@/components/EncabezadoPagina";
 
 type RespuestaSim = RespuestaEvaluate & {
   indice: number;
@@ -149,8 +150,7 @@ export function Simulacion({ total }: { total: number }) {
 
   return (
     <div className="space-y-8">
-      <header className="max-w-3xl">
-        <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">Simulación en vivo</h1>
+      <EncabezadoPagina etiqueta="Simulación" titulo="Simulación en vivo">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Un agente propone acciones una tras otra y VoBo decide cada una en el momento. Así se ve la compuerta cuando no es una acción suelta, sino un
           flujo: lo seguro pasa solo, lo dudoso espera a una persona y lo peligroso se frena.
@@ -159,7 +159,7 @@ export function Simulacion({ total }: { total: number }) {
           Son {total} acciones sintéticas del banco de pruebas (del conjunto de ajuste, nunca del test). Cada una es una evaluación completa; las que
           quedan en PEDIR VOBO pasan a la <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/cola">cola</Link>.
         </p>
-      </header>
+      </EncabezadoPagina>
 
       {jev?.modo === "mock" && (
         <p className="rounded-field border border-line bg-surface px-4 py-3 text-sm text-fg-soft">

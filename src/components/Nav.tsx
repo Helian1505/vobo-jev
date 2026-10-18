@@ -5,66 +5,33 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCola } from "@/lib/vobo/use-cola";
 
-interface Enlace {
-  href: string;
-  texto: string;
-  /** Si el enlace apunta a una sección de la página de inicio, su id (para resaltarla al hacer scroll). */
-  seccion?: string;
-}
+const REPO = "https://github.com/Helian1505/vobo-jev";
 
-const ENLACES: Enlace[] = [
-  { href: "/#como-funciona", texto: "Cómo funciona", seccion: "como-funciona" },
-  { href: "/#demo", texto: "Demo", seccion: "demo" },
+/**
+ * Solo páginas, en el orden del recorrido: probar → verlo en flujo → la persona decide → la evidencia → cómo se conecta.
+ * Cada enlace abre su página desde arriba, con el mismo encabezado. El inicio es el logo.
+ */
+const ENLACES = [
+  { href: "/demo", texto: "Demo" },
   { href: "/simulacion", texto: "Simulación" },
   { href: "/cola", texto: "Cola" },
   { href: "/resultados", texto: "Resultados" },
-  { href: "/#integracion", texto: "Integración", seccion: "integracion" },
+  { href: "/integracion", texto: "Integración" },
 ];
-
-const SECCIONES = ENLACES.flatMap((e) => (e.seccion ? [e.seccion] : []));
-
-/** Resalta la sección visible de la página de inicio mientras se hace scroll. */
-function useSeccionVisible(activo: boolean): string {
-  const [visible, setVisible] = useState("");
-  useEffect(() => {
-    if (!activo || typeof IntersectionObserver === "undefined") {
-      setVisible("");
-      return;
-    }
-    const observador = new IntersectionObserver(
-      (entradas) => {
-        for (const entrada of entradas) {
-          if (entrada.isIntersecting) setVisible(entrada.target.id);
-        }
-      },
-      { rootMargin: "-45% 0px -50% 0px" },
-    );
-    for (const id of SECCIONES) {
-      const el = document.getElementById(id);
-      if (el) observador.observe(el);
-    }
-    return () => observador.disconnect();
-  }, [activo]);
-  return visible;
-}
 
 export function Nav() {
   const ruta = usePathname();
   const pendientes = useCola().filter((i) => i.estado === "pendiente").length;
   const [abierto, setAbierto] = useState(false);
-  const enInicio = ruta === "/";
-  const seccionVisible = useSeccionVisible(enInicio);
 
   // Al cambiar de página se cierra el menú móvil.
   useEffect(() => {
     setAbierto(false);
   }, [ruta]);
 
-  const esActivo = (e: Enlace) => (e.seccion ? enInicio && seccionVisible === e.seccion : ruta.startsWith(e.href));
-
   const enlaces = (movil: boolean) =>
     ENLACES.map((e) => {
-      const activo = esActivo(e);
+      const activo = ruta.startsWith(e.href);
       return (
         <Link
           key={e.href}
@@ -74,7 +41,7 @@ export function Nav() {
           className={
             movil
               ? `flex items-center justify-between rounded-field px-3 py-2.5 text-[15px] ${activo ? "bg-raised text-fg" : "text-fg-soft hover:bg-raised hover:text-fg"}`
-              : `relative px-2.5 py-2 text-sm font-medium tracking-[-0.01em] transition-colors ${
+              : `relative rounded-field px-3 py-2 text-sm font-medium tracking-[-0.01em] transition-colors ${
                   activo ? "text-fg" : "text-fg-muted hover:text-fg"
                 }`
           }
@@ -86,7 +53,7 @@ export function Nav() {
               <span className="sr-only"> pendientes</span>
             </span>
           )}
-          {!movil && activo && <span aria-hidden="true" className="absolute inset-x-2.5 -bottom-[13px] h-0.5 rounded-full bg-accent" />}
+          {!movil && activo && <span aria-hidden="true" className="absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-accent" />}
         </Link>
       );
     });
@@ -97,12 +64,12 @@ export function Nav() {
         {enlaces(false)}
       </nav>
       <div className="flex items-center gap-2">
-        <Link
-          href="/#demo"
-          className="hidden rounded-field bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:brightness-105 sm:inline-block"
+        <a
+          href={REPO}
+          className="hidden rounded-field border border-line-strong px-3.5 py-2 text-sm font-medium text-fg-soft transition-colors hover:border-fg-faint hover:text-fg sm:inline-block"
         >
-          Probar la demo
-        </Link>
+          Código en GitHub
+        </a>
         <button
           type="button"
           className="inline-flex h-9 w-9 items-center justify-center rounded-field border border-line text-fg-soft hover:border-line-strong hover:text-fg lg:hidden"
@@ -134,14 +101,15 @@ export function Nav() {
           className="nav-glass absolute inset-x-0 top-16 border-b border-line px-4 pb-4 pt-2 lg:hidden"
         >
           <div className="mx-auto flex max-w-[1200px] flex-col gap-1">
-            {enlaces(true)}
             <Link
-              href="/#demo"
+              href="/"
               onClick={() => setAbierto(false)}
-              className="mt-2 rounded-field bg-accent px-4 py-2.5 text-center text-[15px] font-semibold text-on-accent sm:hidden"
+              aria-current={ruta === "/" ? "page" : undefined}
+              className={`rounded-field px-3 py-2.5 text-[15px] ${ruta === "/" ? "bg-raised text-fg" : "text-fg-soft hover:bg-raised hover:text-fg"}`}
             >
-              Probar la demo
+              Inicio
             </Link>
+            {enlaces(true)}
           </div>
         </nav>
       )}

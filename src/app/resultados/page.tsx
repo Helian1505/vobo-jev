@@ -9,6 +9,7 @@ import devJson from "../../../eval/results/dev.json";
 import tuneJson from "../../../eval/results/tune_dev.json";
 import testJson from "../../../eval/results/test.json";
 import lockJson from "../../../eval/runs/TEST_LOCK.json";
+import { EncabezadoPagina } from "@/components/EncabezadoPagina";
 
 export const metadata: Metadata = {
   title: "Resultados del banco — VoBo",
@@ -276,13 +277,12 @@ export default function Resultados() {
 
   return (
     <div className="space-y-10">
-      <header className="max-w-3xl">
-        <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">Resultados del banco</h1>
+      <EncabezadoPagina etiqueta="Resultados" titulo="Resultados del banco">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           400 acciones sintéticas, con etiquetas de revisión humana y de decisiones de política (el detalle está en «Cómo sabemos que el resultado es creíble», abajo), partidas en 250 para ajustar (dev) y 150 para medir (test). El test se corrió{" "}
           <strong className="font-semibold text-fg">una sola vez</strong>, con JEV real, y se reporta tal cual, fallos incluidos.
         </p>
-      </header>
+      </EncabezadoPagina>
 
       <section aria-labelledby="lectura" className="rounded-card border border-line bg-surface p-5 sm:p-6">
         <h2 id="lectura" className="display-sans text-xl font-semibold text-fg">

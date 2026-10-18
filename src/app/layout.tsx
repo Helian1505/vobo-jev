@@ -57,10 +57,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Producto</p>
                 <ul className="mt-3 space-y-2 text-fg-soft">
-                  <li><Link className="hover:text-fg" href="/#demo">Demo</Link></li>
+                  <li><Link className="hover:text-fg" href="/demo">Demo</Link></li>
                   <li><Link className="hover:text-fg" href="/simulacion">Simulación</Link></li>
                   <li><Link className="hover:text-fg" href="/cola">Cola de VoBo humano</Link></li>
                   <li><Link className="hover:text-fg" href="/resultados">Resultados del banco</Link></li>
+                  <li><Link className="hover:text-fg" href="/integracion">Integración</Link></li>
                 </ul>
               </div>
               <div>

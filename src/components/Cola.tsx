@@ -7,6 +7,7 @@ import { resolver, vaciar, type EstadoCola, type ItemCola } from "@/lib/vobo/col
 import { useCola } from "@/lib/vobo/use-cola";
 import { ETIQUETA_REGLA, TIPOS_ACCION } from "@/lib/vobo/ui-datos";
 import type { NombreRegla } from "@/lib/vobo/types";
+import { EncabezadoPagina } from "@/components/EncabezadoPagina";
 
 type Filtro = "pendientes" | "resueltas" | "todas";
 
@@ -95,8 +96,7 @@ export function Cola() {
 
   return (
     <div className="space-y-8">
-      <header className="max-w-3xl">
-        <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">Cola de VoBo humano</h1>
+      <EncabezadoPagina etiqueta="Cola" titulo="Cola de VoBo humano">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Las acciones que quedaron en <Insignia decision="REVIEW" /> en la demo y en la simulación esperan aquí a que una persona las apruebe o las rechace.
         </p>
@@ -106,7 +106,7 @@ export function Cola() {
           <a className="text-fg underline underline-offset-4 hover:text-accent" href="https://github.com/Helian1505/vobo-jev/blob/main/docs/INTEGRACION.md">ver cómo integrarlo</a>
           ).
         </p>
-      </header>
+      </EncabezadoPagina>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div role="group" aria-label="Filtrar la cola" className="flex gap-1">
@@ -160,7 +160,7 @@ export function Cola() {
               <p className="font-medium text-fg">No hay acciones esperando.</p>
               <p className="mt-2 text-fg-muted">
                 Llegan solas cuando una evaluación da PEDIR VOBO: prueba el ejemplo E02 en la{" "}
-                <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/">demo</Link> o corre la{" "}
+                <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/demo">demo</Link> o corre la{" "}
                 <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/simulacion">simulación</Link>.
               </p>
             </>
