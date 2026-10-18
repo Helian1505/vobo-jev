@@ -33,7 +33,7 @@ export function Nav() {
     ENLACES.map((e) => {
       const activo = ruta.startsWith(e.href);
       return (
-        <Link
+        <Link scroll={false}
           key={e.href}
           href={e.href}
           onClick={() => setAbierto(false)}
@@ -101,7 +101,7 @@ export function Nav() {
           className="nav-glass absolute inset-x-0 top-16 border-b border-line px-4 pb-4 pt-2 lg:hidden"
         >
           <div className="mx-auto flex max-w-[1200px] flex-col gap-1">
-            <Link
+            <Link scroll={false}
               href="/"
               onClick={() => setAbierto(false)}
               aria-current={ruta === "/" ? "page" : undefined}

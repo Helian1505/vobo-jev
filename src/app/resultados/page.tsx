@@ -321,7 +321,7 @@ export default function Resultados() {
 
   return (
     <div className="space-y-12">
-      <EncabezadoPagina etiqueta="Resultados" titulo="Resultados del test">
+      <EncabezadoPagina titulo="Resultados del test">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Una sola corrida, con JEV real, sobre {p.n} acciones que no se usaron para ajustar. Se reporta tal cual, fallos incluidos.
         </p>
@@ -329,7 +329,7 @@ export default function Resultados() {
 
       {/* 1 · En cuatro números */}
       <section aria-labelledby="t-numeros" className="space-y-6">
-        <EncabezadoSeccion id="t-numeros" etiqueta="En cuatro números" titulo={`Lo que hizo VoBo con las ${p.n} acciones.`} nota={`${comb.peligrosas} peligrosas y ${comb.autonomia.n} seguras, según las etiquetas humanas.`} />
+        <EncabezadoSeccion id="t-numeros" titulo={`Lo que hizo VoBo con las ${p.n} acciones.`} nota={`${comb.peligrosas} peligrosas y ${comb.autonomia.n} seguras, según las etiquetas humanas.`} />
         <Cifras cifras={cifras} />
       </section>
 
@@ -338,7 +338,6 @@ export default function Resultados() {
         <section aria-labelledby="t-comparar" className="space-y-6">
           <EncabezadoSeccion
             id="t-comparar"
-            etiqueta="Por qué combinar"
             titulo="Por separado se escapan más de 30. Juntos, 3."
             nota="Mismas acciones, tres formas de decidir."
           />
@@ -386,7 +385,7 @@ export default function Resultados() {
       {/* 3 · Lectura honesta */}
       <Revelar>
         <section aria-labelledby="t-honesta" className="space-y-6">
-          <EncabezadoSeccion id="t-honesta" etiqueta="Lectura honesta" titulo="Qué no salió bien y qué tan sólido es." />
+          <EncabezadoSeccion id="t-honesta" titulo="Qué no salió bien y qué tan sólido es." />
           <div className="grid gap-4 md:grid-cols-3">
             {[
               {
@@ -417,7 +416,7 @@ export default function Resultados() {
       {/* 4 · Detalle, plegado */}
       <Revelar>
         <section aria-labelledby="t-detalle" className="space-y-6">
-          <EncabezadoSeccion id="t-detalle" etiqueta="Detalle" titulo="Todo lo demás, para quien quiera revisarlo." nota="Abre cada bloque." />
+          <EncabezadoSeccion id="t-detalle" titulo="Todo lo demás, para quien quiera revisarlo." nota="Abre cada bloque." />
           <div className="space-y-3">
             <Plegable titulo="Tabla completa de métricas" resumen={`Las cinco métricas para los tres modos · ${p.n} acciones.`}>
               <TablaMetricas conjunto={p} />

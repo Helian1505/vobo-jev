@@ -247,34 +247,31 @@ button:not(:disabled):active {
 /* ── Movimiento de la página ──────────────────────────────────────────────── */
 
 /* Cada página entra con un difuminado suave (src/app/template.tsx). */
+/* Solo opacidad y corta: se ve decenas de veces al día y no debe mover la página (ni el scroll). */
 @keyframes pagina {
   from {
     opacity: 0;
-    filter: blur(10px);
-    transform: translateY(12px);
   }
   to {
     opacity: 1;
-    filter: none;
-    transform: none;
   }
 }
 .pagina-entra {
-  animation: pagina 700ms var(--ease-out-strong) both;
+  animation: pagina 200ms ease-out both;
 }
 
 /* Bloques que aparecen al llegar a ellos con el scroll (componente Revelar). */
 .revelar {
   transition:
-    opacity 750ms var(--ease-out-strong),
-    transform 750ms var(--ease-out-strong),
-    filter 750ms var(--ease-out-strong);
+    opacity 480ms var(--ease-out-strong),
+    transform 480ms var(--ease-out-strong),
+    filter 480ms var(--ease-out-strong);
   transition-delay: var(--retraso, 0ms);
 }
 .revelar[data-visible="false"] {
   opacity: 0;
-  transform: translateY(28px) scale(0.98);
-  filter: blur(8px);
+  transform: translateY(16px);
+  filter: blur(4px);
 }
 
 /* Filas del registro del inicio: entran desde la derecha y la decisión cae como un sello. */

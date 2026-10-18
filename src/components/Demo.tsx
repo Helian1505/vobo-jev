@@ -529,7 +529,7 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
               {resultado.decision === "REVIEW" && (
                 <p className="mt-5 rounded-field border border-review/40 bg-review/10 px-4 py-3 text-sm text-fg-soft">
                   Esta acción quedó en la cola de VoBo humano, esperando a una persona.{" "}
-                  <Link className="font-medium text-fg underline underline-offset-4 hover:text-accent" href="/cola">Ver la cola</Link>
+                  <Link scroll={false} className="font-medium text-fg underline underline-offset-4 hover:text-accent" href="/cola">Ver la cola</Link>
                 </p>
               )}
             </div>

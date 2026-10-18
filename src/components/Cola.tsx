@@ -96,14 +96,14 @@ export function Cola() {
 
   return (
     <div className="space-y-8">
-      <EncabezadoPagina etiqueta="Cola" titulo="Cola de VoBo humano">
+      <EncabezadoPagina titulo="Cola de VoBo humano">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Lo que quedó en <Insignia decision="REVIEW" /> en la demo o la simulación espera aquí a que una persona lo apruebe o lo rechace.
         </p>
         <p role="note" className="mt-3 text-sm text-fg-muted">
           <strong className="font-semibold text-fg-soft">Demostración:</strong> vive solo en este navegador y aprobar no ejecuta nada. En 30X, esto
           llegaría por Slack (
-          <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/integracion">ver integración</Link>).
+          <Link scroll={false} className="text-fg underline underline-offset-4 hover:text-accent" href="/integracion">ver integración</Link>).
         </p>
       </EncabezadoPagina>
 
@@ -159,8 +159,8 @@ export function Cola() {
               <p className="font-medium text-fg">No hay acciones esperando.</p>
               <p className="mt-2 text-fg-muted">
                 Llegan solas cuando una evaluación da PEDIR VOBO: prueba el ejemplo E02 en la{" "}
-                <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/demo">demo</Link> o corre la{" "}
-                <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/simulacion">simulación</Link>.
+                <Link scroll={false} className="text-fg underline underline-offset-4 hover:text-accent" href="/demo">demo</Link> o corre la{" "}
+                <Link scroll={false} className="text-fg underline underline-offset-4 hover:text-accent" href="/simulacion">simulación</Link>.
               </p>
             </>
           ) : (
