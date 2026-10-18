@@ -27,7 +27,7 @@ Así lo tradujimos. La integración principal es la **puerta de salida dentro de
 
 | Lo que pidieron | Qué hay | Estado |
 |---|---|---|
-| Un paso por el que pase lo que sale | **Puerta de salida:** servidor MCP (`integraciones/mcp/`) y envoltorio de Python dentro de las herramientas del agente (`integraciones/python/`) | MCP: **en construcción** (TODO: completar el enlace cuando exista en `main`). Envoltorio de Python: **construido y probado** |
+| Un paso por el que pase lo que sale | **Puerta de salida:** servidor MCP (`integraciones/mcp/`) y envoltorio de Python dentro de las herramientas del agente (`integraciones/python/`) | MCP: construida y probada con MCP Inspector contra la demo (3 casos: PERMITIR, PEDIR VOBO, BLOQUEAR); NO probada en Claude Desktop ni con HubSpot o WhatsApp reales (el ejecutor es un placeholder) ([LEEME](../integraciones/mcp/LEEME.md)). Envoltorio de Python: **construido y probado** |
 | Adaptador para flujos fuera de tecnología | Flujo de n8n con VoBo como paso de salida (`integraciones/n8n/`) | **Construido y probado** (enrutamiento) |
 | Consulta del agente como complemento | Un agente de ejemplo en TypeScript | **Construido y probado** |
 | Aprobación en Slack | Nodo «Send and Wait» de n8n con el `resumen_aprobacion`; aparte, el aviso de `VOBO_REVIEW_WEBHOOK_URL` llega a Slack por Incoming Webhook | **Aviso probado contra un Slack de prueba** (17 oct); los botones de aprobar, configurados y **no probados** |
@@ -174,7 +174,7 @@ Las reglas por sí solas habrían dicho PEDIR VOBO (audiencia grande); fue JEV q
 
 La idea: el agente no envía por su cuenta. Sus herramientas de salida (enviar correo, enviar WhatsApp, publicar, actualizar HubSpot) pasan primero por VoBo. **Esto solo vale si las llaves de salida viven únicamente en la puerta**: si el agente tiene otra vía para enviar, la puerta no lo detiene. Dos formas, la misma regla:
 
-- **Servidor MCP (`integraciones/mcp/`): en construcción.** Expone las herramientas de salida al agente a través de VoBo. <!-- TODO: completar con el enlace y el estado real cuando integraciones/mcp/ exista en main (Helian avisará). -->
+- **Servidor MCP (`integraciones/mcp/`): construida y probada con MCP Inspector contra la demo (3 casos: PERMITIR, PEDIR VOBO, BLOQUEAR); NO probada en Claude Desktop ni con HubSpot o WhatsApp reales (el ejecutor es un placeholder).** Expone las herramientas de salida al agente a través de VoBo; detalle en [`integraciones/mcp/LEEME.md`](../integraciones/mcp/LEEME.md). Es la integración principal.
 - **Envoltorio de Python (`integraciones/python/`): construido y probado**, descrito abajo.
 
 #### Envoltorio de Python
@@ -292,7 +292,7 @@ Según `src/lib/vobo/jev/state.ts`, JEV recibe solo:
 
 **Hoja de ruta:** detectar en código los datos personales evidentes (correo, teléfono, documento) y bloquear sin enviar el texto a JEV.
 
-*Análisis posterior, no medido en la corrida del test:* las 4 acciones del test con un correo o teléfono visibles (B313, B314, B315 y B339) están etiquetadas BLOQUEAR, y ninguna acción segura del test tiene esos patrones.
+*Análisis posterior, no medido en la corrida del test:* las 5 acciones del test con correo, teléfono o documento visibles (A33, B313, B314, B315 y B339) están etiquetadas BLOQUEAR, y ninguna acción segura del test tiene esos patrones.
 
 ## 5. Límites
 

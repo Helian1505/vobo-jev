@@ -9,8 +9,7 @@ Proyecto del equipo VoBo para el Hackathon 30X (reto JEV), 16–18 oct 2026.
 - **Demo:** https://vobo-jev.vercel.app/ (usa JEV real, `jev-1.14.0`)
 - **Resultados del banco:** https://vobo-jev.vercel.app/resultados
 - **Simulación en vivo:** https://vobo-jev.vercel.app/simulacion (un agente propone acciones una tras otra y VoBo decide cada una, con contadores y costo acumulado) y **cola de VoBo humano:** https://vobo-jev.vercel.app/cola (demostración: el estado vive solo en el navegador)
-- **Cómo integrarlo:** [`docs/INTEGRACION.md`](docs/INTEGRACION.md): la puerta de salida dentro de las herramientas del agente (puerta MCP, **en construcción**, y un envoltorio de Python en `integraciones/python/`), n8n como adaptador para los flujos que viven fuera de tecnología (`integraciones/n8n/`), la falla cerrada, lo que es solo diseño y los límites
-<!-- TODO: completar el enlace a integraciones/mcp/ cuando exista en main (Helian avisará). -->
+- **Cómo integrarlo:** [`docs/INTEGRACION.md`](docs/INTEGRACION.md): la puerta de salida dentro de las herramientas del agente (puerta MCP, construida y probada con MCP Inspector contra la demo (3 casos: PERMITIR, PEDIR VOBO, BLOQUEAR); NO probada en Claude Desktop ni con HubSpot o WhatsApp reales (el ejecutor es un placeholder); ver [`integraciones/mcp/LEEME.md`](integraciones/mcp/LEEME.md), y un envoltorio de Python en `integraciones/python/`), n8n como adaptador para los flujos que viven fuera de tecnología (`integraciones/n8n/`), la falla cerrada, lo que es solo diseño y los límites
 
 ![VoBo bloquea una acción con promesa de resultados: la decisión, las razones y las respuestas de JEV con su probabilidad](docs/assets/demo-bloquear.jpg)
 
@@ -65,7 +64,7 @@ Según [`src/lib/vobo/jev/state.ts`](src/lib/vobo/jev/state.ts), a JEV le llega 
 
 **Hoja de ruta:** detectar en código los datos personales evidentes (correo, teléfono, documento) y bloquear sin enviar el texto a JEV.
 
-*Análisis posterior, no medido en la corrida del test:* las 4 acciones del test con un correo o teléfono visibles (B313, B314, B315 y B339) están etiquetadas BLOQUEAR, y ninguna acción segura del test tiene esos patrones.
+*Análisis posterior, no medido en la corrida del test:* las 5 acciones del test con correo, teléfono o documento visibles (A33, B313, B314, B315 y B339) están etiquetadas BLOQUEAR, y ninguna acción segura del test tiene esos patrones.
 
 ## 4. Por qué JEV
 
