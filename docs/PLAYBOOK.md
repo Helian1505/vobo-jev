@@ -1,7 +1,7 @@
 # Playbook de aplicación de JEV en 30X
 ## Que los agentes hagan más solos, con evidencia · Primera aplicación: VoBo, la puerta de salida de los agentes
 
-> **v1.3 · dom 18 oct 2026, 12:45 a.m. · Pendiente de aprobación de Helian (dueño de la política, D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3.
+> **v1.3 · dom 18 oct 2026, 12:55 a.m. · Pendiente de aprobación de Helian (dueño de la política, D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3.
 > **Versión para el formulario:** `docs/PLAYBOOK.pdf` (8 diapositivas; el límite es 8). Este archivo es su versión en texto.
 > **Qué cubre:** cada parte responde a lo que pide el reto (§08): las decisiones que toma JEV, el esquema de preguntas, los umbrales, quién lo opera y cómo se mide.
 > **Etiquetas:**
@@ -158,7 +158,7 @@ Por separado, se escapan 34 peligrosas con solo reglas y 31 con solo JEV; juntos
 
 | Pieza | Estado |
 |---|---|
-| Puerta de salida MCP, pensada para que no haya otra salida | **Probado:** 11 de 11 pruebas, MCP Inspector contra la demo y Claude Desktop como agente de ejemplo |
+| Puerta de salida MCP, pensada para que no haya otra salida | **Probado:** 11 de 11 pruebas y MCP Inspector contra la demo; probada con Claude Desktop como agente de ejemplo (2 casos: PERMITIR y PEDIR VOBO); no con agentes de 30X ni con HubSpot o WhatsApp reales |
 | Falla cerrada | **Probado:** con el servidor caído, colgado y con error |
 | Aviso en Slack | **Probado** en un Slack de prueba |
 | Identificador: ID de HubSpot + `request_id` | **Construido:** va en cada respuesta |
