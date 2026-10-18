@@ -12,7 +12,7 @@ interface Fila {
 
 /*
  * Tres acciones de la demo con la decisión y la razón que devolvió VoBo con JEV real (jev-1.14.0) el 17 oct.
- * Se muestran como un registro de decisiones: entran una sola vez, rápido, y no se repiten.
+ * Se muestran como un registro de decisiones: cada fila entra desde la derecha y su decisión cae como un sello; una sola vez.
  */
 const FILAS: Fila[] = [
   {
@@ -52,16 +52,16 @@ export function HeroVivo() {
         {FILAS.map((f, i) => (
           <li
             key={f.texto}
-            className="entra grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1.5 px-4 py-3.5 sm:px-5"
-            style={{ animationDelay: `${i * 70}ms` }}
+            className="fila-entra grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1.5 px-4 py-3.5 transition-colors hover:bg-field sm:px-5"
+            style={{ animationDelay: `${250 + i * 260}ms` }}
           >
             <p className="text-[11px] font-medium uppercase tracking-wider text-fg-faint">
               {f.canal} · {f.destino}
             </p>
-            <p className="mono row-span-1 text-right text-[11px] text-fg-faint">{f.latencia}</p>
+            <p className="mono text-right text-[11px] text-fg-faint">{f.latencia}</p>
             <p className="col-span-2 line-clamp-2 text-sm leading-snug text-fg-soft">«{f.texto}»</p>
             <p className="text-xs leading-snug text-fg-muted">{f.razon}</p>
-            <div className="justify-self-end">
+            <div className="sello justify-self-end" style={{ animationDelay: `${250 + i * 260 + 520}ms` }}>
               <Insignia decision={f.decision} />
             </div>
           </li>

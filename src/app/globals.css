@@ -172,16 +172,18 @@ details[open] .gira {
 @keyframes entrada {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px) scale(0.99);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: none;
+    filter: blur(0);
   }
 }
 
 .entra {
-  animation: entrada 180ms var(--ease-out-strong) both;
+  animation: entrada 420ms var(--ease-out-strong) both;
 }
 
 @keyframes tarjeta {
@@ -239,5 +241,155 @@ button:not(:disabled):active {
   }
   button:not(:disabled):active {
     transform: none;
+  }
+}
+
+/* ── Movimiento de la página ──────────────────────────────────────────────── */
+
+/* Cada página entra con un difuminado suave (src/app/template.tsx). */
+@keyframes pagina {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+.pagina-entra {
+  animation: pagina 700ms var(--ease-out-strong) both;
+}
+
+/* Bloques que aparecen al llegar a ellos con el scroll (componente Revelar). */
+.revelar {
+  transition:
+    opacity 750ms var(--ease-out-strong),
+    transform 750ms var(--ease-out-strong),
+    filter 750ms var(--ease-out-strong);
+  transition-delay: var(--retraso, 0ms);
+}
+.revelar[data-visible="false"] {
+  opacity: 0;
+  transform: translateY(28px) scale(0.98);
+  filter: blur(8px);
+}
+
+/* Filas del registro del inicio: entran desde la derecha y la decisión cae como un sello. */
+@keyframes fila {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+.fila-entra {
+  animation: fila 800ms var(--ease-out-strong) both;
+}
+@keyframes sello {
+  0% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.sello {
+  animation: sello 500ms var(--ease-out-strong) both;
+}
+
+/* Fondo: figuras pequeñas que se mueven casi sin notarse (componente FondoFiguras). */
+@keyframes deriva-a {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(46px, -34px) rotate(30deg);
+  }
+}
+@keyframes deriva-b {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-38px, 28px) rotate(-24deg);
+  }
+}
+.figura-a {
+  animation: deriva-a var(--duracion, 60s) ease-in-out infinite;
+}
+.figura-b {
+  animation: deriva-b var(--duracion, 60s) ease-in-out infinite;
+}
+
+/* Diagrama: el camino activo «fluye». */
+@keyframes flujo {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.flujo {
+  stroke-dasharray: 6 6;
+  animation: flujo 900ms linear infinite;
+}
+.atenuable {
+  transition: opacity 350ms var(--ease-out-strong), stroke 350ms ease;
+}
+
+/* Tarjetas que se elevan al pasar el mouse (solo con mouse). */
+.elevar {
+  transition:
+    transform 260ms var(--ease-out-strong),
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .elevar:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 1px var(--color-line-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pagina-entra {
+    animation-name: entrada-suave;
+  }
+  .revelar,
+  .revelar[data-visible="false"] {
+    transform: none;
+    filter: none;
+  }
+  .fila-entra,
+  .sello,
+  .figura-a,
+  .figura-b,
+  .flujo {
+    animation: none;
+  }
+  .elevar:hover {
+    transform: none;
+  }
+}
+@keyframes entrada-suave {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

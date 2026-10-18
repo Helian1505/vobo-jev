@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HeroVivo } from "@/components/HeroVivo";
 import { Cifras, type Cifra } from "@/components/Cifras";
+import { Revelar } from "@/components/Revelar";
 
 // Cifras de la corrida única del test (eval/results/test.json, conjunto principal de 145 acciones). No se recalculan aquí.
 const CIFRAS: Cifra[] = [
@@ -79,12 +80,12 @@ const RECORRIDO = [
 
 export default function Home() {
   return (
-    <div className="space-y-24 sm:space-y-28">
+    <div className="space-y-16 sm:space-y-20">
       {/* 1 · Hero: ocupa el alto de la ventana (menos la barra) y su contenido se encoge con ella para que quepa entero. */}
       <section
         id="inicio"
         aria-labelledby="titulo-inicio"
-        className="piso-hero -mx-4 -mt-10 px-4 pb-6 pt-8 sm:-mx-6 sm:-mt-14 sm:px-6 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-center lg:py-8"
+        className="piso-hero -mx-4 -mt-8 px-4 pb-6 pt-8 sm:-mx-6 sm:-mt-12 sm:px-6 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-center lg:py-8"
       >
         <div className="grid w-full items-center gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:gap-14">
           <div>
@@ -124,73 +125,95 @@ export default function Home() {
 
       {/* 2 · Cifras */}
       <section aria-labelledby="titulo-cifras">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <h2 id="titulo-cifras" className="font-display text-2xl text-fg sm:text-3xl">
-            Más autonomía para los agentes, con evidencia.
-          </h2>
-          <p className="max-w-md text-sm text-fg-muted">
-            Una sola corrida del test, con JEV real, sobre 145 acciones que no se usaron para ajustar.
-          </p>
-        </div>
-        <Cifras cifras={CIFRAS} />
+        <Revelar>
+          <EncabezadoSeccion
+            id="titulo-cifras"
+            etiqueta="Resultados del test"
+            titulo="Más autonomía para los agentes, con evidencia."
+            nota="Una sola corrida, con JEV real, sobre 145 acciones que no se usaron para ajustar."
+          />
+        </Revelar>
+        <Revelar retraso={120} className="mt-8">
+          <Cifras cifras={CIFRAS} />
+        </Revelar>
       </section>
 
       {/* 3 · Cómo decide */}
       <section id="como-funciona" aria-labelledby="titulo-como">
-        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Cómo funciona</p>
-        <h2 id="titulo-como" className="font-display mt-3 max-w-3xl text-3xl text-fg sm:text-[44px] sm:leading-[1.05]">
-          JEV opina, el código autoriza y una persona decide lo dudoso.
-        </h2>
-        <div className="mt-10 grid gap-4 lg:grid-cols-3">
-          {PASOS_DECISION.map((p) => (
-            <details key={p.numero} className="group hairline rounded-card bg-surface p-6 open:bg-field">
-              <summary className="flex h-full flex-col">
-                <span className="mono text-xs text-fg-faint">{p.numero}</span>
-                <span className="font-display mt-4 text-xl text-fg">{p.titulo}</span>
-                <span className="mt-2 text-sm leading-relaxed text-fg-muted">{p.resumen}</span>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-fg-soft group-hover:text-fg">
-                  <span className="gira inline-block text-lg leading-none text-accent" aria-hidden="true">+</span>
-                  <span className="group-open:hidden">Ver detalle</span>
-                  <span className="hidden group-open:inline">Ocultar detalle</span>
-                </span>
-              </summary>
-              <ul className="mt-5 space-y-2.5 border-t border-line pt-5 text-sm leading-relaxed text-fg-soft">
-                {p.detalle.map((d) => (
-                  <li key={d} className="flex gap-2.5">
-                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-fg-faint" aria-hidden="true" />
-                    <span>{d}</span>
-                  </li>
-                ))}
-              </ul>
-            </details>
+        <Revelar>
+          <EncabezadoSeccion
+            id="titulo-como"
+            etiqueta="Cómo funciona"
+            titulo="JEV opina, el código autoriza y una persona decide lo dudoso."
+            nota="Abre cada paso para ver el detalle."
+          />
+        </Revelar>
+        <div className="mt-8 grid gap-4 lg:grid-cols-3">
+          {PASOS_DECISION.map((p, i) => (
+            <Revelar key={p.numero} retraso={i * 140} className="h-full">
+              <details className="elevar group hairline h-full rounded-card bg-surface p-5 open:bg-field">
+                <summary className="flex flex-col">
+                  <span className="flex items-center justify-between">
+                    <span className="mono text-xs text-fg-faint">{p.numero}</span>
+                    <span className="gira inline-block text-lg leading-none text-accent" aria-hidden="true">+</span>
+                  </span>
+                  <span className="font-display mt-3 text-xl text-fg">{p.titulo}</span>
+                  <span className="mt-2 text-sm leading-relaxed text-fg-muted">{p.resumen}</span>
+                  <span className="mt-4 text-sm font-medium text-fg-soft group-hover:text-fg">
+                    <span className="group-open:hidden">Ver detalle</span>
+                    <span className="hidden group-open:inline">Ocultar detalle</span>
+                  </span>
+                </summary>
+                <ul className="mt-4 space-y-2.5 border-t border-line pt-4 text-sm leading-relaxed text-fg-soft">
+                  {p.detalle.map((d) => (
+                    <li key={d} className="flex gap-2.5">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                      <span>{d}</span>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </Revelar>
           ))}
         </div>
       </section>
 
       {/* 4 · Recorrido: las mismas páginas que la barra, en el mismo orden */}
       <section aria-labelledby="titulo-recorrido">
-        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Recorre VoBo</p>
-        <h2 id="titulo-recorrido" className="font-display mt-3 max-w-3xl text-3xl text-fg sm:text-[44px] sm:leading-[1.05]">
-          De una acción suelta a todo el flujo.
-        </h2>
-        <ol className="mt-10 grid gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-2 lg:grid-cols-5">
+        <Revelar>
+          <EncabezadoSeccion
+            id="titulo-recorrido"
+            etiqueta="Recorre VoBo"
+            titulo="De una acción suelta a todo el flujo."
+            nota="Las mismas cinco páginas de la barra, en el mismo orden."
+          />
+        </Revelar>
+        <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {RECORRIDO.map((r, i) => (
-            <li key={r.href} className="bg-surface">
-              <Link href={r.href} className="group flex h-full flex-col p-5 transition-colors hover:bg-field">
-                <span className="mono text-xs text-fg-faint">0{i + 1}</span>
-                <span className="font-display mt-3 flex items-center justify-between text-lg text-fg">
-                  {r.titulo}
-                  <span className="text-fg-faint transition-colors group-hover:text-accent" aria-hidden="true">→</span>
-                </span>
-                <span className="mt-2 text-sm leading-relaxed text-fg-muted">{r.texto}</span>
-              </Link>
+            <li key={r.href}>
+              <Revelar retraso={i * 110} className="h-full">
+                <Link href={r.href} className="elevar group hairline flex h-full flex-col rounded-card bg-surface p-5 hover:bg-field">
+                  <span className="flex items-center justify-between">
+                    <span className="mono text-xs text-fg-faint">0{i + 1}</span>
+                    <span
+                      className="text-fg-faint transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </span>
+                  <span className="font-display mt-3 text-lg text-fg">{r.titulo}</span>
+                  <span className="mt-1.5 text-sm leading-relaxed text-fg-muted">{r.texto}</span>
+                </Link>
+              </Revelar>
             </li>
           ))}
         </ol>
       </section>
 
-      {/* 6 · Evidencia */}
-      <section aria-labelledby="titulo-evidencia" className="hairline rounded-card bg-surface p-6 sm:p-10">
+      {/* 5 · Evidencia */}
+      <Revelar>
+      <section aria-labelledby="titulo-evidencia" className="hairline rounded-card bg-surface p-6 sm:p-8">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           <div>
             <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Lectura honesta</p>
@@ -215,6 +238,22 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </Revelar>
+    </div>
+  );
+}
+
+/** Encabezado de sección del inicio: etiqueta, titular y una nota corta a la derecha. Mismo patrón en todas. */
+function EncabezadoSeccion({ id, etiqueta, titulo, nota }: { id: string; etiqueta: string; titulo: string; nota?: string }) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
+      <div className="max-w-3xl">
+        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">{etiqueta}</p>
+        <h2 id={id} className="font-display mt-3 text-3xl leading-[1.08] text-fg sm:text-[38px]">
+          {titulo}
+        </h2>
+      </div>
+      {nota && <p className="max-w-xs text-sm leading-relaxed text-fg-muted lg:text-right">{nota}</p>}
     </div>
   );
 }

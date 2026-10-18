@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Link from "next/link";
+import { FondoFiguras } from "@/components/FondoFiguras";
 import { Nav } from "@/components/Nav";
 import "./globals.css";
 
@@ -24,7 +25,13 @@ const REPO = "https://github.com/Helian1505/vobo-jev";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={inter.variable}>
+      <head>
+        <noscript>
+          <style>{`.revelar{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-screen">
+        <FondoFiguras />
         <a
           href="#contenido"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-field focus:bg-accent focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-on-accent"
@@ -42,11 +49,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1200px] flex-col px-4 sm:px-6">
-          <main id="contenido" className="flex-1 py-10 sm:py-14">
+        <div className="relative z-[1] mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1200px] flex-col px-4 sm:px-6">
+          <main id="contenido" className="flex-1 py-8 sm:py-12">
             {children}
           </main>
-          <footer className="mt-16 border-t border-line py-10 text-sm">
+          <footer className="mt-14 border-t border-line py-10 text-sm">
             <div className="grid gap-8 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
               <div>
                 <p className="font-display text-lg text-fg">VoBo</p>

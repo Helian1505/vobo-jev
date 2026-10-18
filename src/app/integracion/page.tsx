@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DiagramaPuerta } from "@/components/DiagramaPuerta";
 import { EncabezadoPagina } from "@/components/EncabezadoPagina";
+import { Revelar } from "@/components/Revelar";
 
 const REPO = "https://github.com/Helian1505/vobo-jev";
 
@@ -37,7 +38,7 @@ const ESTADO = [
 
 export default function PaginaIntegracion() {
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       <EncabezadoPagina etiqueta="Integración" titulo="Un paso antes de todo lo que sale hacia afuera.">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Así se pondría VoBo en el flujo que 30X nos describió: agentes en Python, aprobación por Slack y HubSpot solo como
@@ -45,19 +46,24 @@ export default function PaginaIntegracion() {
         </p>
       </EncabezadoPagina>
 
-      <div className="hairline rounded-card bg-surface p-4 sm:p-8">
-        <DiagramaPuerta />
-      </div>
+      <Revelar>
+        <div className="hairline rounded-card bg-surface p-4 sm:p-6">
+          <DiagramaPuerta />
+        </div>
+      </Revelar>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {PUNTOS.map((p) => (
-          <div key={p.titulo} className="hairline rounded-card bg-surface p-5">
-            <p className="font-display text-base text-fg">{p.titulo}</p>
-            <p className="mt-2 text-sm leading-relaxed text-fg-muted">{p.texto}</p>
-          </div>
+        {PUNTOS.map((p, i) => (
+          <Revelar key={p.titulo} retraso={i * 110} className="h-full">
+            <div className="elevar hairline h-full rounded-card bg-surface p-5">
+              <p className="font-display text-base text-fg">{p.titulo}</p>
+              <p className="mt-2 text-sm leading-relaxed text-fg-muted">{p.texto}</p>
+            </div>
+          </Revelar>
         ))}
       </div>
 
+      <Revelar>
       <section aria-labelledby="titulo-estado" className="border-t border-line pt-8">
         <h2 id="titulo-estado" className="font-display text-xl text-fg">
           Qué está construido y qué no
@@ -82,6 +88,7 @@ export default function PaginaIntegracion() {
           .
         </p>
       </section>
+      </Revelar>
     </div>
   );
 }
