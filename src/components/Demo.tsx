@@ -58,6 +58,14 @@ const DECISION_DE_INTENCION: Record<string, Decision> = {
   BLOQUEAR: "BLOCK",
 };
 
+/** Los ejemplos se agrupan por el tipo de acción que revisa la puerta. */
+const GRUPOS_EJEMPLOS = [
+  { tipo: "correo_masivo", titulo: "Correo masivo" },
+  { tipo: "crm_update", titulo: "Cambios en HubSpot" },
+  { tipo: "whatsapp_masivo", titulo: "WhatsApp masivo" },
+  { tipo: "publicacion_redes", titulo: "Publicación en redes" },
+] as const;
+
 const PUNTO: Record<Decision, string> = {
   ALLOW: "bg-allow",
   REVIEW: "bg-review",
@@ -228,43 +236,71 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
       )}
 
       <div>
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
           <p id="titulo-ejemplos" className="text-sm font-medium text-fg">
             Ejemplos con datos de 30X
           </p>
-          <p className="text-xs text-fg-faint">El punto de color es la intención de diseño; el resultado lo decide VoBo en vivo.</p>
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fg-faint">
+            <span>Intención de diseño (el resultado lo decide VoBo en vivo):</span>
+            {(["ALLOW", "REVIEW", "BLOCK"] as const).map((d) => (
+              <span key={d} className="inline-flex items-center gap-1.5">
+                <span className={`h-1.5 w-1.5 rounded-full ${PUNTO[d]}`} aria-hidden="true" />
+                {d === "ALLOW" ? "permitir" : d === "REVIEW" ? "pedir VoBo" : "bloquear"}
+              </span>
+            ))}
+          </p>
         </div>
-        <ul aria-labelledby="titulo-ejemplos" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {ejemplos.map((e) => {
-            const elegido = e.id === ejemploId;
-            const intencion = DECISION_DE_INTENCION[e.intencion];
-            return (
-              <li key={e.id}>
-                <button
-                  type="button"
-                  onClick={() => elegirEjemplo(e.id)}
-                  aria-pressed={elegido}
-                  disabled={cargando}
-                  className={`flex h-full w-full items-start gap-2.5 rounded-field border px-3 py-2.5 text-left text-[13px] leading-snug transition-colors disabled:cursor-wait ${
-                    elegido
-                      ? "border-accent bg-accent/[0.07] text-fg"
-                      : "border-line bg-surface text-fg-soft hover:border-line-strong hover:text-fg"
-                  }`}
-                >
-                  <span
-                    className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${intencion ? PUNTO[intencion] : "bg-fg-faint"}`}
-                    aria-hidden="true"
-                  />
-                  <span>
-                    <span className="mono mr-1.5 text-[11px] text-fg-faint">{e.id}</span>
-                    {e.titulo}
-                    <span className="sr-only"> (intención de diseño: {e.intencion})</span>
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        <div aria-labelledby="titulo-ejemplos" role="group" className="mt-4 grid gap-x-8 gap-y-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+          {[
+            [GRUPOS_EJEMPLOS[0]],
+            [GRUPOS_EJEMPLOS[1], GRUPOS_EJEMPLOS[2], GRUPOS_EJEMPLOS[3]],
+          ].map((columna, i) => (
+            <div key={i} className="space-y-5">
+              {columna.map((g) => {
+                const lista = ejemplos.filter((e) => e.accion.tipo_accion === g.tipo);
+                if (lista.length === 0) return null;
+                return (
+                  <section key={g.tipo} aria-label={g.titulo}>
+                    <h3 className="mb-2 flex items-baseline gap-2 text-xs font-medium uppercase tracking-wider text-fg-muted">
+                      {g.titulo}
+                      <span className="tabular font-normal text-fg-faint">{lista.length}</span>
+                    </h3>
+                    <ul className={`grid gap-2 ${i === 0 ? "sm:grid-cols-2" : ""}`}>
+                      {lista.map((e) => {
+                        const elegido = e.id === ejemploId;
+                        const intencion = DECISION_DE_INTENCION[e.intencion];
+                        return (
+                          <li key={e.id}>
+                            <button
+                              type="button"
+                              onClick={() => elegirEjemplo(e.id)}
+                              aria-pressed={elegido}
+                              disabled={cargando}
+                              className={`flex h-full w-full items-start gap-2.5 rounded-field border px-3 py-2.5 text-left text-[13px] leading-snug transition-colors disabled:cursor-wait ${
+                                elegido
+                                  ? "border-accent bg-accent/[0.07] text-fg"
+                                  : "border-line bg-surface text-fg-soft hover:border-line-strong hover:text-fg"
+                              }`}
+                            >
+                              <span
+                                className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${intencion ? PUNTO[intencion] : "bg-fg-faint"}`}
+                                aria-hidden="true"
+                              />
+                              <span>
+                                {e.titulo}
+                                <span className="sr-only"> ({e.id}; intención de diseño: {e.intencion})</span>
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                );
+              })}
+            </div>
+          ))}
+        </div>
         {ejemplo && <p className="entra mt-3 text-sm text-fg-soft">{ejemplo.por_que}</p>}
       </div>
 
