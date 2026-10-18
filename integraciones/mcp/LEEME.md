@@ -85,7 +85,7 @@ Copia el bloque de `claude_desktop_config.ejemplo.json` en `~/Library/Applicatio
 
 ## Qué se probó (sáb 17 oct 2026, ≈9:15 p.m., contra `https://vobo-jev.vercel.app`)
 
-**Pruebas automáticas:** 11 de 11 (`test_vobo_salidas.py`), con el Python 3.14.1 del entorno. Cubren:
+**Pruebas automáticas:** 11 de 11 en macOS con Python 3.14.1 (la corrida de Angie); también 11 de 11 en Windows (17 oct, noche). Cubren:
 - PERMITIR ejecuta; PEDIR VOBO y BLOQUEAR no ejecutan;
 - VoBo caído, colgado (tiempo agotado), HTTP 500 y decisión desconocida no ejecutan;
 - el modo sombra ejecuta y registra;
@@ -115,5 +115,3 @@ Cada consulta tardó entre 0,5 y 0,6 s de punta a punta. Antes de instalar `cert
 - **Las razones son un resumen.** Se leen de las viñetas de `resumen_aprobacion`, que muestra como máximo 3 razones y recorta cada una a 220 caracteres; si no hay viñetas, se usa el titular. La API trae la lista completa en `explicacion.razones`, pero `vobo_gate.py` hoy no la guarda en `Veredicto`.
 - **El ID de HubSpot admite hasta 20 caracteres** (el largo de `perfil_id` en el contrato). Uno más largo no se recorta, porque dos IDs distintos podrían quedar iguales: la herramienta devuelve un error y no ejecuta.
 - `package.json` no tiene un script `test:mcp`: las pruebas se corren con el comando de arriba.
-
-Falta una fila en `docs/DESVIACIONES.md` (cambio posterior al test); la agrega Helian, porque este trabajo no toca `docs/`.

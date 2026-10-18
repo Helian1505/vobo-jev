@@ -113,7 +113,10 @@ class PruebasFallaCerrada(PruebasBase):
                 self.assertIn(falla, r["falla"])
         os.environ["VOBO_URL"] = "http://127.0.0.1:9"  # nadie escucha
         r = correo()
-        self.assertEqual((r["decision"], r["ejecutada"], r["falla"]), ("PEDIR VOBO", False, "error de red"))
+        # En Windows un puerto cerrado tarda ~2 s en fallar y sale como «tiempo agotado»; en macOS/Linux,
+        # «error de red». Lo que se verifica es lo importante: no ejecuta y queda en PEDIR VOBO.
+        self.assertEqual((r["decision"], r["ejecutada"]), ("PEDIR VOBO", False))
+        self.assertIn(r["falla"], ("error de red", "tiempo agotado"))
         self.assertEqual(self.ejecutadas, [])
 
     def test_colgado_tiempo_agotado_no_ejecuta(self):
