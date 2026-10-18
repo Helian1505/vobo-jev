@@ -2,25 +2,23 @@ import type { ReactNode } from "react";
 
 /**
  * Encabezado común de todas las páginas internas (Demo, Simulación, Cola, Resultados, Integración):
- * misma etiqueta, mismo titular y mismo espacio arriba, para que todas arranquen igual.
+ * mismo titular y mismo espacio arriba, para que todas arranquen igual.
  */
-export function EncabezadoPagina({ etiqueta, titulo, children }: { etiqueta: string; titulo: string; children?: ReactNode }) {
+export function EncabezadoPagina({ titulo, children }: { titulo: string; children?: ReactNode }) {
   return (
     <header className="max-w-3xl">
-      <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">{etiqueta}</p>
-      <h1 className="font-display mt-3 text-4xl leading-[1.05] text-fg sm:text-5xl">{titulo}</h1>
+      <h1 className="font-display text-4xl leading-[1.05] text-fg sm:text-5xl">{titulo}</h1>
       {children}
     </header>
   );
 }
 
-/** Encabezado de sección (mismo en todas las páginas): etiqueta, titular y una nota corta a la derecha. */
-export function EncabezadoSeccion({ id, etiqueta, titulo, nota }: { id: string; etiqueta: string; titulo: string; nota?: string }) {
+/** Encabezado de sección (mismo en todas las páginas): titular y una nota corta a la derecha. */
+export function EncabezadoSeccion({ id, titulo, nota }: { id: string; titulo: string; nota?: string }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-2">
       <div className="max-w-3xl">
-        <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">{etiqueta}</p>
-        <h2 id={id} className="font-display mt-2 text-2xl leading-tight text-fg sm:text-3xl">
+        <h2 id={id} className="font-display text-2xl leading-tight text-fg sm:text-3xl">
           {titulo}
         </h2>
       </div>

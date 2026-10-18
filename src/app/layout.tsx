@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import Link from "next/link";
 import { FondoFiguras } from "@/components/FondoFiguras";
+import { ScrollArriba } from "@/components/ScrollArriba";
 import { Nav } from "@/components/Nav";
 import "./globals.css";
 
@@ -20,17 +21,21 @@ export const metadata: Metadata = {
     "Cada acción que un agente de 30X quiere hacer hacia afuera pasa por VoBo: en milisegundos, reglas en código y JEV (TypeSafe) la revisan; lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo indebido no sale.",
 };
 
+// Barra del navegador del teléfono del mismo color que la página.
+export const viewport: Viewport = { themeColor: "#000000", colorScheme: "dark" };
+
 const REPO = "https://github.com/Helian1505/vobo-jev";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="es" className={inter.variable} data-scroll-behavior="smooth">
       <head>
         <noscript>
           <style>{`.revelar{opacity:1!important;transform:none!important;filter:none!important}`}</style>
         </noscript>
       </head>
-      <body className="min-h-screen">
+      <body className="min-h-dvh">
+        <ScrollArriba />
         <FondoFiguras />
         <a
           href="#contenido"
@@ -41,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <header className="nav-glass sticky top-0 z-40 border-b border-line">
           <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 sm:px-6">
-            <Link href="/" className="flex items-center gap-3" aria-label="VoBo, inicio">
+            <Link scroll={false} href="/" className="flex items-center gap-3" aria-label="VoBo, inicio">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/marca/logo.png" alt="VoBo" width={1200} height={303} className="h-7 w-auto" />
               <span className="hidden whitespace-nowrap text-sm text-fg-faint sm:inline">para 30X</span>
@@ -50,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <div className="relative z-[1] mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1200px] flex-col px-4 sm:px-6">
+        <div className="relative z-[1] mx-auto flex min-h-[calc(100dvh-4rem)] max-w-[1200px] flex-col px-4 sm:px-6">
           <main id="contenido" className="flex-1 py-8 sm:py-12">
             {children}
           </main>
@@ -66,11 +71,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-fg-faint">Producto</p>
                 <ul className="mt-3 space-y-2 text-fg-soft">
-                  <li><Link className="hover:text-fg" href="/demo">Demo</Link></li>
-                  <li><Link className="hover:text-fg" href="/simulacion">Simulación</Link></li>
-                  <li><Link className="hover:text-fg" href="/cola">Cola de VoBo humano</Link></li>
-                  <li><Link className="hover:text-fg" href="/resultados">Resultados del banco</Link></li>
-                  <li><Link className="hover:text-fg" href="/integracion">Integración</Link></li>
+                  <li><Link scroll={false} className="hover:text-fg" href="/demo">Demo</Link></li>
+                  <li><Link scroll={false} className="hover:text-fg" href="/simulacion">Simulación</Link></li>
+                  <li><Link scroll={false} className="hover:text-fg" href="/cola">Cola de VoBo humano</Link></li>
+                  <li><Link scroll={false} className="hover:text-fg" href="/resultados">Resultados del banco</Link></li>
+                  <li><Link scroll={false} className="hover:text-fg" href="/integracion">Integración</Link></li>
                 </ul>
               </div>
               <div>

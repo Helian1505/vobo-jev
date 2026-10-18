@@ -150,10 +150,10 @@ export function Simulacion({ total }: { total: number }) {
 
   return (
     <div className="space-y-8">
-      <EncabezadoPagina etiqueta="Simulación" titulo="Simulación en vivo">
+      <EncabezadoPagina titulo="Simulación en vivo">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
           Un agente propone acciones una tras otra y VoBo decide cada una en el momento: lo seguro sale, lo dudoso va a la{" "}
-          <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/cola">cola</Link> y lo indebido se frena.
+          <Link scroll={false} className="text-fg underline underline-offset-4 hover:text-accent" href="/cola">cola</Link> y lo indebido se frena.
         </p>
         <p className="mt-3 text-sm text-fg-muted">{total} acciones sintéticas del conjunto de ajuste (nunca del test), con JEV real.</p>
       </EncabezadoPagina>
@@ -203,7 +203,7 @@ export function Simulacion({ total }: { total: number }) {
             Reiniciar
           </button>
         )}
-        <Link href="/cola" className="ml-auto rounded-field border border-line px-4 py-2.5 text-sm text-fg-soft hover:text-fg">
+        <Link scroll={false} href="/cola" className="ml-auto rounded-field border border-line px-4 py-2.5 text-sm text-fg-soft hover:text-fg">
           Ver la cola{pendientes > 0 ? ` (${pendientes} pendientes)` : ""}
         </Link>
       </section>
@@ -272,7 +272,7 @@ export function Simulacion({ total }: { total: number }) {
             {usd(costoMedio * ACCIONES_POR_DIA)} (el costo de este flujo; no incluye nada más). Es una extrapolación de {n} acciones sintéticas, no una medición de tráfico real.
           </p>
           <p className="mt-4 text-sm">
-            <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/cola">
+            <Link scroll={false} className="text-fg underline underline-offset-4 hover:text-accent" href="/cola">
               Revisar las {escaladas} acciones que esperan en la cola
             </Link>
           </p>
