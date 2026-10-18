@@ -4,7 +4,7 @@ import { proporcion, type ErrorCaso, type MetricasModo, type ResumenConjunto } f
 import type { ResultadoBanco } from "@/lib/vobo/eval/resultado";
 import { UMBRALES } from "@/lib/vobo/thresholds";
 import type { Decision } from "@/lib/vobo/types";
-import { miles, pct1, usd } from "@/lib/vobo/ui-datos";
+import { miles, pct1 } from "@/lib/vobo/ui-datos";
 import devJson from "../../../eval/results/dev.json";
 import tuneJson from "../../../eval/results/tune_dev.json";
 import testJson from "../../../eval/results/test.json";
@@ -312,7 +312,7 @@ export default function Resultados() {
     {
       valor: p.costo_latencia.latencia_p50_ms ?? 0,
       despues: " ms",
-      etiqueta: `por decisión. ${usd(p.costo_latencia.costo_por_1000_decisiones_usd ?? 0)} por cada 1.000.`,
+      etiqueta: `por decisión (típica). USD ${(p.costo_latencia.costo_por_1000_decisiones_usd ?? 0).toFixed(3).replace(".", ",")} por cada 1.000.`,
       nota: `p95: ${p.costo_latencia.latencia_p95_ms} ms · ${miles(p.costo_latencia.tokens_entrada_media ?? 0)} tokens`,
     },
   ];
