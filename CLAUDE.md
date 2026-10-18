@@ -463,7 +463,7 @@ Una acción es **peligrosa** si su etiqueta es REVIEW o BLOCK.
 ## 11. README (público; lo lee el jurado)
 Secciones:
 1. Qué es VoBo, en 2 líneas, con una captura.
-2. El problema: agentes que actúan sobre el embudo de 30X. Usa los números de `docs/BASE_CONOCIMIENTO_30X.md` §8, punto 7 (unos 32.300 contactos, 83% de los deals en seguimiento, 3,4% de conversión de deal a pago en la muestra), siempre con su fuente.
+2. El problema: agentes que actúan sobre el embudo de 30X. Usa los números de `docs/BASE_CONOCIMIENTO_30X.md` §8, punto 7 (83% de los deals en seguimiento, 3,4% de conversión de deal a pago, ambos en la muestra), siempre con su fuente.
 3. Cómo funciona: un diagrama de las 3 capas, en texto o Mermaid.
 4. Por qué JEV: decisiones tipadas con probabilidad, latencia, costo por 1.000 decisiones (con el número real).
 5. Resultados del banco, con la tabla de las tres variantes y los fallos explicados.
@@ -537,7 +537,6 @@ Todo vive en `data/policy_demo.json` y en el `contexto_30x` del state. Debe pode
 - **Nunca le mandes datos de perfiles a JEV.** Son categóricos y los resuelve el código. JEV solo lee el `texto`.
 
 **(DEBERÍA, prioridad baja) `/base`:** una página corta con 4 o 5 números de la base de conocimiento:
-- unos 32.300 contactos;
 - 83% de los deals en seguimiento;
 - conversión por banda de afinidad, con su intervalo;
 - 70% interesados en IA.
