@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ResultadoPanel } from "@/components/ResultadoPanel";
+import { Insignia, ResultadoPanel } from "@/components/ResultadoPanel";
 import type { RespuestaEvaluate } from "@/lib/vobo/api-contrato";
 import { encolar } from "@/lib/vobo/cola-local";
 import type { Perfil } from "@/lib/vobo/perfiles-datos";
+import type { Decision } from "@/lib/vobo/types";
 import {
   CAMPOS_CRM_SUGERIDOS,
   CANALES_SUGERIDOS,
@@ -50,6 +51,19 @@ interface EstadoJevUi {
 
 const MAX_TEXTO = 2000;
 
+/** La intención de diseño de cada ejemplo, como decisión (solo para el color del punto del chip). */
+const DECISION_DE_INTENCION: Record<string, Decision> = {
+  PERMITIR: "ALLOW",
+  "PEDIR VOBO": "REVIEW",
+  BLOQUEAR: "BLOCK",
+};
+
+const PUNTO: Record<Decision, string> = {
+  ALLOW: "bg-allow",
+  REVIEW: "bg-review",
+  BLOCK: "bg-block",
+};
+
 const claseCampo =
   "mt-1.5 w-full rounded-field border border-line-strong bg-field px-3 py-2 text-sm text-fg hover:border-brand-moss focus:border-accent";
 
@@ -77,7 +91,7 @@ function TarjetaPerfil({ p }: { p: Perfil }) {
   return (
     <div className="rounded-field border border-line bg-field p-4 text-sm">
       <p className="font-semibold text-fg">
-        Perfil {p.id} <span className="font-normal text-fg-muted">· muestra anónima de 30X, solo categorías</span>
+        Perfil {p.id} <span className="font-normal text-fg-muted">· muestra de ejemplo para el reto, solo categorías</span>
       </p>
       <dl className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
         {filas.map(([k, v]) => (
@@ -189,6 +203,15 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
   };
 
   const textoRestante = MAX_TEXTO - form.texto.length;
+  const avanzados = [
+    form.programa_ofrecido,
+    form.audiencia_id,
+    form.segmento_declarado !== FORM_VACIO.segmento_declarado ? form.segmento_declarado : "",
+    form.en_lista_de_bajas,
+    form.fecha_evento_real,
+    form.fecha_en_texto,
+    form.precio_en_texto_usd,
+  ].filter((v) => v !== "" && v !== "0").length;
 
   return (
     <div className="space-y-6">
@@ -204,30 +227,56 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
         </p>
       )}
 
-      <div className="rounded-card border border-line bg-surface p-5">
-        <label htmlFor="ejemplo" className="block text-sm font-semibold text-fg">
-          Ejemplos de la demo
-        </label>
-        <select id="ejemplo" value={ejemploId} onChange={(e) => elegirEjemplo(e.target.value)} className={claseCampo}>
-          <option value="">Elige un ejemplo o escribe tu propia acción…</option>
-          {ejemplos.map((e) => (
-            <option key={e.id} value={e.id}>
-              {e.id} · {e.titulo}
-            </option>
-          ))}
-        </select>
-        {ejemplo && <p className="mt-3 text-sm text-fg-soft">{ejemplo.por_que}</p>}
+      <div>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <p id="titulo-ejemplos" className="text-sm font-medium text-fg">
+            Ejemplos con datos de 30X
+          </p>
+          <p className="text-xs text-fg-faint">El punto de color es la intención de diseño; el resultado lo decide VoBo en vivo.</p>
+        </div>
+        <ul aria-labelledby="titulo-ejemplos" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {ejemplos.map((e) => {
+            const elegido = e.id === ejemploId;
+            const intencion = DECISION_DE_INTENCION[e.intencion];
+            return (
+              <li key={e.id}>
+                <button
+                  type="button"
+                  onClick={() => elegirEjemplo(e.id)}
+                  aria-pressed={elegido}
+                  disabled={cargando}
+                  className={`flex h-full w-full items-start gap-2.5 rounded-field border px-3 py-2.5 text-left text-[13px] leading-snug transition-colors disabled:cursor-wait ${
+                    elegido
+                      ? "border-accent bg-accent/[0.07] text-fg"
+                      : "border-line bg-surface text-fg-soft hover:border-line-strong hover:text-fg"
+                  }`}
+                >
+                  <span
+                    className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${intencion ? PUNTO[intencion] : "bg-fg-faint"}`}
+                    aria-hidden="true"
+                  />
+                  <span>
+                    <span className="mono mr-1.5 text-[11px] text-fg-faint">{e.id}</span>
+                    {e.titulo}
+                    <span className="sr-only"> (intención de diseño: {e.intencion})</span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        {ejemplo && <p className="entra mt-3 text-sm text-fg-soft">{ejemplo.por_que}</p>}
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <form
-          className="space-y-5 rounded-card border border-line bg-surface p-5 sm:p-6"
+          className="hairline space-y-5 rounded-card bg-surface p-5 sm:p-6"
           onSubmit={(e) => {
             e.preventDefault();
             void evaluar(form);
           }}
         >
-          <h2 className="display-sans text-lg font-semibold text-fg">Acción que propone el agente</h2>
+          <h3 className="display-sans text-lg font-semibold text-fg">Acción que propone el agente</h3>
 
           <Campo id="tipo" etiqueta="Tipo de acción">
             <select
@@ -259,48 +308,6 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
               ))}
             </datalist>
           </Campo>
-
-          {esMasivo && (
-            <Campo id="programa" etiqueta="Programa ofrecido (opcional)">
-              <select
-                id="programa"
-                value={form.programa_ofrecido}
-                onChange={(e) => cambiar({ programa_ofrecido: e.target.value })}
-                className={claseCampo}
-              >
-                <option value="">Ninguno</option>
-                {programas.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-            </Campo>
-          )}
-
-          {!esRedes && (
-            <Campo id="audiencia" etiqueta="Audiencia armada desde los perfiles (opcional)">
-              <select
-                id="audiencia"
-                value={form.audiencia_id}
-                onChange={(e) => elegirAudiencia(e.target.value)}
-                className={claseCampo}
-              >
-                <option value="">Sin audiencia: escribo los destinatarios</option>
-                {audiencias.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.id} · {a.nombre}
-                  </option>
-                ))}
-              </select>
-              {audiencia && (
-                <p className="tabular mt-1.5 text-xs text-fg-muted">
-                  {audiencia.perfiles_en_muestra} perfiles en la muestra · ≈ {miles(audiencia.destinatarios_estimados)} personas
-                  en la base · {pct(audiencia.pct_afinidad_baja)} con afinidad baja
-                </p>
-              )}
-            </Campo>
-          )}
 
           {esCrm && (
             <>
@@ -350,6 +357,86 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
                 />
               </Campo>
             )}
+            <Campo id="hora" etiqueta="Hora de envío (Bogotá)">
+              <input
+                id="hora"
+                type="time"
+                value={form.hora_envio}
+                onChange={(e) => cambiar({ hora_envio: e.target.value })}
+                className={claseCampo}
+                required
+              />
+            </Campo>
+          </div>
+
+          <Campo id="texto" etiqueta={esCrm ? "Valor que se escribe" : "Texto del mensaje o la publicación"}>
+            <textarea
+              id="texto"
+              rows={6}
+              maxLength={MAX_TEXTO}
+              value={form.texto}
+              onChange={(e) => cambiar({ texto: e.target.value })}
+              className={claseCampo}
+            />
+            <p className={`tabular mt-1.5 text-xs ${textoRestante < 100 ? "text-block" : "text-fg-muted"}`}>
+              {miles(textoRestante)} caracteres restantes
+            </p>
+          </Campo>
+
+          <details className="group rounded-field border border-line bg-field/60">
+            <summary className="flex items-center justify-between gap-3 px-4 py-3 text-sm font-medium text-fg-soft hover:text-fg">
+              <span>
+                Ajustes avanzados
+                <span className="ml-2 text-xs font-normal text-fg-faint">
+                  {avanzados > 0 ? `${avanzados} con valor` : "programa, audiencia, segmento, fechas y precio"}
+                </span>
+              </span>
+              <span className="gira text-lg leading-none text-accent" aria-hidden="true">+</span>
+            </summary>
+            <div className="space-y-5 border-t border-line px-4 pb-5 pt-4">
+          {esMasivo && (
+            <Campo id="programa" etiqueta="Programa ofrecido (opcional)">
+              <select
+                id="programa"
+                value={form.programa_ofrecido}
+                onChange={(e) => cambiar({ programa_ofrecido: e.target.value })}
+                className={claseCampo}
+              >
+                <option value="">Ninguno</option>
+                {programas.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </Campo>
+          )}
+
+          {!esRedes && (
+            <Campo id="audiencia" etiqueta="Audiencia armada desde los perfiles (opcional)">
+              <select
+                id="audiencia"
+                value={form.audiencia_id}
+                onChange={(e) => elegirAudiencia(e.target.value)}
+                className={claseCampo}
+              >
+                <option value="">Sin audiencia: escribo los destinatarios</option>
+                {audiencias.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.id} · {a.nombre}
+                  </option>
+                ))}
+              </select>
+              {audiencia && (
+                <p className="tabular mt-1.5 text-xs text-fg-muted">
+                  {audiencia.perfiles_en_muestra} perfiles en la muestra · ≈ {miles(audiencia.destinatarios_estimados)} personas
+                  en la base · {pct(audiencia.pct_afinidad_baja)} con afinidad baja
+                </p>
+              )}
+            </Campo>
+          )}
+
+          <div className="grid gap-4 sm:grid-cols-2">
             <Campo id="segmento" etiqueta="Segmento declarado">
               <select
                 id="segmento"
@@ -363,16 +450,6 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
                   </option>
                 ))}
               </select>
-            </Campo>
-            <Campo id="hora" etiqueta="Hora de envío (Bogotá)">
-              <input
-                id="hora"
-                type="time"
-                value={form.hora_envio}
-                onChange={(e) => cambiar({ hora_envio: e.target.value })}
-                className={claseCampo}
-                required
-              />
             </Campo>
             {esMasivo && (
               <Campo id="bajas" etiqueta="Destinatarios en la lista de bajas">
@@ -421,19 +498,8 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
             </div>
           )}
 
-          <Campo id="texto" etiqueta={esCrm ? "Valor que se escribe" : "Texto del mensaje o la publicación"}>
-            <textarea
-              id="texto"
-              rows={6}
-              maxLength={MAX_TEXTO}
-              value={form.texto}
-              onChange={(e) => cambiar({ texto: e.target.value })}
-              className={claseCampo}
-            />
-            <p className={`tabular mt-1.5 text-xs ${textoRestante < 100 ? "text-block" : "text-fg-muted"}`}>
-              {miles(textoRestante)} caracteres restantes
-            </p>
-          </Campo>
+            </div>
+          </details>
 
           <button
             type="submit"
@@ -444,7 +510,7 @@ export function Demo({ ejemplos, audiencias, idsDeals, programas }: Props) {
           </button>
         </form>
 
-        <div className="min-h-48 rounded-card border border-line bg-surface p-5 sm:p-6">
+        <div className="hairline sombra-flotante min-h-48 rounded-card bg-surface p-5 sm:p-6 lg:sticky lg:top-24">
           {error && (
             <p role="alert" className="rounded-field border border-block/40 bg-block/10 px-4 py-3 text-sm font-medium text-block">
               {error}

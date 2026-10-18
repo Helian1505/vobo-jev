@@ -8,6 +8,7 @@ import { encolar } from "@/lib/vobo/cola-local";
 import { TIPOS_ACCION, miles, usd } from "@/lib/vobo/ui-datos";
 import { useCola } from "@/lib/vobo/use-cola";
 import type { Decision } from "@/lib/vobo/types";
+import { EncabezadoPagina } from "@/components/EncabezadoPagina";
 
 type RespuestaSim = RespuestaEvaluate & {
   indice: number;
@@ -149,17 +150,13 @@ export function Simulacion({ total }: { total: number }) {
 
   return (
     <div className="space-y-8">
-      <header className="max-w-3xl">
-        <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">Simulación en vivo</h1>
+      <EncabezadoPagina etiqueta="Simulación" titulo="Simulación en vivo">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
-          Un agente propone acciones una tras otra y VoBo decide cada una en el momento. Así se ve la compuerta cuando no es una acción suelta, sino un
-          flujo: lo seguro pasa solo, lo dudoso espera a una persona y lo peligroso se frena.
+          Un agente propone acciones una tras otra y VoBo decide cada una en el momento: lo seguro sale, lo dudoso va a la{" "}
+          <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/cola">cola</Link> y lo indebido se frena.
         </p>
-        <p className="mt-3 text-sm leading-relaxed text-fg-muted">
-          Son {total} acciones sintéticas del banco de pruebas (del conjunto de ajuste, nunca del test). Cada una es una evaluación completa; las que
-          quedan en PEDIR VOBO pasan a la <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/cola">cola</Link>.
-        </p>
-      </header>
+        <p className="mt-3 text-sm text-fg-muted">{total} acciones sintéticas del conjunto de ajuste (nunca del test), con JEV real.</p>
+      </EncabezadoPagina>
 
       {jev?.modo === "mock" && (
         <p className="rounded-field border border-line bg-surface px-4 py-3 text-sm text-fg-soft">
@@ -265,7 +262,7 @@ export function Simulacion({ total }: { total: number }) {
 
       {fase === "terminada" && (
         <section role="status" aria-label="Resumen" className="rounded-card border border-line bg-surface p-5 sm:p-6">
-          <h2 className="display-sans text-lg font-semibold text-fg">Resumen</h2>
+          <h2 className="font-display text-lg text-fg">Resumen</h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-fg-soft">
             De {n} acciones, VoBo dejó pasar {permitidas} sin molestar a nadie, escaló {escaladas} a una persona y frenó {bloqueadas}, en {segundos.toFixed(1)} s
             y por {usd(costo)}.
@@ -283,7 +280,7 @@ export function Simulacion({ total }: { total: number }) {
       )}
 
       <section aria-label="Decisiones" aria-live={bloqueado ? "off" : "polite"}>
-        <h2 className="display-sans text-xl font-semibold text-fg">Decisiones, de la más reciente a la más antigua</h2>
+        <h2 className="font-display text-lg text-fg">Decisiones, de la más reciente a la más antigua</h2>
         {filas.length === 0 ? (
           <p className="mt-3 text-sm text-fg-muted">Todavía no hay decisiones. Pulsa «Iniciar simulación».</p>
         ) : (

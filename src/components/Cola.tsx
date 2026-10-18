@@ -7,6 +7,7 @@ import { resolver, vaciar, type EstadoCola, type ItemCola } from "@/lib/vobo/col
 import { useCola } from "@/lib/vobo/use-cola";
 import { ETIQUETA_REGLA, TIPOS_ACCION } from "@/lib/vobo/ui-datos";
 import type { NombreRegla } from "@/lib/vobo/types";
+import { EncabezadoPagina } from "@/components/EncabezadoPagina";
 
 type Filtro = "pendientes" | "resueltas" | "todas";
 
@@ -95,18 +96,16 @@ export function Cola() {
 
   return (
     <div className="space-y-8">
-      <header className="max-w-3xl">
-        <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-fg sm:text-5xl">Cola de VoBo humano</h1>
+      <EncabezadoPagina etiqueta="Cola" titulo="Cola de VoBo humano">
         <p className="mt-5 text-base leading-relaxed text-fg-soft sm:text-lg">
-          Las acciones que quedaron en <Insignia decision="REVIEW" /> en la demo y en la simulación esperan aquí a que una persona las apruebe o las rechace.
+          Lo que quedó en <Insignia decision="REVIEW" /> en la demo o la simulación espera aquí a que una persona lo apruebe o lo rechace.
         </p>
-        <p role="note" className="mt-4 rounded-field border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-fg-muted">
-          <strong className="font-semibold text-fg">Es una demostración.</strong> El estado vive solo en este navegador: se guarda aquí y no sale de tu
-          equipo, y aprobar no ejecuta nada de verdad. En una integración real, esta cola sería un sistema de tareas o aprobaciones (
-          <a className="text-fg underline underline-offset-4 hover:text-accent" href="https://github.com/Helian1505/vobo-jev/blob/main/docs/INTEGRACION.md">ver cómo integrarlo</a>
-          ).
+        <p role="note" className="mt-3 text-sm text-fg-muted">
+          <strong className="font-semibold text-fg-soft">Demostración:</strong> vive solo en este navegador y aprobar no ejecuta nada. En 30X, esto
+          llegaría por Slack (
+          <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/integracion">ver integración</Link>).
         </p>
-      </header>
+      </EncabezadoPagina>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div role="group" aria-label="Filtrar la cola" className="flex gap-1">
@@ -160,7 +159,7 @@ export function Cola() {
               <p className="font-medium text-fg">No hay acciones esperando.</p>
               <p className="mt-2 text-fg-muted">
                 Llegan solas cuando una evaluación da PEDIR VOBO: prueba el ejemplo E02 en la{" "}
-                <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/">demo</Link> o corre la{" "}
+                <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/demo">demo</Link> o corre la{" "}
                 <Link className="text-fg underline underline-offset-4 hover:text-accent" href="/simulacion">simulación</Link>.
               </p>
             </>
