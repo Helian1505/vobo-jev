@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Playbook de aplicación de JEV en 30X · VoBo</title>
+<style>
+@font-face { font-family: Inter; src: url('inter-latin-opsz-normal.woff2') format('woff2'); font-weight: 100 900; }
+@page { size: 1920px 1080px; margin: 0; }
+:root {
+  --bg: #000; --surface: #0b0b0b; --field: #121212; --raised: #1a1a1a;
+  --line: #242424; --line2: #383838;
+  --fg: #f7f5f2; --soft: #d4d4d4; --muted: #a39e93; --faint: #868073;
+  --lime: #e9ff7b; --allow: #7ee787; --review: #f2cc60; --block: #ffa198;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: Inter, sans-serif; background: var(--bg); color: var(--fg); letter-spacing: -0.006em; }
+.slide { width: 1920px; height: 1080px; padding: 72px 96px 64px; position: relative; overflow: hidden; page-break-after: always; display: flex; flex-direction: column; }
+.slide:last-child { page-break-after: auto; }
+.d { font-variation-settings: "opsz" 32; font-weight: 600; letter-spacing: -0.04em; }
+.eyebrow { font-size: 18px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--faint); }
+.eyebrow b { color: var(--lime); font-weight: 600; margin-right: 14px; }
+h2 { font-size: 60px; line-height: 1.04; margin-top: 18px; }
+.lead { font-size: 26px; line-height: 1.45; color: var(--soft); margin-top: 18px; max-width: 1180px; }
+.lime { color: var(--lime); }
+.top { display: flex; justify-content: space-between; align-items: flex-start; }
+.marca { font-size: 22px; color: var(--faint); }
+.marca .d { color: var(--fg); font-size: 28px; margin-right: 10px; }
+.pie { position: absolute; left: 96px; right: 96px; bottom: 34px; display: flex; justify-content: space-between; font-size: 15px; color: #5e5a52; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 30px 32px; }
+.grid { display: grid; gap: 22px; }
+.tag { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line2); color: var(--muted); }
+.tag.med { color: var(--lime); border-color: rgba(233,255,123,.45); }
+.tag.pro { color: var(--review); border-color: rgba(242,204,96,.45); }
+.tag.ok { color: var(--allow); border-color: rgba(126,231,135,.45); }
+.pill { display: inline-flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; letter-spacing: .04em; padding: 6px 14px; border-radius: 999px; }
+.p-allow { color: var(--allow); background: rgba(126,231,135,.10); border: 1px solid rgba(126,231,135,.45); }
+.p-review { color: var(--review); background: rgba(242,204,96,.10); border: 1px solid rgba(242,204,96,.45); }
+.p-block { color: var(--block); background: rgba(255,161,152,.10); border: 1px solid rgba(255,161,152,.45); }
+.small { font-size: 19.5px; line-height: 1.5; color: var(--muted); }
+.mono { font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: -0.01em; }
+ul.l { list-style: none; }
+ul.l li { position: relative; padding-left: 24px; font-size: 23px; line-height: 1.45; color: var(--soft); margin-top: 10px; }
+ul.l li::before { content: ""; position: absolute; left: 0; top: 14px; width: 7px; height: 7px; border-radius: 2px; background: var(--lime); }
+.h3 { font-size: 28px; line-height: 1.15; }
+.glow { position: absolute; width: 1100px; height: 1100px; border-radius: 50%; background: radial-gradient(circle, rgba(233,255,123,.10), transparent 62%); pointer-events: none; }
+.fig { position: absolute; opacity: .18; }
+
+/* Portada */
+.portada h1 { font-size: 112px; line-height: .98; margin-top: 30px; max-width: 1400px; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; margin-top: auto; }
+.kpi { background: var(--surface); padding: 30px 34px; }
+.kpi .n { font-size: 72px; line-height: 1; }
+.kpi .t { font-size: 20px; color: var(--soft); margin-top: 14px; line-height: 1.35; }
+.kpi .s { font-size: 15px; color: var(--faint); margin-top: 10px; }
+
+/* Reglas y preguntas */
+.fila { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 15px 0; border-top: 1px solid var(--line); font-size: 20.5px; color: var(--soft); }
+.fila:first-of-type { border-top: 0; }
+.fila .c { flex-shrink: 0; font-size: 14px; font-weight: 700; letter-spacing: .05em; }
+.c-allow { color: var(--allow); } .c-review { color: var(--review); } .c-block { color: var(--block); }
+
+/* Umbrales */
+.barra { position: relative; height: 54px; border-radius: 12px; overflow: hidden; display: flex; border: 1px solid var(--line2); }
+.barra div { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; letter-spacing: .04em; }
+.z1 { background: rgba(126,231,135,.16); color: var(--allow); }
+.z2 { background: rgba(242,204,96,.18); color: var(--review); }
+.z3 { background: rgba(255,161,152,.18); color: var(--block); }
+.escala { position: relative; height: 20px; font-size: 14px; color: var(--faint); margin-top: 8px; }
+.escala span { position: absolute; transform: translateX(-50%); }
+.escala span:first-child { transform: none; } .escala span:last-child { transform: translateX(-100%); }
+
+/* Flujo */
+.flujo { display: flex; align-items: center; gap: 18px; }
+.nodo { background: var(--surface); border: 1px solid var(--line2); border-radius: 18px; padding: 22px 26px; }
+.nodo .k { font-size: 14px; color: var(--faint); font-weight: 600; letter-spacing: .08em; }
+.nodo .t { font-size: 26px; margin-top: 6px; }
+.nodo .s { font-size: 17px; color: var(--muted); margin-top: 6px; }
+.nodo.vobo { border-color: var(--lime); background: linear-gradient(180deg, rgba(233,255,123,.10), rgba(233,255,123,.02)); box-shadow: 0 0 60px rgba(233,255,123,.10); }
+.flecha { color: var(--faint); font-size: 30px; }
+.qa .q { font-size: 21px; font-weight: 600; color: var(--fg); }
+.qa .a { font-size: 18px; line-height: 1.45; color: var(--soft); margin-top: 8px; }
+.qa .e { font-size: 15.5px; line-height: 1.4; color: var(--muted); margin-top: 10px; }
+
+/* Barras comparativas */
+.cmp { display: grid; grid-template-columns: 210px 1fr 130px; align-items: center; gap: 18px; margin-top: 20px; }
+.cmp .nom { font-size: 20px; font-weight: 600; }
+.cmp .nom span { display: block; font-size: 15px; font-weight: 400; color: var(--faint); margin-top: 2px; }
+.cmp .tr { height: 18px; background: var(--raised); border-radius: 999px; overflow: hidden; }
+.cmp .tr i { display: block; height: 100%; border-radius: 999px; background: #6c685f; }
+.cmp.v .nom { color: var(--lime); } .cmp.v .tr i { background: var(--lime); }
+.cmp .val { font-size: 24px; font-weight: 600; text-align: right; }
+
+/* Línea de tiempo */
+.linea { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; position: relative; }
+.paso .num { width: 54px; height: 54px; border-radius: 50%; border: 1.5px solid var(--lime); color: var(--lime); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 600; background: var(--bg); position: relative; z-index: 1; }
+.paso .t { font-size: 26px; margin-top: 18px; }
+.paso .s { font-size: 18px; color: var(--soft); line-height: 1.45; margin-top: 8px; }
+.paso .m { font-size: 15.5px; color: var(--muted); line-height: 1.4; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.riel { position: absolute; top: 27px; left: 27px; right: 27px; height: 1px; background: linear-gradient(90deg, var(--lime), var(--line2)); }
+</style>
+</head>
+<body>
+
+<!-- 1 · PORTADA -->
+<section class="slide portada">
+  <div class="glow" style="right:-380px; top:-420px"></div>
+  <svg class="fig" style="left:1180px; top:620px" width="38" height="38" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="#a39e93" stroke-width="1.5"/></svg>
+  <svg class="fig" style="left:1700px; top:470px" width="30" height="30" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" stroke="#a39e93" stroke-width="1.5"/></svg>
+  <svg class="fig" style="left:860px; top:120px" width="26" height="26" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2" fill="none" stroke="#a39e93" stroke-width="1.5"/></svg>
+  <div class="top">
+    <p class="marca"><span class="d">VoBo</span>para 30X</p>
+    <p class="eyebrow">Playbook de aplicación de JEV · Reto JEV · Hackathon 30X</p>
+  </div>
+  <h1 class="d">La puerta de salida de los <span class="lime">agentes</span> de 30X.</h1>
+  <p class="lead" style="font-size:30px; max-width:1240px; margin-top:28px">Antes de que un agente envíe, publique o cambie un registro, VoBo revisa la acción en milisegundos (reglas en código y JEV) y decide si sale, si la ve una persona o si se frena. Más autonomía para los agentes, con evidencia.</p>
+  <div class="kpis">
+    <div class="kpi"><p class="n d">3<span style="font-size:36px;color:var(--muted)">&nbsp;de 74</span></p><p class="t">acciones peligrosas aprobadas sin persona. Con reglas solas eran 34.</p><p class="s mono">IC 95%: 1,4–11,3% · la meta era 0</p></div>
+    <div class="kpi"><p class="n d">83,1%</p><p class="t">de las acciones seguras sale sola, sin molestar a nadie.</p><p class="s mono">59 de 71</p></div>
+    <div class="kpi"><p class="n d">399 ms</p><p class="t">por decisión (latencia típica). 7 preguntas en una llamada.</p><p class="s mono">p95: 650 ms</p></div>
+    <div class="kpi"><p class="n d">USD 0,064</p><p class="t">por cada 1.000 decisiones con JEV real.</p><p class="s mono">1.534 tokens de entrada por decisión</p></div>
+  </div>
+  <div class="pie"><span>v1.1 · 17 oct 2026 · Pendiente de aprobación de Helian (dueño de la política) · Test de una sola corrida con jev-1.14.0 · banco sintético y política de demostración</span><span>vobo-jev.vercel.app · github.com/Helian1505/vobo-jev</span></div>
+</section>
+
+<!-- 2 · LA DECISIÓN -->
+<section class="slide">
+  <p class="eyebrow"><b>01</b>La decisión</p>
+  <h2 class="d">¿Sale o no sale esta acción del agente?</h2>
+  <p class="lead">Cada correo, WhatsApp, publicación o cambio en HubSpot que propone un agente pasa por una sola pregunta. Hay tres respuestas, siempre con su porqué.</p>
+  <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 40px">
+    <div class="card"><span class="pill p-allow">✓ PERMITIR</span><p class="h3 d" style="margin-top:22px">Sale sola.</p><p class="small" style="margin-top:10px">El recordatorio de una clase abierta a 1.200 contactos: sin problemas, sale en 216 ms.</p></div>
+    <div class="card"><span class="pill p-review">! PEDIR VOBO</span><p class="h3 d" style="margin-top:22px">Decide una persona.</p><p class="small" style="margin-top:10px">Una oferta de AI Sales a 1.711 contactos de afinidad baja: llega a Slack con su porqué.</p></div>
+    <div class="card"><span class="pill p-block">× BLOQUEAR</span><p class="h3 d" style="margin-top:22px">No sale.</p><p class="small" style="margin-top:10px">Una nota en HubSpot con una instrucción escondida para el agente: JEV la detecta con 99%.</p></div>
+  </div>
+  <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top: auto; margin-bottom: 40px">
+    <div class="card">
+      <p class="eyebrow" style="color:var(--lime)">Por qué es una decisión para JEV</p>
+      <ul class="l" style="margin-top:8px">
+        <li><b>Pequeña y repetida:</b> se toma en cada acción de cada agente; con más agentes, son miles al día.</li>
+        <li><b>Antes de que salga:</b> tiene que responder en milisegundos; un LLM por acción sería lento y caro.</li>
+        <li><b>Tipada:</b> JEV responde preguntas cerradas con su probabilidad, y el código decide con umbrales.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <p class="eyebrow" style="color:var(--lime)">Qué gana 30X</p>
+      <ul class="l" style="margin-top:8px">
+        <li><b>Más autonomía:</b> los agentes hacen más solos porque cada acción se revisa, no porque se confíe en ellos.</li>
+        <li><b>Sus guardrails, aplicados y medidos:</b> la política que ya consensúan sus equipos, versionada y con registro.</li>
+        <li><b>Una sola puerta auditable:</b> todo lo que sale pasa por el mismo punto. Cubre dos ideas del reto: guardrails para agentes y calificación de contenido.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pie"><span>VoBo · Playbook de aplicación de JEV en 30X</span><span>2 / 7</span></div>
+</section>
+
+<!-- 3 · CÓMO DECIDE -->
+<section class="slide">
+  <p class="eyebrow"><b>02</b>Esquema de preguntas</p>
+  <h2 class="d">JEV opina, el código autoriza y una persona decide lo dudoso.</h2>
+  <div class="grid" style="grid-template-columns: 1fr 1.15fr 0.8fr; margin-top: 36px">
+    <div class="card">
+      <p class="tag">Capa 1</p>
+      <p class="h3 d" style="margin-top:14px">Reglas en código</p>
+      <p class="small" style="margin:6px 0 10px">Lo que JEV no debe hacer: contar, comparar, revisar listas.</p>
+      <div class="fila"><span>Canal no oficial</span><span class="c c-block">BLOQUEAR</span></div>
+      <div class="fila"><span>Destinatario en la lista de bajas</span><span class="c c-block">BLOQUEAR</span></div>
+      <div class="fila"><span>Campo protegido o «Ganado» en varios registros</span><span class="c c-block">BLOQUEAR</span></div>
+      <div class="fila"><span>…en un solo registro</span><span class="c c-review">PEDIR VOBO</span></div>
+      <div class="fila"><span>Más de 5.000 destinatarios</span><span class="c c-review">PEDIR VOBO</span></div>
+      <div class="fila"><span>Masivo fuera de 07:00–19:59</span><span class="c c-review">PEDIR VOBO</span></div>
+      <div class="fila"><span>Fecha o precio que no cuadran</span><span class="c c-review">PEDIR VOBO</span></div>
+      <div class="fila"><span>Oferta paga a afinidad baja (≥50%)</span><span class="c c-review">PEDIR VOBO</span></div>
+    </div>
+    <div class="card">
+      <p class="tag">Capa 2</p>
+      <p class="h3 d" style="margin-top:14px">JEV: 7 preguntas en una llamada</p>
+      <p class="small" style="margin:6px 0 10px">Solo lee el texto, marcado como contenido no confiable.</p>
+      <div class="fila"><span>¿Promete resultados? <span class="mono" style="color:var(--faint);font-size:15px">choice</span></span><span class="c"><span class="c-block">explícita</span> · <span class="c-review">implícita</span></span></div>
+      <div class="fila"><span>¿Afirma un título o un aval oficial? <span class="mono" style="color:var(--faint);font-size:15px">sí/no</span></span><span class="c c-block">BLOQUEAR</span></div>
+      <div class="fila"><span>¿Expone datos personales? <span class="mono" style="color:var(--faint);font-size:15px">choice</span></span><span class="c"><span class="c-block">contacto</span> · <span class="c-review">persona</span></span></div>
+      <div class="fila"><span>¿Trae una orden para un agente? <span class="mono" style="color:var(--faint);font-size:15px">sí/no</span></span><span class="c c-block">BLOQUEAR</span></div>
+      <div class="fila"><span>¿Afirma impacto sin respaldo? <span class="mono" style="color:var(--faint);font-size:15px">choice</span></span><span class="c c-review">PEDIR VOBO</span></div>
+      <div class="fila"><span>¿Va al público declarado? <span class="mono" style="color:var(--faint);font-size:15px">choice</span></span><span class="c c-review">PEDIR VOBO</span></div>
+      <div class="fila"><span>¿Qué tono tiene? <span class="mono" style="color:var(--faint);font-size:15px">score 0–3</span></span><span class="c"><span class="c-block">ofensivo</span> · <span class="c-review">alarmista</span></span></div>
+    </div>
+    <div class="card" style="border-color:rgba(233,255,123,.4); background:linear-gradient(180deg, rgba(233,255,123,.07), rgba(233,255,123,.01))">
+      <p class="tag med">Capa 3</p>
+      <p class="h3 d" style="margin-top:14px">Gana el más severo</p>
+      <p class="d lime" style="font-size:34px; margin-top:26px; line-height:1.15">final = máx(<br>reglas, JEV)</p>
+      <ul class="l" style="margin-top:22px">
+        <li>JEV puede endurecer la decisión, nunca aflojarla.</li>
+        <li>La explicación sale de plantillas fijas. No hay un segundo modelo.</li>
+        <li>El mismo texto llega listo para Slack.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pie"><span>VoBo · Playbook de aplicación de JEV en 30X</span><span>3 / 7</span></div>
+</section>
+
+<!-- 4 · UMBRALES -->
+<section class="slide">
+  <p class="eyebrow"><b>03</b>Umbrales</p>
+  <h2 class="d">Cuánto más irreversible la acción, antes duda.</h2>
+  <p class="lead">Cada pregunta devuelve una probabilidad de riesgo. Según el tipo de acción, esa probabilidad cae en una de tres zonas.</p>
+  <div class="card" style="margin-top:36px; padding:36px 40px">
+    <div style="display:grid; grid-template-columns: 300px 1fr; gap: 26px 36px; align-items:center">
+      <div><p class="h3 d">Estricto</p><p class="small">Correo y WhatsApp masivos · irreversibles</p></div>
+      <div><div class="barra"><div class="z1" style="width:30%">SALE</div><div class="z2" style="width:20%">PERSONA</div><div class="z3" style="width:50%">SE APLICA LA CONSECUENCIA</div></div><div class="escala mono"><span style="left:0">0</span><span style="left:30%">0,30</span><span style="left:50%">0,50</span><span style="left:100%">1</span></div></div>
+      <div><p class="h3 d">Normal</p><p class="small">Publicaciones en redes · parcialmente reversibles</p></div>
+      <div><div class="barra"><div class="z1" style="width:45%">SALE</div><div class="z2" style="width:20%">PERSONA</div><div class="z3" style="width:35%">CONSECUENCIA</div></div><div class="escala mono"><span style="left:0">0</span><span style="left:45%">0,45</span><span style="left:65%">0,65</span><span style="left:100%">1</span></div></div>
+      <div><p class="h3 d">Laxo</p><p class="small">Cambios en HubSpot · reversibles</p></div>
+      <div><div class="barra"><div class="z1" style="width:25%">SALE</div><div class="z2" style="width:25%">PERSONA</div><div class="z3" style="width:50%">SE APLICA LA CONSECUENCIA</div></div><div class="escala mono"><span style="left:0">0</span><span style="left:25%">0,25</span><span style="left:50%">0,50</span><span style="left:100%">1</span></div></div>
+    </div>
+  </div>
+  <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top:22px">
+    <div class="card"><p class="h3 d" style="font-size:24px">Si JEV falla, la acción no sale</p><p class="small" style="margin-top:8px">Error, respuesta inválida o más de 3 s (con hasta 2 reintentos): pasa a una persona. Nunca se permite por un error.</p></div>
+    <div class="card"><p class="h3 d" style="font-size:24px">Un LLM nunca decide</p><p class="small" style="margin-top:8px">Lo que no resuelven el código ni JEV, lo resuelve una persona.</p></div>
+    <div class="card"><p class="h3 d" style="font-size:24px">Ajustados solo con datos de ajuste</p><p class="small" style="margin-top:8px">250 acciones de ajuste, nunca las de medición. Regla firmada por Helian: banda de duda ≥ 0,20 y, entre opciones iguales, la más conservadora.</p></div>
+  </div>
+  <div class="pie"><span>VoBo · Playbook de aplicación de JEV en 30X · valores en data/thresholds.json</span><span>4 / 7</span></div>
+</section>
+
+<!-- 5 · CÓMO SE PONE EN 30X -->
+<section class="slide">
+  <p class="eyebrow"><b>04</b>Propuesta tecnológica</p>
+  <h2 class="d">Un paso antes de todo lo que sale hacia afuera.</h2>
+  <div class="card" style="margin-top:28px; padding:22px 30px; display:flex; gap:30px; align-items:center">
+    <p class="eyebrow" style="color:var(--lime); flex-shrink:0">Lo que 30X pidió</p>
+    <p style="font-size:20px; line-height:1.45; color:var(--soft)">Agentes en Python con tool calling y MCP · un filtro para todo lo que sale, sin depender de que el agente decida preguntar · aprobación por Slack · HubSpot como registro · sin datos de personas en modelos externos.</p>
+  </div>
+  <div class="flujo" style="margin-top:26px">
+    <div class="nodo" style="width:300px"><p class="k">01</p><p class="t d">Agente de 30X</p><p class="s">Python · tool calling o MCP</p></div>
+    <span class="flecha">→</span>
+    <div class="nodo" style="width:330px"><p class="k">02</p><p class="t d">Puerta de salida</p><p class="s">Las llaves de salida viven aquí</p></div>
+    <span class="flecha">→</span>
+    <div class="nodo vobo" style="width:330px"><p class="k" style="color:var(--lime)">03</p><p class="t d">VoBo</p><p class="s">Reglas + JEV · ≈ 0,4 s</p></div>
+    <span class="flecha">→</span>
+    <div style="display:flex; flex-direction:column; gap:10px">
+      <div style="display:flex; gap:14px; align-items:center"><span class="pill p-allow" style="font-size:14px">PERMITIR</span><span class="small" style="color:var(--soft)">Sale a correo, WhatsApp, redes o HubSpot</span></div>
+      <div style="display:flex; gap:14px; align-items:center"><span class="pill p-review" style="font-size:14px">PEDIR VOBO</span><span class="small" style="color:var(--soft)">Aviso en Slack; decide una persona</span></div>
+      <div style="display:flex; gap:14px; align-items:center"><span class="pill p-block" style="font-size:14px">BLOQUEAR</span><span class="small" style="color:var(--soft)">No sale; el agente recibe las razones</span></div>
+    </div>
+  </div>
+  <div class="grid qa" style="grid-template-columns: repeat(3, 1fr); margin-top:26px">
+    <div class="card"><p class="q">¿Dónde se pone?</p><p class="a">Dentro de las herramientas del agente (servidor MCP). Si las llaves de HubSpot y WhatsApp viven solo en la puerta, el agente no tiene otra vía para enviar.</p><p class="e"><span class="tag ok">Construido</span> 11 pruebas, probado contra la demo. Ejecutores de ejemplo.</p></div>
+    <div class="card"><p class="q">¿Y los cambios en HubSpot?</p><p class="a">La herramienta que escribe en HubSpot pasa por VoBo. Como red de seguridad, los webhooks de HubSpot auditan lo que no pasó por la puerta.</p><p class="e"><span class="tag pro">Propuesta</span> Los webhooks, por verificar con su plan de HubSpot.</p></div>
+    <div class="card"><p class="q">¿Cuál es el identificador?</p><p class="a">El ID de registro de HubSpot más el <span class="mono">request_id</span> de cada decisión. Es estable y no es un dato personal.</p><p class="e"><span class="tag ok">Construido</span> Cada respuesta trae su registro.</p></div>
+    <div class="card"><p class="q">¿Y si VoBo tarda o falla?</p><p class="a">Falla cerrada: sin respuesta válida, la acción espera a una persona. Esperar unos minutos cuesta menos que un envío masivo indebido.</p><p class="e"><span class="tag ok">Probado</span> Con el servidor caído, colgado y con error.</p></div>
+    <div class="card"><p class="q">¿Qué ve el modelo?</p><p class="a">JEV es el único modelo y recibe solo el texto, el tipo y el canal. Nunca destinatarios, correos, IDs, fechas ni precios.</p><p class="e"><span class="tag ok">Construido</span> <span class="mono">jev/state.ts</span></p></div>
+    <div class="card"><p class="q">¿Dónde se aprueba?</p><p class="a">Lo dudoso llega a Slack con su porqué. La decisión queda como nota en HubSpot con su <span class="mono">request_id</span>.</p><p class="e"><span class="tag ok">Probado</span> Aviso en un Slack de prueba. <span class="tag pro">Propuesta</span> Botones y nota en HubSpot.</p></div>
+  </div>
+  <div class="pie"><span>VoBo · Playbook de aplicación de JEV en 30X · no hay integración con los sistemas de 30X</span><span>5 / 7</span></div>
+</section>
+
+<!-- 6 · EVIDENCIA -->
+<section class="slide">
+  <p class="eyebrow"><b>05</b>Cómo se mide</p>
+  <h2 class="d">Por separado se escapan más de 30. Juntos, 3.</h2>
+  <p class="lead">Una sola corrida, con JEV real, sobre 145 acciones que no se usaron para ajustar: 74 peligrosas y 71 seguras. Son las 150 del test menos 5 sin mayoría humana.</p>
+  <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top:34px">
+    <div class="card">
+      <p class="h3 d">Peligrosas que pasan sin persona</p><p class="small">Menos es mejor · de 74</p>
+      <div class="cmp"><p class="nom">Solo reglas<span>el código, sin JEV</span></p><div class="tr"><i style="width:45.9%"></i></div><p class="val">34</p></div>
+      <div class="cmp"><p class="nom">Solo JEV<span>sin el piso de reglas</span></p><div class="tr"><i style="width:41.9%"></i></div><p class="val">31</p></div>
+      <div class="cmp v"><p class="nom">VoBo<span>el más severo de los dos</span></p><div class="tr"><i style="width:4.1%"></i></div><p class="val lime">3</p></div>
+    </div>
+    <div class="card">
+      <p class="h3 d">Seguras que salen solas</p><p class="small">Más es mejor · de 71</p>
+      <div class="cmp"><p class="nom">Solo reglas<span>pero dejan pasar 34</span></p><div class="tr"><i style="width:100%"></i></div><p class="val">100%</p></div>
+      <div class="cmp"><p class="nom">Solo JEV</p><div class="tr"><i style="width:83.1%"></i></div><p class="val">83,1%</p></div>
+      <div class="cmp v"><p class="nom">VoBo</p><div class="tr"><i style="width:83.1%"></i></div><p class="val lime">83,1%</p></div>
+    </div>
+  </div>
+  <div class="grid" style="grid-template-columns: repeat(4, 1fr); margin-top:22px">
+    <div class="card"><p class="tag med">Medido</p><p class="h3 d" style="font-size:24px; margin-top:14px">Lo grave, todo frenado</p><p class="small" style="margin-top:8px">Las 42 acciones graves se bloquearon todas, incluidas las 9 instrucciones escondidas que las reglas no veían.</p></div>
+    <div class="card"><p class="tag med">Medido</p><p class="h3 d" style="font-size:24px; margin-top:14px">Fallos publicados</p><p class="small" style="margin-top:8px">Las 3 que pasaron son textos de apariencia inocua que marcó un solo revisor. 2 seguras se bloquearon. Todas, con su texto, en /resultados.</p></div>
+    <div class="card"><p class="tag">Estimación</p><p class="h3 d" style="font-size:24px; margin-top:14px">Carga humana ≈15–16%</p><p class="small" style="margin-top:8px">En la prueba, 25,5% fue a una persona, pero el banco tiene 51% de peligrosas. Con 5–10% de tráfico problemático, bajaría a ≈15–16%.</p></div>
+    <div class="card"><p class="tag med">Medido</p><p class="h3 d" style="font-size:24px; margin-top:14px">Resultado creíble</p><p class="small" style="margin-top:8px">Etiquetas humanas a ciegas, congeladas con hash antes de correr JEV. Acuerdo entre revisores κ = 0,51. Banco pequeño: es una demostración.</p></div>
+  </div>
+  <div class="pie"><span>VoBo · Playbook de aplicación de JEV en 30X · cifras de eval/results/test.json · IC 95% de 3 de 74: 1,4–11,3%</span><span>6 / 7</span></div>
+</section>
+
+<!-- 7 · DESPLIEGUE -->
+<section class="slide">
+  <p class="eyebrow"><b>06</b>Despliegue y operación</p>
+  <h2 class="d">Empezar sin frenar nada.</h2>
+  <div class="linea" style="margin-top:48px">
+    <div class="riel"></div>
+    <div class="paso"><p class="num">1</p><p class="t d">Modo sombra</p><p class="s">La puerta consulta y registra, pero deja salir todo.</p><p class="m">Avanza cuando: VoBo coincide con lo que hoy deciden los equipos.</p></div>
+    <div class="paso"><p class="num">2</p><p class="t d">Etiquetar y ajustar</p><p class="s">Se revisa lo que VoBo habría frenado y se reajustan los umbrales solo con esos datos.</p><p class="m">Avanza cuando: las falsas alarmas están por debajo de lo acordado con cada dueño de canal.</p></div>
+    <div class="paso"><p class="num">3</p><p class="t d">Activar por canal</p><p class="s">Primero el de menor riesgo, luego el resto.</p><p class="m">Se mide: peligrosas aprobadas sin persona y tiempo de aprobación en Slack.</p></div>
+    <div class="paso"><p class="num">∞</p><p class="t d">Monitorear</p><p class="s">Revisión semanal con cada dueño de canal.</p><p class="m">Se mide: autonomía, % escalado, tiempo de aprobación y costo.</p></div>
+  </div>
+  <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; margin-top:auto; margin-bottom:40px">
+    <div class="card">
+      <p class="eyebrow" style="color:var(--lime)">Quién lo opera</p>
+      <ul class="l" style="margin-top:6px">
+        <li><b>Dueño de cada canal:</b> firma su política y sus umbrales.</li>
+        <li><b>Quien aprueba:</b> decide lo dudoso en Slack.</li>
+        <li><b>Tecnología:</b> mantiene la puerta, las llaves y el registro.</li>
+        <li><b>VoBo:</b> aplica la política; nunca la cambia solo.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <p class="eyebrow" style="color:var(--lime)">Límites conocidos</p>
+      <ul class="l" style="margin-top:6px">
+        <li>Lo que no pase por la puerta no se evalúa.</li>
+        <li>JEV puede equivocarse con confianza y varía un poco entre llamadas.</li>
+        <li>Preguntas en español, sin medir frente al inglés.</li>
+        <li>Banco sintético y política de demostración, por confirmar con 30X.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <p class="eyebrow" style="color:var(--lime)">Hoja de ruta</p>
+      <ul class="l" style="margin-top:6px">
+        <li>Detectar correos, teléfonos y documentos en código, sin enviar el texto a JEV.</li>
+        <li>Botones de aprobar en Slack y nota automática en HubSpot.</li>
+        <li>Auditoría con los webhooks de HubSpot.</li>
+        <li>El mismo patrón para clasificar cada inscripción.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pie"><span>VoBo · Playbook de aplicación de JEV en 30X · Equipo VoBo: Helian Fierro, Juan David Cano, Angie Tamara</span><span>7 / 7</span></div>
+</section>
+
+</body>
+</html>

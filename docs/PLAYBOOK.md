@@ -1,7 +1,7 @@
 # Playbook de aplicación de JEV en 30X
 ## VoBo: la puerta de salida de los agentes
 
-> **v1.1 · sáb 17 oct 2026, 11:45 p.m. · Pendiente de aprobación de Helian (dueño de la política, D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3 de las 9:35 p.m.
+> **v1.2 · dom 18 oct 2026, 12:05 a.m. · Pendiente de aprobación de Helian (dueño de la política, D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3. La versión diseñada para el formulario es `docs/PLAYBOOK.pdf` (7 diapositivas; el límite es 8). Este archivo es su versión en texto.
 > **Cómo leer las etiquetas:**
 > - **[Medido]** sale del test de una sola corrida (17 oct, `jev-1.14.0`).
 > - **[30X]** lo dijo el equipo de 30X.
@@ -101,18 +101,14 @@ Los valores están en `data/thresholds.json`.
 
 ## 4. Propuesta tecnológica: cómo se pone en 30X y quién la opera
 
-**[30X]** Lo que nos dijeron:
-- **Sandra:**
-  - agentes en Python con tool calling y MCP;
-  - «no queremos depender de que el agente decida cuándo preguntar»;
-  - un filtro para todo lo que sale;
-  - aprobación en Slack;
-  - el CRM como registro.
-- **CTO:**
-  - el CRM es HubSpot;
-  - los hooks, el identificador, el punto de salida y el comportamiento ante fallas son parte de la propuesta;
-  - tecnología sacó n8n;
-  - hay que evitar enviar datos de personas a modelos externos.
+**[30X] Lo que 30X pidió (resumen):**
+- agentes en Python con tool calling y MCP;
+- un filtro para todo lo que sale, sin depender de que el agente decida cuándo preguntar;
+- aprobación por Slack;
+- HubSpot como CRM y como registro;
+- hooks, identificador, punto de salida y comportamiento ante fallas como parte de la propuesta;
+- n8n ya no se usa en tecnología;
+- no enviar datos de personas a modelos externos.
 
 | Pregunta | Propuesta | Qué existe hoy |
 |---|---|---|
