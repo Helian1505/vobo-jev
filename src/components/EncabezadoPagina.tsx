@@ -18,7 +18,7 @@ export function EncabezadoSeccion({ id, titulo, nota }: { id: string; titulo: st
   return (
     <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-2">
       <div className="max-w-3xl">
-<h2 id={id} className="font-display text-2xl leading-tight text-fg sm:text-3xl">
+        <h2 id={id} className="font-display text-2xl leading-tight text-fg sm:text-3xl">
           {titulo}
         </h2>
       </div>
