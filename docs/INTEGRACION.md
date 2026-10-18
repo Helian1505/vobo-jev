@@ -19,7 +19,7 @@ Así lo tradujimos:
 |---|---|---|
 | Un paso dentro de los flujos | Flujo de n8n con VoBo como compuerta de salida (`integraciones/n8n/`) | **Construido y probado** (enrutamiento) |
 | Consulta del agente como complemento | Envoltorio de Python (`integraciones/python/`) y un agente de ejemplo en TypeScript | **Construido y probado** |
-| Aprobación en Slack | Nodo «Send and Wait» de n8n con el `resumen_aprobacion` | **Configurado, no probado contra Slack** |
+| Aprobación en Slack | Nodo «Send and Wait» de n8n con el `resumen_aprobacion`; aparte, el aviso de `VOBO_REVIEW_WEBHOOK_URL` llega a Slack por Incoming Webhook | **Aviso probado contra un Slack de prueba** (17 oct); los botones de aprobar, configurados y no probados |
 | WhatsApp para urgentes, correo de respaldo | El `resumen_aprobacion` ya viene en un formato que sirve para WhatsApp | **Solo diseño** |
 | CRM solo como registro | El campo `registro` (objeto plano) y un nodo que lo arma | **Solo diseño**: no se escribe en ningún CRM |
 
@@ -239,7 +239,9 @@ Antes de dejar que VoBo frene algo, pon la integración en modo sombra: consulta
 
 ### 2.7 Webhook de revisión (opcional)
 
-Si defines `VOBO_REVIEW_WEBHOOK_URL`, cada vez que una acción queda en PEDIR VOBO o BLOQUEAR, VoBo envía un `POST` JSON a esa URL con `request_id`, `decision`, `tipo_accion`, `id`, `explicacion` y `reglas`. Va **después** de responder (con `after()` de Next.js), tiene un tiempo límite de 2 s, no se reintenta y nunca bloquea ni cambia la respuesta. Sin la variable no hace nada. Sirve para avisar; no sustituye a un sistema de aprobación.
+Si defines `VOBO_REVIEW_WEBHOOK_URL`, cada vez que una acción queda en PEDIR VOBO o BLOQUEAR, VoBo envía un `POST` JSON a esa URL con `request_id`, `decision`, `tipo_accion`, `id`, `explicacion`, `reglas` y `text` (el mismo resumen de `resumen_aprobacion`, en el campo que Slack muestra como mensaje del canal). Si la URL es de `hooks.slack.com` se manda solo `{ text }`, porque Slack rechaza lo que no reconoce; a cualquier otra URL le llega la carga completa. Va **después** de responder (con `after()` de Next.js), tiene un tiempo límite de 2 s, no se reintenta y nunca bloquea ni cambia la respuesta. Sin la variable no hace nada. Sirve para avisar; no sustituye a un sistema de aprobación.
+
+**Probado:** el aviso llega a un Slack de prueba por Incoming Webhook (17 oct). **No probado:** botones de aprobar en Slack (requieren una app con interactividad y estado; ver §3).
 
 ### 2.8 Patrón complementario: el agente consulta antes de actuar
 
@@ -254,7 +256,7 @@ Suman una segunda barrera cuando el agente decide por su cuenta, pero **no cubre
 
 Nada de esto está construido ni probado:
 
-- **Slack con botones reales.** El flujo de n8n trae el nodo «Send and Wait for Response» configurado, pero **no se ejecutó contra Slack**. Los botones, el mensaje en el canal y la espera de la respuesta quedan sin verificar.
+- **Slack con botones reales.** El flujo de n8n trae el nodo «Send and Wait for Response» configurado, pero **no se ejecutó contra Slack**. Los botones, el mensaje en el canal y la espera de la respuesta quedan sin verificar (requieren una app con interactividad y estado).
 - **WhatsApp para lo urgente.** No hay nodo ni criterio de qué es «urgente». El `resumen_aprobacion` ya viene en un formato que sirve para WhatsApp (texto corto, `*negritas*`).
 - **Correo de respaldo.** No hay nada construido: sería otro nodo de salida con el mismo resumen.
 - **Escritura en el CRM como registro.** El `registro` es un objeto plano listo para guardar, y el nodo **Registrar decisión** lo arma, pero **no escribe en ningún sistema**.

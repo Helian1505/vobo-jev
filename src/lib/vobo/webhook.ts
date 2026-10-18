@@ -1,3 +1,4 @@
+import { construirResumenAprobacion } from "./respuesta";
 import type { Evaluacion } from "./evaluate";
 import type { AccionAgente, Decision, ReglaActivada } from "./types";
 
@@ -13,6 +14,12 @@ export interface CargaWebhook {
   id: string | null;
   explicacion: Evaluacion["explicacion"];
   reglas: ReglaActivada[];
+  /**
+   * El mismo resumen en español que la API devuelve en `resumen_aprobacion`. Va en un campo llamado `text`
+   * porque es el campo que Slack muestra como el mensaje del canal: así un Incoming Webhook de Slack enseña
+   * el aviso tal cual, sin nada más que configurar. Para cualquier otro destino es un campo más.
+   */
+  text: string;
 }
 
 export interface ResultadoWebhook {
@@ -38,6 +45,19 @@ export function urlWebhook(env: Record<string, string | undefined> = process.env
   }
 }
 
+/**
+ * ¿La URL es un Incoming Webhook de Slack? Slack solo acepta su propio esquema de carga y rechaza con
+ * `invalid_payload` lo que no reconoce, así que a ese host le mandamos únicamente `{ text }`. Es lo mínimo
+ * que funciona: a cualquier otra URL le sigue llegando la carga completa (que ya incluye el mismo `text`).
+ */
+export function esWebhookDeSlack(url: string): boolean {
+  try {
+    return new URL(url).hostname === "hooks.slack.com";
+  } catch {
+    return false;
+  }
+}
+
 export function construirCarga(request_id: string, accion: AccionAgente, ev: Evaluacion): CargaWebhook {
   return {
     request_id,
@@ -46,6 +66,7 @@ export function construirCarga(request_id: string, accion: AccionAgente, ev: Eva
     id: accion.id ?? null,
     explicacion: ev.explicacion,
     reglas: ev.reglas,
+    text: construirResumenAprobacion(accion, ev, request_id),
   };
 }
 
@@ -65,7 +86,7 @@ export async function enviarWebhook(args: {
     const res = await (args.fetchImpl ?? fetch)(args.url, {
       method: "POST",
       headers: { "content-type": "application/json", "user-agent": "vobo-webhook/1", "x-vobo-request-id": args.carga.request_id },
-      body: JSON.stringify(args.carga),
+      body: JSON.stringify(esWebhookDeSlack(args.url) ? { text: args.carga.text } : args.carga),
       signal: control.signal,
     });
     return res.ok ? { enviado: true, estado: res.status } : { enviado: false, estado: res.status, error: "http" };

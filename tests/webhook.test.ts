@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/evaluate/route";
-import { debeNotificar, enviarWebhook, urlWebhook, type CargaWebhook } from "@/lib/vobo/webhook";
+import { debeNotificar, enviarWebhook, esWebhookDeSlack, urlWebhook, type CargaWebhook } from "@/lib/vobo/webhook";
 
 const URL_HOOK = "https://hooks.ejemplo.test/vobo";
+const URL_SLACK = "https://hooks.slack.com/services/T000/B000/xxxxxxxx"; // inventada: nunca la real
 
 const limpia = {
   tipo_accion: "correo_masivo",
@@ -58,6 +59,7 @@ describe("enviarWebhook (fetch simulado)", () => {
     id: null,
     explicacion: { titular: "BLOQUEAR: x", razones: ["x"] },
     reglas: [],
+    text: "*VoBo: BLOQUEAR*\nAcción: correo masivo…",
   };
 
   it("hace un POST JSON con la carga y el request_id en un encabezado", async () => {
@@ -69,6 +71,22 @@ describe("enviarWebhook (fetch simulado)", () => {
     expect(init.method).toBe("POST");
     expect(JSON.parse(String(init.body))).toEqual(carga);
     expect((init.headers as Record<string, string>)["x-vobo-request-id"]).toBe(carga.request_id);
+  });
+
+  it("a hooks.slack.com le manda solo { text }; a cualquier otra URL la carga completa", async () => {
+    expect(esWebhookDeSlack(URL_SLACK)).toBe(true);
+    expect(esWebhookDeSlack(URL_HOOK)).toBe(false);
+    expect(esWebhookDeSlack("no es una url")).toBe(false);
+
+    const aSlack = vi.fn(async () => new Response("ok", { status: 200 }));
+    expect(await enviarWebhook({ url: URL_SLACK, carga, fetchImpl: aSlack as unknown as typeof fetch })).toEqual({ enviado: true, estado: 200 });
+    const [urlSlack, initSlack] = aSlack.mock.calls[0] as unknown as [string, RequestInit];
+    expect(urlSlack).toBe(URL_SLACK);
+    expect(JSON.parse(String(initSlack.body))).toEqual({ text: carga.text });
+
+    const aOtro = vi.fn(async () => new Response("ok", { status: 200 }));
+    await enviarWebhook({ url: URL_HOOK, carga, fetchImpl: aOtro as unknown as typeof fetch });
+    expect(JSON.parse(String((aOtro.mock.calls[0] as unknown as [string, RequestInit])[1].body))).toEqual(carga);
   });
 
   it("nunca lanza: un 500, un error de red y un tiempo agotado devuelven el motivo", async () => {
@@ -100,7 +118,7 @@ describe("POST /api/evaluate con el webhook", () => {
     expect(fetchSim).not.toHaveBeenCalled();
   });
 
-  it("una acción BLOQUEADA envía la carga con request_id, decision, tipo_accion, id, explicacion y reglas", async () => {
+  it("una acción BLOQUEADA envía la carga con request_id, decision, tipo_accion, id, explicacion, reglas y text", async () => {
     vi.stubEnv("VOBO_JEV_MODE", "mock");
     vi.stubEnv("VOBO_REVIEW_WEBHOOK_URL", URL_HOOK);
     const fetchSim = vi.fn(async () => new Response("ok", { status: 200 }));
@@ -113,10 +131,27 @@ describe("POST /api/evaluate con el webhook", () => {
     const [url, init] = fetchSim.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe(URL_HOOK);
     const carga = JSON.parse(String(init.body));
-    expect(Object.keys(carga).sort()).toEqual(["decision", "explicacion", "id", "reglas", "request_id", "tipo_accion"]);
+    expect(Object.keys(carga).sort()).toEqual(["decision", "explicacion", "id", "reglas", "request_id", "text", "tipo_accion"]);
     expect(carga).toMatchObject({ request_id: cuerpo.request_id, decision: "BLOCK", tipo_accion: "correo_masivo", id: "ACC-77" });
     expect(carga.reglas.map((r: { regla: string }) => r.regla)).toContain("canal_no_oficial");
     expect(carga.explicacion.titular).toContain("BLOQUEAR");
+    // `text` es exactamente el mismo resumen que devuelve la API: Slack lo muestra tal cual.
+    expect(carga.text).toBe(cuerpo.resumen_aprobacion);
+    expect(carga.text).toContain("*VoBo: BLOQUEAR*");
+  });
+
+  it("si la URL es de Slack, al canal le llega solo el resumen en { text }", async () => {
+    vi.stubEnv("VOBO_JEV_MODE", "mock");
+    vi.stubEnv("VOBO_REVIEW_WEBHOOK_URL", URL_SLACK);
+    const fetchSim = vi.fn(async () => new Response("ok", { status: 200 }));
+    vi.stubGlobal("fetch", fetchSim);
+
+    const cuerpo = await (await pedir(bloqueada)).json();
+    await vi.waitFor(() => expect(fetchSim).toHaveBeenCalledTimes(1));
+
+    const [url, init] = fetchSim.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe(URL_SLACK);
+    expect(JSON.parse(String(init.body))).toEqual({ text: cuerpo.resumen_aprobacion });
   });
 
   it("una acción en PEDIR VOBO también avisa; una PERMITIDA no", async () => {
