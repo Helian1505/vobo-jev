@@ -1,7 +1,7 @@
 # Playbook de aplicación de JEV en 30X
 ## Que los agentes hagan más solos, con evidencia · Primera aplicación: VoBo, la puerta de salida de los agentes
 
-> **v1.3 · dom 18 oct 2026, 12:55 a.m. · Pendiente de aprobación de Helian (dueño de la política, D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3.
+> **v1.3 · dom 18 oct 2026 · Dueño de la política: Helian (D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3.
 > **Versión para el formulario:** `docs/PLAYBOOK.pdf` (8 diapositivas; el límite es 8). Este archivo es su versión en texto.
 > **Qué cubre:** cada parte responde a lo que pide el reto (§08): las decisiones que toma JEV, el esquema de preguntas, los umbrales, quién lo opera y cómo se mide.
 > **Etiquetas:**
