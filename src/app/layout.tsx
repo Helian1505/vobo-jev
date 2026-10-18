@@ -41,8 +41,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <header className="nav-glass sticky top-0 z-40 border-b border-line">
           <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 sm:px-6">
-            <Link href="/" className="flex items-baseline gap-2" aria-label="VoBo, inicio">
-              <span className="font-display text-xl text-fg">VoBo</span>
+            <Link href="/" className="flex items-center gap-3" aria-label="VoBo, inicio">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/marca/logo.png" alt="VoBo" width={1200} height={303} className="h-7 w-auto" />
               <span className="hidden whitespace-nowrap text-sm text-fg-faint sm:inline">para 30X</span>
             </Link>
             <Nav />
@@ -56,7 +57,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <footer className="mt-14 border-t border-line py-10 text-sm">
             <div className="grid gap-8 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
               <div>
-                <p className="font-display text-lg text-fg">VoBo</p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/marca/logo.png" alt="VoBo" width={1200} height={303} className="h-8 w-auto" />
                 <p className="mt-2 max-w-md leading-relaxed text-fg-muted">
                   La puerta de salida de los agentes de 30X. Equipo VoBo · Reto JEV · Hackathon 30X, 16–18 oct 2026.
                 </p>
