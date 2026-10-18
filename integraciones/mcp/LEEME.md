@@ -4,8 +4,7 @@ Un servidor MCP en Python con las herramientas de salida de un agente de 30X: **
 
 ## Qué es y por qué
 
-- **Es el punto único de salida.** El agente no tiene otra forma de enviar: si quiere mandar un correo o escribir en HubSpot, llama a una de estas herramientas, y la herramienta pregunta a VoBo primero. No depende de que el agente «decida preguntar».
-- **El agente no puede saltársela.** La consulta está dentro de la herramienta, no en las instrucciones del agente.
+- **Es el punto único de salida.** Si las llaves de salida viven solo en la puerta, el agente no tiene otra vía para enviar: la consulta está dentro de la herramienta, no en las instrucciones del agente. Si quiere mandar un correo o escribir en HubSpot, llama a una de estas herramientas, y la herramienta pregunta a VoBo primero. No depende de que el agente «decida preguntar».
 - **Las llaves de salida viven solo aquí.** En producción, las llaves de HubSpot y WhatsApp estarían en este servidor; el agente nunca las ve.
 - **No usa ningún modelo adicional.** La puerta no usa IA: arma la acción con el contrato de VoBo y la manda. VoBo es quien usa JEV.
 - **Falla cerrada.** Reutiliza `integraciones/python/vobo_gate.py`: si VoBo no responde bien (red, tiempo agotado, HTTP distinto de 200, decisión desconocida), la acción **no sale** y queda pendiente de una persona.
@@ -64,6 +63,12 @@ source integraciones/mcp/.venv/bin/activate
 pip install -r integraciones/mcp/requirements.txt
 python -m unittest discover -s integraciones/mcp -p "test_*.py" -v
 npx @modelcontextprotocol/inspector python integraciones/mcp/vobo_salidas.py
+```
+
+En Windows (PowerShell), el entorno se crea e instala así:
+
+```powershell
+py -3 -m venv integraciones\mcp\.venv ; integraciones\mcp\.venv\Scripts\Activate.ps1 ; pip install -r integraciones\mcp\requirements.txt
 ```
 
 Con el entorno activo existe el comando `python` y apunta al Python del entorno, que es el que tiene el paquete `mcp` instalado.
