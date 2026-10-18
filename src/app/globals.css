@@ -196,7 +196,7 @@ details[open] .gira {
 }
 
 .tarjeta-entra {
-  animation: tarjeta 420ms var(--ease-out-strong) both;
+  animation: tarjeta 280ms var(--ease-out-strong) both;
 }
 
 @keyframes pulso {

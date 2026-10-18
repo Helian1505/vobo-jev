@@ -132,8 +132,9 @@ export default function Home() {
               La puerta de salida de los <span className="text-accent">agentes</span> de 30X.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-soft">
-              Cada correo, WhatsApp, publicación o cambio en HubSpot que un agente quiere hacer pasa por VoBo. JEV decide en
-              milisegundos: lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo indebido no sale.
+              Cada correo, WhatsApp, publicación o cambio en HubSpot que un agente quiere hacer pasa primero por VoBo. En
+              milisegundos, las reglas y JEV lo revisan: lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo
+              indebido no sale.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link

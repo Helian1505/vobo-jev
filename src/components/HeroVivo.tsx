@@ -106,6 +106,14 @@ export function HeroVivo() {
             </div>
           </li>
         ))}
+        {TARJETAS.slice(visibles).map((t) => (
+          <li
+            key={`espera-${t.texto}`}
+            className="flex min-h-[122px] items-center justify-center rounded-[10px] border border-dashed border-line"
+          >
+            <p className="mono text-[11px] text-fg-faint">esperando la siguiente acción…</p>
+          </li>
+        ))}
       </ol>
     </div>
   );

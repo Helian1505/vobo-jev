@@ -16,7 +16,7 @@ const inter = localFont({
 export const metadata: Metadata = {
   title: "VoBo — la puerta de salida de los agentes de 30X",
   description:
-    "Cada acción que un agente de 30X quiere hacer hacia afuera pasa por VoBo: JEV (TypeSafe) decide en milisegundos, lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo indebido no sale.",
+    "Cada acción que un agente de 30X quiere hacer hacia afuera pasa por VoBo: en milisegundos, reglas en código y JEV (TypeSafe) la revisan; lo seguro sale solo, lo dudoso llega a una persona con su porqué y lo indebido no sale.",
 };
 
 const REPO = "https://github.com/Helian1505/vobo-jev";
