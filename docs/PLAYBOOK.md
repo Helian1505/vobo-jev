@@ -1,7 +1,7 @@
 # Playbook de aplicación de JEV en 30X
 ## VoBo: la puerta de salida de los agentes
 
-> **v1.2 · dom 18 oct 2026, 12:05 a.m. · Pendiente de aprobación de Helian (dueño de la política, D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3. La versión diseñada para el formulario es `docs/PLAYBOOK.pdf` (7 diapositivas; el límite es 8). Este archivo es su versión en texto.
+> **v1.2 · dom 18 oct 2026, 12:10 a.m. · Pendiente de aprobación de Helian (dueño de la política, D-026).** Redactó Claude (sesión de Juan). Incorpora la revisión H-3. La versión diseñada para el formulario es `docs/PLAYBOOK.pdf` (7 diapositivas; el límite es 8). Este archivo es su versión en texto.
 > **Cómo leer las etiquetas:**
 > - **[Medido]** sale del test de una sola corrida (17 oct, `jev-1.14.0`).
 > - **[30X]** lo dijo el equipo de 30X.
@@ -85,7 +85,7 @@ Cada pregunta devuelve una probabilidad. El umbral depende de qué tan reversibl
 
 - **Probabilidad ≥ T_acción:** se aplica la consecuencia de la §2.
 - **Entre T_revisión y T_acción:** JEV no descarta el riesgo y la acción **pasa a una persona**.
-- **Si JEV falla, tarda más de 3 s o responde algo inválido:** la acción **pasa a una persona**. Antes hay hasta 2 reintentos. **Nunca se permite por un error.**
+- **Si JEV falla:** hay hasta 2 reintentos (esperas de 300 y 900 ms) cuando está saturado (429 o 529), no responde en 3 s o falla la red. En el peor caso, a los ≈10 s la acción **pasa a una persona**. Una respuesta inválida pasa a una persona de inmediato. **Nunca se permite por un error.**
 - **Un LLM nunca decide.** Lo que no resuelven el código ni JEV, lo resuelve una persona.
 
 **Cómo se ajustaron (regla firmada por Helian):**
@@ -112,7 +112,7 @@ Los valores están en `data/thresholds.json`.
 
 | Pregunta | Propuesta | Qué existe hoy |
 |---|---|---|
-| **¿Dónde se pone?** | **Una puerta de salida única, dentro de las herramientas del agente.** Un servidor MCP expone `enviar_correo_masivo`, `enviar_whatsapp`, `publicar_en_redes` y `actualizar_hubspot`, y cada una consulta a VoBo antes de ejecutar. **Si las llaves de HubSpot y WhatsApp viven solo en la puerta, el agente no tiene otra vía para enviar.** n8n queda solo como adaptador para flujos fuera de tecnología | **Puerta MCP construida** (`integraciones/mcp/`, 11 pruebas) y probada contra la demo con MCP Inspector en los tres casos. También hay un envoltorio de Python (19 pruebas). Los ejecutores son de ejemplo: no tocan HubSpot ni WhatsApp reales |
+| **¿Dónde se pone?** | **Una puerta de salida única, dentro de las herramientas del agente.** Un servidor MCP expone `enviar_correo_masivo`, `enviar_whatsapp`, `publicar_en_redes` y `actualizar_hubspot`, y cada una consulta a VoBo antes de ejecutar. **La puerta está pensada para que no haya otra salida:** las llaves de HubSpot y WhatsApp viven solo en ella. n8n queda solo como adaptador para flujos fuera de tecnología | **Puerta MCP construida** (`integraciones/mcp/`) y probada contra la demo con MCP Inspector en los tres casos (11 de 11 pruebas). No se probó en Claude Desktop ni con HubSpot o WhatsApp reales. También hay un envoltorio de Python (19 pruebas). Los ejecutores son de ejemplo: no tocan HubSpot ni WhatsApp reales |
 | **¿Cómo se ven los cambios en HubSpot?** | **Antes:** la herramienta que escribe en HubSpot pasa por VoBo. **Después**, como red de seguridad: los webhooks de HubSpot sobre cambios en contactos y deals permiten auditar lo que se escribió sin pasar por la puerta | Lo de «antes» existe en la puerta MCP. Lo de «después» es **[Propuesta]**, por verificar con el plan de HubSpot de 30X |
 | **¿Cuál es el identificador?** | El **ID de registro de HubSpot** más el `request_id` de VoBo en cada decisión. Es estable y no es un dato personal. El correo **nunca va a JEV** | Cada respuesta trae su `request_id` y su registro |
 | **¿Qué pasa si VoBo tarda o falla?** | **Falla cerrada:** sin una respuesta válida, la acción espera a una persona. Correo y WhatsApp son irreversibles, así que esperar unos minutos cuesta menos que un envío indebido. Siguiente paso: un modo «permitir con aviso» para acciones reversibles | Implementado. Probado con VoBo caído, colgado, con error 500 y con una decisión desconocida |
@@ -155,7 +155,7 @@ Los valores están en `data/thresholds.json`.
 | Continuo | Monitoreo semanal | Peligrosas aprobadas, autonomía, % escalado, tiempo de aprobación y costo |
 
 **Límites conocidos:**
-- Una acción que no pase por la puerta no se evalúa. Por eso las llaves van solo en la puerta.
+- Una acción que no pase por la puerta no se evalúa. Por eso las llaves van solo en la puerta. No se probó con agentes reales de 30X.
 - Cubre 4 tipos de acción; los mensajes 1 a 1 se modelan con destinatarios = 1.
 - JEV puede equivocarse con confianza y no es del todo determinista entre llamadas.
 - Las preguntas están en español; no se midió frente al inglés.

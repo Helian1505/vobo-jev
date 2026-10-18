@@ -214,7 +214,7 @@ ul.l li::before { content: ""; position: absolute; left: 0; top: 14px; width: 7p
     </div>
   </div>
   <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top:22px">
-    <div class="card"><p class="h3 d" style="font-size:24px">Si JEV falla, la acción no sale</p><p class="small" style="margin-top:8px">Error, respuesta inválida o más de 3 s (con hasta 2 reintentos): pasa a una persona. Nunca se permite por un error.</p></div>
+    <div class="card"><p class="h3 d" style="font-size:24px">Si JEV falla, la acción no sale</p><p class="small" style="margin-top:8px">Hasta 2 reintentos si JEV está saturado, no responde en 3 s o falla la red. En el peor caso, a los ≈10 s pasa a una persona. Nunca se permite por un error.</p></div>
     <div class="card"><p class="h3 d" style="font-size:24px">Un LLM nunca decide</p><p class="small" style="margin-top:8px">Lo que no resuelven el código ni JEV, lo resuelve una persona.</p></div>
     <div class="card"><p class="h3 d" style="font-size:24px">Ajustados solo con datos de ajuste</p><p class="small" style="margin-top:8px">250 acciones de ajuste, nunca las de medición. Regla firmada por Helian: banda de duda ≥ 0,20 y, entre opciones iguales, la más conservadora.</p></div>
   </div>
@@ -243,7 +243,7 @@ ul.l li::before { content: ""; position: absolute; left: 0; top: 14px; width: 7p
     </div>
   </div>
   <div class="grid qa" style="grid-template-columns: repeat(3, 1fr); margin-top:26px">
-    <div class="card"><p class="q">¿Dónde se pone?</p><p class="a">Dentro de las herramientas del agente (servidor MCP). Si las llaves de HubSpot y WhatsApp viven solo en la puerta, el agente no tiene otra vía para enviar.</p><p class="e"><span class="tag ok">Construido</span> 11 pruebas, probado contra la demo. Ejecutores de ejemplo.</p></div>
+    <div class="card"><p class="q">¿Dónde se pone?</p><p class="a">Dentro de las herramientas del agente (servidor MCP). La puerta está pensada para que no haya otra salida: las llaves de HubSpot y WhatsApp viven solo en ella.</p><p class="e"><span class="tag ok">Probado</span> 11 de 11 pruebas y MCP Inspector contra la demo. No probado en Claude Desktop ni con HubSpot o WhatsApp reales.</p></div>
     <div class="card"><p class="q">¿Y los cambios en HubSpot?</p><p class="a">La herramienta que escribe en HubSpot pasa por VoBo. Como red de seguridad, los webhooks de HubSpot auditan lo que no pasó por la puerta.</p><p class="e"><span class="tag pro">Propuesta</span> Los webhooks, por verificar con su plan de HubSpot.</p></div>
     <div class="card"><p class="q">¿Cuál es el identificador?</p><p class="a">El ID de registro de HubSpot más el <span class="mono">request_id</span> de cada decisión. Es estable y no es un dato personal.</p><p class="e"><span class="tag ok">Construido</span> Cada respuesta trae su registro.</p></div>
     <div class="card"><p class="q">¿Y si VoBo tarda o falla?</p><p class="a">Falla cerrada: sin respuesta válida, la acción espera a una persona. Esperar unos minutos cuesta menos que un envío masivo indebido.</p><p class="e"><span class="tag ok">Probado</span> Con el servidor caído, colgado y con error.</p></div>
@@ -305,7 +305,7 @@ ul.l li::before { content: ""; position: absolute; left: 0; top: 14px; width: 7p
     <div class="card">
       <p class="eyebrow" style="color:var(--lime)">Límites conocidos</p>
       <ul class="l" style="margin-top:6px">
-        <li>Lo que no pase por la puerta no se evalúa.</li>
+        <li>Lo que no pase por la puerta no se evalúa; no se probó con agentes reales de 30X.</li>
         <li>JEV puede equivocarse con confianza y varía un poco entre llamadas.</li>
         <li>Preguntas en español, sin medir frente al inglés.</li>
         <li>Banco sintético y política de demostración, por confirmar con 30X.</li>
